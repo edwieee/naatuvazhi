@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Newsreader, Manrope, JetBrains_Mono } from 'next/font/google';
+import { Newsreader, Manrope, JetBrains_Mono, Noto_Sans_Malayalam } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
@@ -9,16 +9,26 @@ const newsreader = Newsreader({
   variable: '--font-newsreader',
   subsets: ['latin'],
   style: ['normal', 'italic'],
+  display: 'swap',
 });
 
 const manrope = Manrope({
   variable: '--font-manrope',
   subsets: ['latin'],
+  display: 'swap',
 });
 
 const jetbrainsMono = JetBrains_Mono({
   variable: '--font-jetbrains-mono',
   subsets: ['latin'],
+  display: 'swap',
+});
+
+const notoSansMalayalam = Noto_Sans_Malayalam({
+  variable: '--font-noto-malayalam',
+  subsets: ['malayalam'],
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
 export const metadata: Metadata = {
@@ -35,7 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} h-full antialiased scroll-smooth`}
+      className={`${newsreader.variable} ${manrope.variable} ${jetbrainsMono.variable} ${notoSansMalayalam.variable} h-full antialiased scroll-smooth`}
     >
       <body className="min-h-full flex flex-col bg-[#fcf9f0] text-[#1c1c16] font-body selection:bg-[#aa3000] selection:text-white">
         <LanguageProvider>

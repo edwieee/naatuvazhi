@@ -17,22 +17,22 @@ export default function FeaturedListings() {
     : MOCK_LISTINGS.filter((l) => l.category === selectedCategory).slice(0, 6);
 
   return (
-    <section className="py-14 md:py-18 border-b border-[#e5e3d9]" id="directory">
+    <section className="py-14 md:py-20 border-b border-[#e5e0d4]" id="directory">
       <div className="max-w-7xl mx-auto px-4 md:px-12">
         {/* Section Header with Archive Link */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <span className="font-mono text-[11px] text-[#aa3000] uppercase tracking-widest block mb-2 font-medium">
-              {t('CURATED CULTURAL HERITAGE', 'തിരഞ്ഞെടുത്ത പൈതൃക കേന്ദ്രങ്ങൾ')}
+            <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
+              {t('Curated cultural heritage', 'തിരഞ്ഞെടുത്ത പൈതൃക കേന്ദ്രങ്ങൾ')}
             </span>
             <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight">
-              {t('Featured Living Traditions', 'പ്രധാന സാംസ്കാരിക കേന്ദ്രങ്ങൾ')}
+              {t('Featured living traditions', 'പ്രധാന സാംസ്കാരിക കേന്ദ്രങ്ങൾ')}
             </h2>
           </div>
 
           <Link
             href="/explore"
-            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#d43f05] transition-colors"
+            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors"
           >
             <span>{t('View complete directory', 'എല്ലാ കേന്ദ്രങ്ങളും കാണുക')}</span>
             <ArrowRight className="w-4 h-4 text-[#aa3000]" />
@@ -40,15 +40,15 @@ export default function FeaturedListings() {
         </div>
 
         {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-[#e5e3d9]">
+        <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-[#e5e0d4]">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-1.5 font-mono text-xs rounded-xs flex items-center gap-2 transition-colors ${
+              className={`px-3.5 py-1.5 font-body text-xs rounded-md flex items-center gap-2 transition-colors cursor-pointer ${
                 selectedCategory === cat
-                  ? 'bg-[#1c1c16] text-[#fcf9f0] shadow-xs'
-                  : 'bg-[#f6f4ea] hover:bg-[#f0eee5] text-[#5d5e61] hover:text-[#1c1c16] border border-[#D8D6CD]'
+                  ? 'bg-[#26221e] text-[#fcf9f0] shadow-xs font-medium'
+                  : 'bg-[#f6f3eb] hover:bg-[#ede7da] text-[#5d5e61] hover:text-[#1c1c16] border border-[#ded7c9]'
               }`}
             >
               {selectedCategory === cat && (
@@ -65,22 +65,22 @@ export default function FeaturedListings() {
             <Link
               key={listing.id}
               href={`/culture/${listing.slug}`}
-              className="bg-white border border-[#D8D6CD] rounded-md overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow"
+              className="bg-white border border-[#ded7c9] rounded-lg overflow-hidden flex flex-col group hover:border-[#26221e] transition-colors ambient-card-shadow"
             >
               <div className="relative h-48 bg-[#f0eee5] overflow-hidden">
                 <img
                   src={listing.imageUrl}
                   alt={listing.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 />
-                <div className="absolute top-3 left-3 bg-[#202224]/85 text-[#fcf9f0] px-2 py-0.5 rounded-xs font-mono text-[10px]">
+                <div className="absolute top-3 left-3 bg-[#26221e]/90 text-[#fcf9f0] px-2.5 py-0.5 rounded-sm font-body text-[11px] font-medium">
                   {listing.category}
                 </div>
-                <div className="absolute bottom-3 left-3 bg-[#fcf9f0]/90 backdrop-blur-xs px-2 py-0.5 rounded-xs font-mono text-[10px] text-[#1c1c16]">
+                <div className="absolute bottom-3 left-3 bg-[#fcf9f0]/95 backdrop-blur-xs px-2.5 py-0.5 rounded-sm font-body text-[11px] text-[#1c1c16] border border-[#ded7c9]">
                   {listing.locality}, {listing.district}
                 </div>
-                <div className="absolute top-3 right-3 bg-white/95 px-2 py-0.5 rounded-full flex items-center gap-1 font-mono text-[10px] text-[#aa3000] shadow-xs">
-                  <Check className="w-3 h-3 text-[#aa3000]" />
+                <div className="absolute top-3 right-3 bg-white/95 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-body text-[11px] font-medium text-[#aa3000] shadow-xs">
+                  <Check className="w-3.5 h-3.5 text-[#aa3000]" />
                   <span>{listing.verificationStatus}</span>
                 </div>
               </div>
@@ -90,7 +90,7 @@ export default function FeaturedListings() {
                   <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
                     {listing.name}
                   </h3>
-                  <p className="text-xs text-[#5d5e61] mb-3 italic">
+                  <p className="font-malayalam text-xs text-[#6e675d] mb-3">
                     {listing.nameMalayalam}
                   </p>
                   <p className="font-body text-xs text-[#5d5e61] leading-relaxed line-clamp-2">
@@ -98,13 +98,13 @@ export default function FeaturedListings() {
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
-                  <span className="font-mono text-xs bg-[#303336] text-[#fcf9f0] px-2 py-0.5 rounded-xs">
+                <div className="mt-6 pt-4 border-t border-[#ece6da] flex items-center justify-between">
+                  <span className="font-mono text-xs text-[#6e675d] bg-[#f4efe4] px-2 py-0.5 rounded-xs border border-[#ded7c9] tabular-nums">
                     № KL-{listing.district.substring(0, 3).toUpperCase()}-{listing.id.replace('c-', '')}
                   </span>
-                  <span className="font-mono text-xs text-[#aa3000] group-hover:text-[#d43f05] flex items-center gap-1 font-semibold">
+                  <span className="font-body text-xs text-[#aa3000] group-hover:text-[#c23700] flex items-center gap-1 font-semibold">
                     <span>{t('Read story', 'വായിക്കുക')}</span>
-                    <ArrowRight className="w-3 h-3 text-[#aa3000]" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#aa3000]" />
                   </span>
                 </div>
               </div>

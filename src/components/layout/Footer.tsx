@@ -8,20 +8,22 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="w-full border-t border-[#e5e3d9] px-4 md:px-12 py-12 md:py-16 bg-[#f6f4ea]">
+    <footer className="w-full border-t border-[#e5e0d4] px-4 md:px-12 py-12 md:py-16 bg-[#f6f3eb]">
       <div className="max-w-7xl mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           {/* Brand column */}
           <div className="md:col-span-4">
-            <div className="flex items-center gap-2 mb-3">
-              <div className="w-6 h-6 bg-[#aa3000] text-white flex items-center justify-center font-bold text-xs rounded-xs shadow-xs">
+            <div className="flex items-center gap-2.5 mb-3">
+              <div className="w-6 h-6 bg-[#aa3000] text-white flex items-center justify-center font-bold text-xs rounded-sm shadow-xs">
                 NV
               </div>
-              <div className="flex items-baseline gap-1.5">
+              <div className="flex items-baseline gap-2">
                 <span className="font-headline text-lg font-semibold text-[#1c1c16]">
                   nattuvazhi
                 </span>
-                <span className="text-xs text-[#5d5e61] font-medium">നാട്ടുവഴി</span>
+                <span className="font-malayalam text-xs text-[#6e675d] font-normal">
+                  നാട്ടുവഴി
+                </span>
               </div>
             </div>
             <p className="font-body text-xs sm:text-sm text-[#5d5e61] leading-relaxed mb-4 max-w-sm">
@@ -30,7 +32,7 @@ export default function Footer() {
                 'കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. ക്ഷേത്രകലകൾ, അനുഷ്ഠാന കലാരൂപങ്ങൾ, പാരമ്പര്യ കരകൗശലങ്ങൾ, നാട്ടുവിജ്ഞാനം എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
               )}
             </p>
-            <div className="inline-flex items-center gap-2 font-mono text-[11px] text-[#5d5e61]">
+            <div className="inline-flex items-center gap-2 font-body text-xs text-[#6e675d]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
               <span>All records peer-verified before public discovery</span>
             </div>
@@ -41,7 +43,7 @@ export default function Footer() {
             <h4 className="font-body text-sm font-semibold text-[#1c1c16] mb-3">
               {t('Explore', 'കണ്ടെത്തുക')}
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-[#5d5e61]">
+            <ul className="space-y-2 text-xs sm:text-sm text-[#5d5e61] font-body">
               <li>
                 <Link href="/explore?category=Ritual+Art" className="hover:text-[#aa3000] transition-colors">
                   Ritual arts &amp; Theyyam
@@ -75,7 +77,7 @@ export default function Footer() {
             <h4 className="font-body text-sm font-semibold text-[#1c1c16] mb-3">
               {t('Community', 'സമൂഹം')}
             </h4>
-            <ul className="space-y-2 text-xs sm:text-sm text-[#5d5e61]">
+            <ul className="space-y-2 text-xs sm:text-sm text-[#5d5e61] font-body">
               <li>
                 <Link href="/contribute" className="hover:text-[#aa3000] transition-colors">
                   Submit a discovery
@@ -101,9 +103,9 @@ export default function Footer() {
 
           {/* Heritage Note */}
           <div className="md:col-span-3">
-            <div className="bg-[#f0eee5] p-4 rounded-md border border-[#e5e3d9]">
-              <h4 className="font-mono text-xs text-[#1c1c16] font-semibold mb-1 uppercase tracking-wide">
-                {t('Heritage Note', 'പൈതൃക വിവരണം')}
+            <div className="bg-[#f0eee5] p-4 rounded-md border border-[#ded7c9]">
+              <h4 className="font-body text-xs text-[#1c1c16] font-semibold mb-1">
+                {t('Heritage note', 'പൈതൃക വിവരണം')}
               </h4>
               <p className="font-body text-xs text-[#5d5e61] leading-relaxed">
                 {t(
@@ -116,7 +118,7 @@ export default function Footer() {
         </div>
 
         {/* Footer Bottom Bar */}
-        <div className="pt-6 border-t border-[#e5e3d9] flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-[#5d5e61]">
+        <div className="pt-6 border-t border-[#ded7c9] flex flex-col sm:flex-row items-center justify-between gap-4 font-body text-xs text-[#6e675d]">
           <p>© 2026 Nattuvazhi. Built with care for Kerala's Living Heritage.</p>
           <div className="flex items-center gap-3">
             <span>Kasaragod to Thiruvananthapuram</span>

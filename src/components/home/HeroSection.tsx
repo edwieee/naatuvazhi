@@ -9,59 +9,57 @@ export default function HeroSection() {
   const { t } = useLanguage();
 
   return (
-    <section className="relative border-b border-[#e5e3d9] overflow-hidden">
-      {/* Atmospheric Ambient Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[#fcf9f0] via-[#f6f4ea] to-[#faeade]/60 pointer-events-none"></div>
-      <div className="absolute top-0 right-0 w-2/5 h-full opacity-40 blur-3xl pointer-events-none bg-gradient-to-b from-[#ffdbd0] via-[#ffdbd0]/50 to-transparent"></div>
-
-      <div className="relative max-w-7xl mx-auto px-4 md:px-12 py-12 lg:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+    <section className="relative border-b border-[#e5e0d4] bg-[#fcf9f0] overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 py-14 lg:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           {/* Left Column: Editorial Archive Pitch */}
           <div className="lg:col-span-7 flex flex-col justify-center">
+            {/* Subtle Eyebrow Label */}
             <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000] animate-pulse"></span>
-              <span className="font-mono text-[11px] text-[#5b4139] uppercase tracking-wider">
-                Kerala Cultural Cartography · Public Open Archive
+              <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
+              <span className="font-body text-xs font-medium text-[#7d3b24] tracking-normal">
+                {t('Kerala cultural cartography · Public open archive', 'കേരള സാംസ്കാരിക ഭൂപടം · പബ്ലിക് ഓപ്പൺ ആർക്കൈവ്')}
               </span>
             </div>
 
-            <h1 className="font-headline text-4xl sm:text-5xl lg:text-[58px] lg:leading-[64px] text-[#1c1c16] mb-6 tracking-tight font-medium">
+            {/* Display Headline without trailing period */}
+            <h1 className="font-headline text-4xl sm:text-5xl lg:text-[54px] lg:leading-[1.12] text-[#1c1c16] mb-5 tracking-tight font-medium">
               {t(
-                'Discover the culture that lives around you.',
-                'നിങ്ങൾക്ക് ചുറ്റും ജീവിക്കുന്ന സംസ്കാരം കണ്ടെത്തൂ.'
+                'Discover the culture that lives around you',
+                'നിങ്ങൾക്ക് ചുറ്റും ജീവിക്കുന്ന സംസ്കാരം കണ്ടെത്തൂ'
               )}
             </h1>
 
-            <p className="font-body text-base sm:text-lg text-[#5d5e61] mb-8 max-w-2xl leading-relaxed">
+            {/* Supporting Description */}
+            <p className="font-body text-base sm:text-lg text-[#5d5e61] mb-8 max-w-xl leading-relaxed">
               {t(
                 'A community-informed, scholar-verified living map of Kerala’s sacred groves, ritual performing arts, master practitioners, and craft guilds.',
                 'നാട്ടുവഴി — കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. ക്ഷേത്രകലകൾ, കാവുകൾ, പാരമ്പര്യ കരകൗശലങ്ങൾ, നാട്ടുവിജ്ഞാനം എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
               )}
             </p>
 
-            <div className="flex flex-wrap items-center gap-4 mb-8">
+            {/* Quiet, Well-balanced Dual CTAs */}
+            <div className="flex flex-wrap items-center gap-3.5 mb-8">
               <Link
                 href="/explore"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#aa3000] hover:bg-[#d43f05] text-white font-medium text-sm sm:text-base rounded-md transition-all duration-150 transform hover:-translate-y-0.5 terracotta-glow shadow-sm"
+                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-sm rounded-md transition-colors shadow-xs"
               >
                 <span>{t('Explore the directory', 'ഭൂപടം തുറക്കുക')}</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/contribute"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-transparent border border-[#303336] text-[#202224] hover:bg-[#202224] hover:text-[#fcf9f0] font-medium text-sm sm:text-base rounded-md transition-all duration-150"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#f6f3eb] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm rounded-md transition-colors"
               >
-                <PlusCircle className="w-4 h-4" />
+                <PlusCircle className="w-4 h-4 text-[#aa3000]" />
                 <span>{t('Submit a discovery', 'പുതിയ കേന്ദ്രം സമർപ്പിക്കൂ')}</span>
               </Link>
             </div>
 
-            {/* Trust Badge / Custodial Accreditation */}
-            <div className="pt-4 border-t border-[#e5e3d9] flex items-center gap-3">
-              <span className="w-5 h-5 rounded-full bg-[#303336] text-[#fcf9f0] flex items-center justify-center text-xs flex-shrink-0">
-                <Check className="w-3 h-3 text-[#fcf9f0]" />
-              </span>
-              <p className="font-mono text-xs text-[#5d5e61]">
+            {/* Trust Line with proper typography */}
+            <div className="pt-5 border-t border-[#e5e0d4] flex items-center gap-2.5">
+              <Check className="w-4 h-4 text-[#aa3000] flex-shrink-0" />
+              <p className="font-body text-xs sm:text-sm text-[#5d5e61]">
                 {t(
                   'Verified against folklore academy archives and local hereditary custodians',
                   'നാട്ടറിവ് വിദഗ്ദ്ധരും ഫോക്‌ലോർ പണ്ഡിതരും പരിശോധിച്ചു ഉറപ്പുവരുത്തിയത്'
@@ -70,102 +68,124 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: Dual-Pane Cartographic Itinerary Survey */}
+          {/* Right Column: Tactile Field Itinerary Ledger */}
           <div className="lg:col-span-5 w-full">
-            <div className="bg-white border border-[#D8D6CD] ambient-card-shadow overflow-hidden rounded-md">
-              {/* Gazetteer Card Header */}
-              <div className="bg-[#202224] text-[#fcf9f0] px-5 py-3 flex items-center justify-between border-b border-[#303336]">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#aa3000] animate-ping"></span>
-                  <span className="font-mono text-[10px] tracking-widest text-[#D8D6CD]">FIELD ITINERARY SURVEY</span>
+            <div className="bg-white border border-[#ded7c9] ambient-card-shadow overflow-hidden rounded-lg">
+              {/* Card Header */}
+              <div className="bg-[#26221e] text-[#fcf9f0] px-5 py-3.5 flex items-center justify-between border-b border-[#38332c]">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-[#e65c00]"></span>
+                  <span className="font-body text-xs font-semibold text-[#ded8cd] tracking-normal">
+                    Field itinerary survey
+                  </span>
                 </div>
-                <span className="font-mono text-[11px] bg-[#303336] px-2 py-0.5 rounded-xs text-[#D8D6CD]">
+                <span className="font-mono text-xs text-[#d8d1c2] bg-[#3a342d] px-2 py-0.5 rounded-xs tabular-nums">
                   № KL-SURVEY-26
                 </span>
               </div>
 
-              {/* Survey Waypoints List */}
-              <div className="divide-y divide-[#D8D6CD]">
+              {/* Waypoints List with balanced padding & tabular figures */}
+              <div className="divide-y divide-[#ece6da]">
                 {/* Item 01 */}
-                <div className="p-4 hover:bg-[#f6f4ea] transition-colors group">
-                  <div className="flex items-start justify-between">
+                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5">01</span>
+                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
+                        01
+                      </span>
                       <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors">
+                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
                           Parassini Muthappan Vellattam
                         </h4>
-                        <p className="font-body text-xs text-[#5d5e61]">Valapattanam Riverbank, Kannur</p>
+                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
+                          Valapattanam Riverbank, Kannur
+                        </p>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-[#1c1c16] bg-[#f0eee5] px-2 py-0.5 rounded-xs tabular-nums">
+                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
                       05:45
                     </span>
                   </div>
                 </div>
 
                 {/* Item 02 */}
-                <div className="p-4 hover:bg-[#f6f4ea] transition-colors group">
-                  <div className="flex items-start justify-between">
+                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5">02</span>
+                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
+                        02
+                      </span>
                       <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors">
+                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
                           Kalamandalam Koodiyattam
                         </h4>
-                        <p className="font-body text-xs text-[#5d5e61]">Koothambalam, Cheruthuruthy</p>
+                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
+                          Koothambalam, Cheruthuruthy
+                        </p>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-[#1c1c16] bg-[#f0eee5] px-2 py-0.5 rounded-xs tabular-nums">
+                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
                       09:30
                     </span>
                   </div>
                 </div>
 
                 {/* Item 03 */}
-                <div className="p-4 hover:bg-[#f6f4ea] transition-colors group">
-                  <div className="flex items-start justify-between">
+                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5">03</span>
+                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
+                        03
+                      </span>
                       <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors">
+                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
                           Aranmula Metal Mirror Casting
                         </h4>
-                        <p className="font-body text-xs text-[#5d5e61]">Vishwakarma Guild, Pathanamthitta</p>
+                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
+                          Vishwakarma Guild, Pathanamthitta
+                        </p>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-[#1c1c16] bg-[#f0eee5] px-2 py-0.5 rounded-xs tabular-nums">
+                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
                       14:15
                     </span>
                   </div>
                 </div>
 
                 {/* Item 04 */}
-                <div className="p-4 hover:bg-[#f6f4ea] transition-colors group">
-                  <div className="flex items-start justify-between">
+                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
+                  <div className="flex items-start justify-between gap-3">
                     <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5">04</span>
+                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
+                        04
+                      </span>
                       <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors">
+                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
                           Mannarasala Sarpam Thullal
                         </h4>
-                        <p className="font-body text-xs text-[#5d5e61]">Sacred Grove, Haripad</p>
+                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
+                          Sacred Grove, Haripad
+                        </p>
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-[#1c1c16] bg-[#f0eee5] px-2 py-0.5 rounded-xs tabular-nums">
+                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
                       18:00
                     </span>
                   </div>
                 </div>
               </div>
 
-              {/* Survey Status Footer */}
-              <div className="bg-[#eae8df] px-5 py-3 border-t border-[#D8D6CD] flex items-center justify-between text-xs">
+              {/* Card Footer */}
+              <div className="bg-[#f5efe4] px-5 py-3 border-t border-[#ded7c9] flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full bg-[#aa3000]"></span>
-                  <span className="font-mono text-[11px] text-[#1c1c16] font-medium">Field-verified corridor</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
+                  <span className="font-body text-xs font-medium text-[#26221e]">
+                    Field-verified corridor
+                  </span>
                 </div>
-                <span className="font-mono text-[11px] text-[#5d5e61]">Kannur → Alappuzha</span>
+                <span className="font-body text-xs text-[#6e675d]">
+                  Kannur → Alappuzha
+                </span>
               </div>
             </div>
           </div>

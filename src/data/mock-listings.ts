@@ -18,7 +18,7 @@ export const MOCK_LISTINGS: CulturalListing[] = [
 Unlike seasonal temple festivals that occur only during the Malayalam winter months, Parassini witnesses daily dawn and dusk manifestations. The deity accepts offerings of dried fish, toddy, and roasted grains, listening directly to devotees in personal, whispered conversations. The elaborate face painting (Mukhathezhuthu), tower-like headdresses (Mudi), and blazing torch dances represent one of humanity's oldest surviving ritual theater traditions.`,
     culturalSignificance: 'Parassini represents a vital bridge between indigenous tribal animism and folk Hinduism, maintaining caste-free community feeding (Annadhanam) and daily ritual invocation of subaltern guardian deities.',
     visitorProtocol: 'Modest traditional dress is encouraged. Photography of the deity listening to devotees is restricted in innermost sanctum; follow temple custodian directions. Free meal is offered to all visitors.',
-    imageUrl: 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/parassini-theyyam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop',
@@ -74,7 +74,7 @@ Unlike seasonal temple festivals that occur only during the Malayalam winter mon
 Students at Kalamandalam awaken before dawn to the rhythmic thrum of the Maddalam and Chenda. Rigorous physical disciplines, eye exercises, and mudra training are practiced in open-air 'Kalaris' beneath riverine trees. Its legendary Koothambalam—the traditional temple theater designed according to Natyashastra architectural principles—stands as an acoustic and aesthetic marvel.`,
     culturalSignificance: 'Declared a Deemed University for Arts and Culture, Kalamandalam serves as the world benchmark for pedagogical transmission of UNESCO-recognized master traditions like Koodiyattam and classical Kathakali.',
     visitorProtocol: 'Visitors are welcomed between 9:00 AM and 1:00 PM on working days under the "A Day with the Masters" cultural immersion protocol. Silence is strictly observed near active practice classrooms.',
-    imageUrl: 'https://images.unsplash.com/photo-1582711012124-a56cf82307a0?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/kalamandalam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1582711012124-a56cf82307a0?q=80&w=1200&auto=format&fit=crop',
@@ -120,7 +120,7 @@ Students at Kalamandalam awaken before dawn to the rhythmic thrum of the Maddala
 Because the reflection occurs directly on the polished metal surface rather than behind glass, light suffers zero refraction or secondary distortion. When an object touches the mirror, there is zero gap between the object and its image. The alloy is melted in clay crucibles, poured into mud molds, and hand-polished for weeks using river silt, velvet cloths, and coconut oil until an immaculate reflection emerges.`,
     culturalSignificance: 'Ranked among the eight auspicious items (Ashtamangalyam) in Kerala spiritual rites, it earned India’s earliest Geographical Indication (GI) registration for indigenous metallurgy.',
     visitorProtocol: 'Artisan workshops are open to visitors during daylight hours. Visitors may observe the polishing stages. Counterfeits abound in commercial tourist shops; look for the hologram seal of the Vishwabrahmana Guild.',
-    imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/aranmula-kannadi.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
@@ -164,7 +164,7 @@ Because the reflection occurs directly on the polished metal surface rather than
 The curriculum progresses methodically through Meythari (body conditioning and animal postures like Lion, Boar, Elephant), Kolthari (wooden weapons and sticks), Angathari (metal blades, shields, and the lethal flexible sword Urumi), and culminates in Verumkai (barehand self-defense) and Marma Chikitsa (treatment of vital pressure points).`,
     culturalSignificance: 'Mentioned in ancient Sangam literature and the Vadakkan Pattukal ballads, Kalaripayattu is the physiological and aesthetic ancestor of Kerala’s dramatic arts, including Kathakali and Theyyam.',
     visitorProtocol: 'Morning training sessions (6:00 AM - 8:30 AM) can be observed with prior permission. Remove footwear before stepping down into the earthen Kalari floor. Photography requires instructor consent.',
-    imageUrl: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/cvn-kalari.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop',
@@ -208,7 +208,7 @@ The curriculum progresses methodically through Meythari (body conditioning and a
 Costumed in opulent velvet capes, golden crowns, and Romanesque armor, actors deliver dramatic verse in Chentamil and classical Malayalam while executing synchronized acrobatic footwork. Plays like 'Brijeena Charitham' and 'Karalman Charitham' (Charlemagne) depict epic battles, courtly honor, and Christian spiritual triumph.`,
     culturalSignificance: 'Chavittu Nadakam is India’s foremost Christian classical dramatic heritage, celebrated for its unique wooden stage resonance and vibrant synthesis of Mediterranean and Malabar aesthetics.',
     visitorProtocol: 'Rehearsals are open during post-monsoon festive seasons. Annual Gothuruth Chavittu Nadakam Fest takes place every December.',
-    imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/chavittu-nadakam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop',
@@ -252,7 +252,7 @@ Costumed in opulent velvet capes, golden crowns, and Romanesque armor, actors de
 The puppets are meticulously cut from treated deer and buffalo hide, etched with perforated decorative filigree that casts luminous silhouettes against the backlit cotton screen. The flickering flames of 21 oil lamps suspended in a row impart a hypnotic, lifelike animation to the epic battles between Rama and Ravana. Master puppeteer Padmashri Ramachandra Pulavar and his family lead the art’s preservation and contemporary adaptation.`,
     culturalSignificance: 'One of the few ritual shadow puppetry lineages in South Asia that continues to be performed as a live devotional offering within sacred temple precincts.',
     visitorProtocol: 'The Koonathara puppet museum and workshop can be visited during daytime. Temple ritual performances are nocturnal (10:00 PM to dawn) between January and May.',
-    imageUrl: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/stitch/tholpavakoothu.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop',

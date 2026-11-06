@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { MOCK_LISTINGS } from '@/data/mock-listings';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
+import { Check, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function FeaturedListings() {
@@ -17,101 +17,96 @@ export default function FeaturedListings() {
     : MOCK_LISTINGS.filter((l) => l.category === selectedCategory).slice(0, 6);
 
   return (
-    <section className="py-16 md:py-24 border-b border-[#E8E2D6]">
-      <div className="max-w-6xl mx-auto px-4 md:px-8">
-        {/* Section Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+    <section className="py-14 md:py-18 border-b border-[#e5e3d9]" id="directory">
+      <div className="max-w-7xl mx-auto px-4 md:px-12">
+        {/* Section Header with Archive Link */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div>
-            <div className="flex items-center gap-2 text-xs font-mono text-[#5C554B] mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9041]"></span>
-              <span>{t('CURATED CULTURAL HERITAGE', 'തിരഞ്ഞെടുത്ത പൈതൃക കേന്ദ്രങ്ങൾ')}</span>
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-semibold text-[#000000] tracking-tight">
+            <span className="font-mono text-[11px] text-[#aa3000] uppercase tracking-widest block mb-2 font-medium">
+              {t('CURATED CULTURAL HERITAGE', 'തിരഞ്ഞെടുത്ത പൈതൃക കേന്ദ്രങ്ങൾ')}
+            </span>
+            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight">
               {t('Featured Living Traditions', 'പ്രധാന സാംസ്കാരിക കേന്ദ്രങ്ങൾ')}
             </h2>
           </div>
 
           <Link
             href="/explore"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#000000] hover:text-[#FF5931] transition-colors"
+            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#d43f05] transition-colors"
           >
             <span>{t('View complete directory', 'എല്ലാ കേന്ദ്രങ്ങളും കാണുക')}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-[#FF9041]" />
+            <ArrowRight className="w-4 h-4 text-[#aa3000]" />
           </Link>
         </div>
 
-        {/* Filter Tags: Active in #FF9041, Inactive in warm surface with orange hover */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 mb-8 scrollbar-none">
+        {/* Category Filter Tabs */}
+        <div className="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-[#e5e3d9]">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
+              className={`px-4 py-1.5 font-mono text-xs rounded-xs flex items-center gap-2 transition-colors ${
                 selectedCategory === cat
-                  ? 'bg-[#FF9041] text-[#000000] font-semibold shadow-xs'
-                  : 'bg-white hover:bg-[#FFF8F0] text-[#5C554B] hover:text-[#000000] border border-[#E8E2D6] hover:border-[#FF9041]'
+                  ? 'bg-[#1c1c16] text-[#fcf9f0] shadow-xs'
+                  : 'bg-[#f6f4ea] hover:bg-[#f0eee5] text-[#5d5e61] hover:text-[#1c1c16] border border-[#D8D6CD]'
               }`}
             >
-              {cat}
+              {selectedCategory === cat && (
+                <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
+              )}
+              <span>{cat}</span>
             </button>
           ))}
         </div>
 
-        {/* Listings Grid */}
+        {/* 6 Curated Cultural Cards in 3-Column Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredListings.map((listing) => (
             <Link
               key={listing.id}
               href={`/culture/${listing.slug}`}
-              className="group bg-white rounded-xl overflow-hidden border border-[#E8E2D6] hover:border-[#FF9041] transition-colors flex flex-col justify-between"
+              className="bg-white border border-[#D8D6CD] rounded-md overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow"
             >
-              <div>
-                {/* Image Container with quiet, non-floating labels */}
-                <div className="relative aspect-[16/10] overflow-hidden bg-[#F3EFE8]">
-                  <img
-                    src={listing.imageUrl}
-                    alt={listing.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute top-2.5 left-2.5">
-                    <span className="px-2 py-0.5 rounded-sm bg-[#000000]/85 text-white text-[10px] font-mono">
-                      {listing.category}
-                    </span>
-                  </div>
+              <div className="relative h-48 bg-[#f0eee5] overflow-hidden">
+                <img
+                  src={listing.imageUrl}
+                  alt={listing.name}
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute top-3 left-3 bg-[#202224]/85 text-[#fcf9f0] px-2 py-0.5 rounded-xs font-mono text-[10px]">
+                  {listing.category}
                 </div>
-
-                {/* Content */}
-                <div className="p-5">
-                  <div className="flex items-center justify-between text-xs text-[#5C554B] mb-1">
-                    <span>{listing.locality}, {listing.district}</span>
-                    <span className="text-[#2D6A4F] font-medium flex items-center gap-1 text-[11px]">
-                      <ShieldCheck className="w-3.5 h-3.5" />
-                      <span>{listing.verificationStatus}</span>
-                    </span>
-                  </div>
-
-                  <h3 className="text-base font-semibold text-[#000000] group-hover:text-[#FF5931] transition-colors leading-snug">
-                    {listing.name}
-                  </h3>
-                  <div className="text-xs text-[#5C554B] mt-0.5 mb-2 font-serif">
-                    {listing.nameMalayalam}
-                  </div>
-
-                  <p className="text-xs text-[#5C554B] line-clamp-2 leading-relaxed">
-                    {listing.shortDescription}
-                  </p>
+                <div className="absolute bottom-3 left-3 bg-[#fcf9f0]/90 backdrop-blur-xs px-2 py-0.5 rounded-xs font-mono text-[10px] text-[#1c1c16]">
+                  {listing.locality}, {listing.district}
+                </div>
+                <div className="absolute top-3 right-3 bg-white/95 px-2 py-0.5 rounded-full flex items-center gap-1 font-mono text-[10px] text-[#aa3000] shadow-xs">
+                  <Check className="w-3 h-3 text-[#aa3000]" />
+                  <span>{listing.verificationStatus}</span>
                 </div>
               </div>
 
-              {/* Card Footer: Signature Survey ID Tag */}
-              <div className="px-5 py-3 border-t border-[#E8E2D6] bg-[#FFF9F0]/60 flex items-center justify-between text-xs">
-                <span className="font-mono text-[11px] text-[#5C554B]">
-                  № KL-{listing.district.substring(0, 3).toUpperCase()}-{listing.id.replace('c-', '')}
-                </span>
-                <span className="text-xs font-semibold text-[#000000] group-hover:text-[#FF5931] flex items-center gap-1 transition-colors">
-                  <span>Read story</span>
-                  <ArrowRight className="w-3 h-3 text-[#FF9041]" />
-                </span>
+              <div className="p-5 flex-1 flex flex-col justify-between">
+                <div>
+                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
+                    {listing.name}
+                  </h3>
+                  <p className="text-xs text-[#5d5e61] mb-3 italic">
+                    {listing.nameMalayalam}
+                  </p>
+                  <p className="font-body text-xs text-[#5d5e61] leading-relaxed line-clamp-2">
+                    {listing.shortDescription}
+                  </p>
+                </div>
+
+                <div className="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+                  <span className="font-mono text-xs bg-[#303336] text-[#fcf9f0] px-2 py-0.5 rounded-xs">
+                    № KL-{listing.district.substring(0, 3).toUpperCase()}-{listing.id.replace('c-', '')}
+                  </span>
+                  <span className="font-mono text-xs text-[#aa3000] group-hover:text-[#d43f05] flex items-center gap-1 font-semibold">
+                    <span>{t('Read story', 'വായിക്കുക')}</span>
+                    <ArrowRight className="w-3 h-3 text-[#aa3000]" />
+                  </span>
+                </div>
               </div>
             </Link>
           ))}

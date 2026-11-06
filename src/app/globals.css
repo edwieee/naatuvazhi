@@ -1,39 +1,51 @@
 @import "tailwindcss";
 
-:root {
-  --color-background: #F5F5F5;
-  --color-surface: #FFFFFF;
-  --color-orange-light: #FFB658;
-  --color-orange: #FF9041;
-  --color-coral: #FF5931;
-  --color-deep-red: #B21C01;
-  --color-text: #000000;
-  --color-text-muted: #5C554B;
-  --color-border: #E8E2D6;
-  --color-surface-subtle: #FFF8F0;
+@theme {
+  --color-surface: #fcf9f0;
+  --color-surface-container-low: #f6f4ea;
+  --color-surface-container: #f0eee5;
+  --color-surface-container-high: #eae8df;
+  --color-surface-container-highest: #e5e3d9;
+  --color-surface-container-lowest: #ffffff;
+  --color-primary: #aa3000;
+  --color-primary-container: #d43f05;
+  --color-primary-fixed: #ffdbd0;
+  --color-secondary: #5d5e61;
+  --color-on-surface: #1c1c16;
+  --color-on-surface-variant: #5b4139;
+  --color-border: #D8D6CD;
+  --color-slate-dark: #202224;
+  --color-slate-border: #303336;
 
-  --background: #F5F5F5;
-  --foreground: #000000;
+  --font-headline: var(--font-newsreader), Georgia, serif;
+  --font-display: var(--font-newsreader), Georgia, serif;
+  --font-body: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
 }
 
-@theme {
-  --color-background: #F5F5F5;
-  --color-surface: #FFFFFF;
-  --color-orange-light: #FFB658;
-  --color-orange: #FF9041;
-  --color-coral: #FF5931;
-  --color-deep-red: #B21C01;
-  --color-text: #000000;
-  --color-text-muted: #5C554B;
-  --color-border: #E8E2D6;
-  --color-surface-subtle: #FFF8F0;
+:root {
+  --background: #fcf9f0;
+  --foreground: #1c1c16;
 }
 
 body {
-  background-color: #F5F5F5;
-  color: #000000;
+  background-color: #fcf9f0;
+  color: #1c1c16;
+  font-family: var(--font-manrope), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
+}
+
+.hairline-border {
+  border-color: #D8D6CD;
+}
+
+.terracotta-glow {
+  box-shadow: 0 16px 36px -8px rgba(212, 63, 5, 0.22);
+}
+
+.ambient-card-shadow {
+  box-shadow: 0 4px 20px -2px rgba(32, 34, 36, 0.05);
 }
 
 /* Custom quiet scrollbar */
@@ -45,7 +57,7 @@ body {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D8D1C4;
+  background: #D8D6CD;
   border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {

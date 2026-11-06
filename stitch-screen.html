@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Nattuvazhi (നാട്ടുവഴി) · Living Cultural Cartography of Kerala</title>
+<!-- Fonts: Newsreader, Manrope, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {darkMode: "class", theme: {extend: {colors: {"on-primary-fixed": "#3a0a00", "surface-container-high": "#eae8df", "on-secondary-container": "#636467", "primary-fixed": "#ffdbd0", secondary: "#5d5e61", surface: "#fcf9f0", "inverse-primary": "#ffb59f", "on-secondary-fixed-variant": "#454749", "surface-container": "#f0eee5", "tertiary-container": "#d34000", "on-primary-container": "#fffbff", "on-surface-variant": "#5b4139", "surface-container-lowest": "#ffffff", "tertiary-fixed-dim": "#ffb59e", "on-error": "#ffffff", "secondary-container": "#e2e2e5", "on-primary-fixed-variant": "#852300", "primary-container": "#d43f05", "inverse-surface": "#31312b", "on-tertiary-fixed-variant": "#842500", "outline-variant": "#e3beb4", background: "#fcf9f0", "on-surface": "#1c1c16", "surface-dim": "#dcdad1", "on-secondary-fixed": "#1a1c1e", "on-tertiary-fixed": "#3a0b00", "surface-tint": "#af3100", "surface-container-highest": "#e5e3d9", primary: "#aa3000", "surface-variant": "#e5e3d9", "error-container": "#ffdad6", "secondary-fixed": "#e2e2e5", outline: "#8f7067", "surface-bright": "#fcf9f0", "on-background": "#1c1c16", "on-error-container": "#93000a", "primary-fixed-dim": "#ffb59f", "surface-container-low": "#f6f4ea", "on-tertiary-container": "#fffbff", tertiary: "#a93100", "on-secondary": "#ffffff", "secondary-fixed-dim": "#c6c6c9", error: "#ba1a1a", "tertiary-fixed": "#ffdbd0", "on-tertiary": "#ffffff", "on-primary": "#ffffff", "inverse-on-surface": "#f3f1e7"}, borderRadius: {DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"}, spacing: {"margin-mobile": "1rem", margin: "1.5rem", "space-xs": "0.25rem", "gutter-lg": "2rem", "space-lg": "1.5rem", "space-xl": "2rem", "space-sm": "0.5rem", "gutter-sm": "1rem", "space-md": "1rem", gutter: "1rem", "margin-desktop": "3.5rem"}, fontFamily: {"title-lg": ["Manrope"], "label-sm-mono": ["JetBrains Mono"], "display-hero-mobile": ["Newsreader"], "body-sm": ["Manrope"], "body-md": ["Inter"], "headline-md": ["Newsreader"], "body-lg": ["Manrope"], "headline-sm": ["Newsreader"], "title-md": ["Manrope"], "display-hero": ["Newsreader"], "label-mono": ["JetBrains Mono"], "headline-lg": ["Noto Serif"], "headline-lg-mobile": ["Newsreader"], "label-md": ["Public Sans"], headline: ["Newsreader"], display: ["Newsreader"], body: ["Manrope"], label: ["JetBrains Mono"]}, fontSize: {"title-lg": ["18px", {lineHeight: "26px", fontWeight: "600"}], "label-sm-mono": ["10px", {lineHeight: "14px", letterSpacing: "0.08em", fontWeight: "500"}], "display-hero-mobile": ["36px", {lineHeight: "44px", letterSpacing: "-0.01em", fontWeight: "400"}], "body-sm": ["13px", {lineHeight: "20px", fontWeight: "400"}], "body-md": ["16px", {lineHeight: "24px", fontWeight: "400"}], "headline-md": ["28px", {lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "500"}], "body-lg": ["18px", {lineHeight: "28px", fontWeight: "400"}], "headline-sm": ["22px", {lineHeight: "28px", fontWeight: "600"}], "title-md": ["16px", {lineHeight: "24px", fontWeight: "600"}], "display-hero": ["56px", {lineHeight: "64px", letterSpacing: "-0.02em", fontWeight: "400"}], "label-mono": ["12px", {lineHeight: "16px", letterSpacing: "0.06em", fontWeight: "500"}], "headline-lg": ["32px", {lineHeight: "40px", fontWeight: "700"}], "headline-lg-mobile": ["28px", {lineHeight: "36px", fontWeight: "500"}], "label-md": ["14px", {lineHeight: "20px", fontWeight: "500"}]}}}}
+  </script>
+<style>
+    .hairline-border { border-color: #D8D6CD; }
+    .terracotta-glow {
+      box-shadow: 0 16px 36px -8px rgba(212, 63, 5, 0.16);
+    }
+    .ambient-card-shadow {
+      box-shadow: 0 4px 20px -2px rgba(32, 34, 36, 0.05);
+    }
+    .malayalam-script {
+      font-family: 'Gayathri', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased selection:bg-primary selection:text-white">
+<!-- ================= TOP APP BAR (From Shared Components JSON) ================= -->
+<header class="w-full sticky top-0 z-50 bg-surface/95 dark:bg-inverse-surface/95 backdrop-blur-sm border-b border-surface-container-highest dark:border-outline-variant px-margin md:px-margin-desktop py-space-sm flex items-center justify-between">
+<!-- Brand Anchor -->
+<a class="flex items-center gap-2 group transition-all duration-150 active:scale-95" href="#">
+<div class="w-7 h-7 bg-primary text-white flex items-center justify-center font-bold text-xs tracking-tight rounded-sm shadow-sm">
+        NV
+      </div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface dark:text-inverse-on-surface tracking-tight">nattuvazhi</span>
+<span class="malayalam-script text-xs text-secondary font-medium dark:text-secondary-fixed-dim">നാട്ടുവഴി</span>
+</div>
+</a>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center space-x-6">
+<a class="text-primary dark:text-inverse-primary font-title-md text-title-md border-b-2 border-primary dark:border-inverse-primary pb-1" href="#directory">
+        Directory &amp; Map
+      </a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-body-md text-body-md hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#calendar">
+        Festivals
+      </a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-body-md text-body-md hover:text-on-surface dark:hover:text-inverse-on-surface transition-colors" href="#contribute">
+        Contribute
+      </a>
+</nav>
+<!-- Trailing Actions -->
+<div class="flex items-center gap-3">
+<a class="hidden sm:inline-block font-label-mono text-label-mono text-secondary hover:text-on-surface transition-colors px-2.5 py-1 rounded border border-surface-container-highest" href="#">
+        Curator portal
+      </a>
+<button class="font-label-mono text-label-mono bg-surface-container-low hover:bg-surface-container text-on-surface px-2.5 py-1 border border-surface-container-highest rounded flex items-center gap-1.5 transition-all">
+<span class="material-symbols-outlined text-sm">translate</span>
+<span class="malayalam-script text-xs font-semibold">മലയാളം</span>
+</button>
+</div>
+</header>
+<!-- ================= HERO CARTOGRAPHY SECTION ================= -->
+<section class="relative border-b border-surface-container-highest overflow-hidden">
+<!-- Atmospheric Ambient Gradient (matching palette swatch) -->
+<div class="absolute inset-0 bg-gradient-to-r from-surface via-surface-container-low to-[#faeade]/60 pointer-events-none"></div>
+<div class="absolute top-0 right-0 w-2/5 h-full opacity-40 blur-3xl pointer-events-none bg-gradient-to-b from-[#ffdbd0] via-primary-fixed to-transparent"></div>
+<div class="relative max-w-7xl mx-auto px-margin md:px-margin-desktop py-space-xl lg:py-16">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+<!-- Left Column: Editorial Archive Pitch -->
+<div class="lg:col-span-7 flex flex-col justify-center">
+<div class="inline-flex items-center gap-2 mb-4">
+<span class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"></span>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface-variant uppercase tracking-wider">
+              Kerala Cultural Cartography · Public Open Archive
+            </span>
+</div>
+<h1 class="font-display-hero text-display-hero lg:text-[58px] lg:leading-[64px] text-on-surface mb-6 tracking-tight">
+            Discover the culture that lives around you.
+          </h1>
+<p class="font-body-lg text-body-lg text-secondary mb-8 max-w-2xl leading-relaxed">
+            A community-informed, scholar-verified living map of Kerala’s sacred groves, ritual performing arts, master practitioners, and craft guilds.
+          </p>
+<div class="flex flex-wrap items-center gap-4 mb-8">
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-[#d43f05] text-white font-title-md text-title-md rounded-lg transition-all duration-150 transform hover:-translate-y-0.5 terracotta-glow" href="#directory"><span class="">Explore the directory</span><span class="material-symbols-outlined text-sm">arrow_forward</span></a>
+<a class="inline-flex items-center justify-center gap-2 px-5 py-3 bg-transparent border border-[#303336] text-[#202224] hover:bg-[#202224] hover:text-[#F6F5F3] font-title-md text-title-md rounded-lg transition-all duration-150" href="#contribute"><span class="material-symbols-outlined text-base">add_circle</span><span class="">Submit a discovery</span></a>
+</div>
+<!-- Trust Badge / Custodial Accreditation -->
+<div class="pt-4 border-t border-surface-container-highest flex items-center gap-3">
+<span class="w-5 h-5 rounded-full bg-[#303336] text-[#F6F5F3] flex items-center justify-center text-xs">
+<span class="material-symbols-outlined text-[13px]">verified</span>
+</span>
+<p class="font-label-mono text-label-mono text-secondary">
+              Verified against folklore academy archives and local hereditary custodians
+            </p>
+</div>
+</div>
+<!-- Right Column: Dual-Pane Cartographic Itinerary Survey -->
+<div class="lg:col-span-5 w-full">
+<div class="bg-surface-container-lowest border border-[#D8D6CD] ambient-card-shadow overflow-hidden rounded-lg">
+<!-- Gazetteer Card Header -->
+<div class="bg-[#202224] text-[#F6F5F3] px-5 py-3 flex items-center justify-between border-b border-[#303336]">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary animate-ping"></span>
+<span class="font-label-sm-mono text-label-sm-mono tracking-widest text-[#D8D6CD]">FIELD ITINERARY SURVEY</span>
+</div>
+<span class="font-label-mono text-label-mono bg-[#303336] px-2 py-0.5 rounded text-[#D8D6CD]">
+                № KL-SURVEY-26
+              </span>
+</div>
+<!-- Survey Waypoints List -->
+<div class="divide-y divide-[#D8D6CD]">
+<!-- Item 01 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-3">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-semibold mt-0.5">01</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">
+                        Parassini Muthappan Vellattam
+                      </h4>
+<p class="font-body-sm text-body-sm text-secondary">Valapattanam Riverbank, Kannur</p>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface bg-surface-container px-2 py-1 rounded">
+                    05:45
+                  </span>
+</div>
+</div>
+<!-- Item 02 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-3">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-semibold mt-0.5">02</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">
+                        Kalamandalam Koodiyattam
+                      </h4>
+<p class="font-body-sm text-body-sm text-secondary">Koothambalam, Cheruthuruthy</p>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface bg-surface-container px-2 py-1 rounded">
+                    09:30
+                  </span>
+</div>
+</div>
+<!-- Item 03 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-3">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-semibold mt-0.5">03</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">
+                        Aranmula Metal Mirror Casting
+                      </h4>
+<p class="font-body-sm text-body-sm text-secondary">Vishwakarma Guild, Pathanamthitta</p>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface bg-surface-container px-2 py-1 rounded">
+                    14:15
+                  </span>
+</div>
+</div>
+<!-- Item 04 -->
+<div class="p-4 hover:bg-surface-container-low transition-colors group">
+<div class="flex items-start justify-between">
+<div class="flex items-start gap-3">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-semibold mt-0.5">04</span>
+<div>
+<h4 class="font-title-md text-title-md text-on-surface group-hover:text-primary transition-colors">
+                        Mannarasala Sarpam Thullal
+                      </h4>
+<p class="font-body-sm text-body-sm text-secondary">Sacred Grove, Haripad</p>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface bg-surface-container px-2 py-1 rounded">
+                    18:00
+                  </span>
+</div>
+</div>
+</div>
+<!-- Survey Status Footer -->
+<div class="bg-surface-container-high px-5 py-3 border-t border-[#D8D6CD] flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="font-label-sm-mono text-label-sm-mono text-on-surface font-medium">Field-verified corridor</span>
+</div>
+<span class="font-label-mono text-label-mono text-secondary">Kannur → Alappuzha</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= METHODOLOGY & VERIFICATION SECTION ================= -->
+<section class="py-space-xl border-b border-surface-container-highest bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<div class="max-w-3xl mb-12">
+<span class="font-label-sm-mono text-label-sm-mono text-primary uppercase tracking-widest block mb-2">
+          METHODOLOGY &amp; VERIFICATION
+        </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-3">
+          A calm, human-checked workflow for living heritage.
+        </h2>
+<p class="font-body-md text-body-md text-secondary">
+          Documenting oral traditions, temple rites, and hereditary crafts with geographic precision and communal consent.
+        </p>
+</div>
+<!-- 4 Archival Protocol Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- 01 Discover -->
+<div class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded flex flex-col justify-between hover:border-primary transition-colors">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-bold text-base">01</span>
+<span class="material-symbols-outlined text-secondary text-lg">explore</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Discover</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+              Locate sacred groves, ritual performances, craft guilds, and living masters on an interactive cultural map.
+            </p>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest flex items-center justify-between text-secondary">
+<span class="font-label-sm-mono text-label-sm-mono">GIS SURVEY</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</div>
+</div>
+<!-- 02 Learn -->
+<div class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded flex flex-col justify-between hover:border-primary transition-colors">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-bold text-base">02</span>
+<span class="material-symbols-outlined text-secondary text-lg">menu_book</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Learn</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+              Read authentic oral folklore, ritual significance, origins, and respectful visitor guidelines.
+            </p>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest flex items-center justify-between text-secondary">
+<span class="font-label-sm-mono text-label-sm-mono">ORAL HISTORIES</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</div>
+</div>
+<!-- 03 Verify -->
+<div class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded flex flex-col justify-between hover:border-primary transition-colors">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-bold text-base">03</span>
+<span class="material-symbols-outlined text-secondary text-lg">verified_user</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Verify</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+              Every entry is reviewed by cultural researchers, local elders, and archives before public listing.
+            </p>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest flex items-center justify-between text-secondary">
+<span class="font-label-sm-mono text-label-sm-mono">PEER-CHECKED</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</div>
+</div>
+<!-- 04 Contribute -->
+<div class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded flex flex-col justify-between hover:border-primary transition-colors">
+<div>
+<div class="flex items-center justify-between mb-4">
+<span class="font-label-sm-mono text-label-sm-mono text-primary font-bold text-base">04</span>
+<span class="material-symbols-outlined text-secondary text-lg">add_circle</span>
+</div>
+<h3 class="font-title-lg text-title-lg text-on-surface mb-2">Contribute</h3>
+<p class="font-body-sm text-body-sm text-secondary">
+              Submit undocumented heritage traditions, upcoming village festivals, or propose factual corrections.
+            </p>
+</div>
+<div class="mt-6 pt-3 border-t border-surface-container-highest flex items-center justify-between text-secondary">
+<span class="font-label-sm-mono text-label-sm-mono">COMMUNITY OPEN</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= CURATED CULTURAL HERITAGE / FEATURED LIVING TRADITIONS ================= -->
+<section class="py-space-xl border-b border-surface-container-highest" id="directory">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<!-- Section Header with Archive Link -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<span class="font-label-sm-mono text-label-sm-mono text-primary uppercase tracking-widest block mb-2">
+            CURATED CULTURAL HERITAGE
+          </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+            Featured Living Traditions
+          </h2>
+</div>
+<a class="inline-flex items-center gap-1.5 font-title-md text-title-md text-primary hover:text-[#d43f05] transition-colors" href="#directory">
+<span class="">View complete directory</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- Category Filter Tabs -->
+<div class="flex flex-wrap items-center gap-2 mb-10 pb-4 border-b border-surface-container-highest">
+<button class="px-4 py-1.5 bg-on-surface text-surface font-label-mono text-label-mono rounded flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="">All</span>
+</button>
+<button class="px-4 py-1.5 bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface border border-[#D8D6CD] font-label-mono text-label-mono rounded transition-colors">
+          Ritual Art
+        </button>
+<button class="px-4 py-1.5 bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface border border-[#D8D6CD] font-label-mono text-label-mono rounded transition-colors">
+          Sacred Space
+        </button>
+<button class="px-4 py-1.5 bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface border border-[#D8D6CD] font-label-mono text-label-mono rounded transition-colors">
+          Traditional Craft
+        </button>
+<button class="px-4 py-1.5 bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface border border-[#D8D6CD] font-label-mono text-label-mono rounded transition-colors">
+          Cultural Institution
+        </button>
+<button class="px-4 py-1.5 bg-surface-container-low hover:bg-surface-container text-secondary hover:text-on-surface border border-[#D8D6CD] font-label-mono text-label-mono rounded transition-colors">
+          Martial Tradition
+        </button>
+</div>
+<!-- 6 Curated Cultural Cards in 3-Column Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Card 1: Parassini Madappura Muthappan Sthanam -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="A striking documentary photograph of a Theyyam ritual artist in fiery vermilion makeup and towering coconut-frond headgear at dusk. Soft torchlight illuminates the laterite stone temple sanctuary in North Kerala. The atmosphere is solemn and culturally authentic with deep charcoal shadows and burnt orange embers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBf_-cEOJ5VbeWetcUsRQI6LVBbMDUpUyxfF5gqQezoMPPNbTF60mguU1Zdl93jKX2BITihpOmuNeOdKvAC5MlvV6xg5itJs1fKr0oyOe8qDNDYmLKMmWfYS8RrM3sBrahxkUP0S7wSNRzjCFmaRT9JQCm3dZB9yimEky4GvEXpZ8XpZtbdvphO27wH6d9qkJHqnR5-zLYd4J8qm-GRmgSkLdBS6IioZfIT_dDUvt_Z"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Ritual Art
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              Parassinikadavu, Kannur
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-primary">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Verified</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                Parassini Madappura Muthappan Sthanam
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                പറശ്ശിനിക്കടവ് മുത്തപ്പൻ മടപ്പുര
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                One of the living ritual sanctums where Muthappan Vellattam and Thiruvappana are performed daily as a living spiritual communion.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-KAN-01
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 2: Kerala Kalamandalam Deemed University -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Scholarly architectural view of the traditional Koothambalam dance pavilion at Kerala Kalamandalam with polished teakwood columns and terracotta tiled roof. Students practice classical Kathakali postures in soft golden morning sunlight filtered through wooden lattices." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAS9_j-te-HyDk8i_iDIgyiCHcI_nfl9qNVggGvp3fa2LY5EwdedDOV5bTPJ2H78dJ6u9gUjSQAPSMJJOz_hspNgFcgHN10TJlXfpeB1Z13SYt-bGVgyFPdCNP7CH3dyp-VqkJNEfs78MJJ9nVlENs2QeFZuaiV9wYZV-hJmkTiymskH0NOB0YuWIBP7FG1RsdtEfi1miPQNhYOEn_-2V42qwuXvthUyKP3P40w7GSu"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Cultural Institution
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              Cheruthuruthy, Thrissur
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-primary">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Verified</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                Kerala Kalamandalam Deemed University
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                കേരള കലാമണ്ഡലം, ചെറുതുരുത്തി
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The premier national cradle of classical Indian performing arts, preserving the ancient Gurukula system along the Bharathapuzha.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-THR-02
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 3: Aranmula Kannadi Artisan Guild -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Intimate artisan workshop in Aranmula showcasing an elderly metallurgist polishing an ornate front-surface metal mirror made of copper and tin alloy. Warm earthen kiln glow accents the brass handle and workbench in an archival documentary aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuASX_iDgGxGBf__Liw54yqVaonFavToVHlivW6jL86ZCzadd3_yneG2yMprnf3FdQwAXGififMukUHIRM8hahogSyY5MpeGa1RivGY5TloS2o7GPFz-Ew3065zg0Gvd7-n5XBuwipDkyardMHUecwtjmbd21pLi3m93TOj94bbWEBtP6uLDHHURm5AjCslV1nQXj9Kvl2U4gs9wi43gcdETlWHiLy3XaNq9f9t0lsqk"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Traditional Craft
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              Aranmula, Pathanamthitta
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-primary">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Verified</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                Aranmula Kannadi Artisan Guild
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                ആറന്മുള കണ്ണാടി പാരമ്പര്യ പണിശാല
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The secretive copper-tin alloy metallurgical wonder, producing front-surface reflection mirrors recognized with GI tag status.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-PAT-03
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 4: CVN Kalari Sangham -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Sunken earthen floor of a traditional Kalaripayattu pit arena in Calicut with red laterite soil and oil lamps. Two agile martial practitioners in traditional white loincloths practice sword combat under sacred stone deities in soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBLGZVSZv5YPPyUpwAeuKQNep-BzwgbttSDmSdQvt_7QcTsVCR4m6ax0vqmztTsnolmRps6NNioCSJkitx7mZPaw44YDg6RXVefTxlQ_9o6rkKDYTwsqFbWh0t7nuDUXXmwg5_iC6WYZ1Ix3uV60X7SquzRfdvOr-3SJnvRxj2q_FS1z6MuePz2xwrid_6fFlrvzjpEelyvoyml4KfWOh7tDR8rvM1XNSWmkCYgx3Jn"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Martial Tradition
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              East Hill, Kozhikode
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-secondary">
+<span class="material-symbols-outlined text-xs">school</span>
+<span class="">Scholar Reviewed</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                CVN Kalari Sangham
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                സി.വി.എൻ കളരി സംഘം, കോഴിക്കോട്
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The historic subterranean gymnasium preserving Vadakkan (Northern) Kalaripayattu, weaponry, and traditional bone-setting marma healing.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-KOZ-04
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 5: Gothuruth Chavittu Nadakam Kala Samithi -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Theatrical stage in Gothuruth showing costumed Chavittu Nadakam actors dressed as medieval Iberian royalty with velvet cloaks and crowns, stamping rhythmically onto resonant wooden floorboards under warm vintage stage spotlights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCPA1z6fAxXJnQg7R7XVfxptNQjnFyy029vvMauQZz8-gjhz1Dn3_AZiTa-SipUY6e_G4zJ1O2JKZWjk8za0APmmBZJ1Iz9hAk6DZniULgEDrI6oARpCb_d4KxGfgLRg7dEegzpYMw_yl4XQYcBVz1tchSEh4SIcqxLhv4rRpdK3u9WlL6AUfPi_6CfamNFw3eUEi8eIGimxhqy9Ui0R3zKDFdLplaTjgCblwnYmuS"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Ritual Art
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              Gothuruth Island, Ernakulam
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-primary">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Verified</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                Gothuruth Chavittu Nadakam Kala Samithi
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                ഗോതുരുത്ത് ചവിട്ടുനാടക കളരി
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The 500-year-old high-energy stomping musical drama born from Portuguese-Latin maritime contact and local theatrical mastery.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-ERN-05
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+<!-- Card 6: Kavalappara Tholpavakoothu Sangham -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] rounded overflow-hidden flex flex-col group hover:border-[#202224] transition-all ambient-card-shadow">
+<div class="relative h-48 bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" data-alt="Mystical nighttime scene of Tholpavakoothu shadow puppetry in Palakkad. Handcrafted deer-skin puppets of mythological warriors cast crisp silhouettes across an illuminated forty-foot white fabric screen lit by coconut half-shell oil lamps." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAd5mamKDj5aMrCDpxkYSoR7xoUeeZEpQxM0DU1claGGR_-l8Wiy7eY8co8Spew38NyR1qGBSxfXvvymp8C2rNNcwEcMdOBsT1MypOJGbshUTrNzhyGdS5yigbbqSHlm5qx_wpkRQifOO-VqCXchvWG9gZqyGCxmMKnMU0X19PiV7ttyk5d6bW6kJ5MKbQSWDmFOM1TezPXonQumCyJsk7qRGfeu1yznaJ6HZ3QTHql"/>
+<div class="absolute top-3 left-3 bg-[#202224]/85 text-[#F6F5F3] px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono">
+              Master Practitioner
+            </div>
+<div class="absolute bottom-3 left-3 bg-surface/90 backdrop-blur-xs px-2 py-0.5 rounded font-label-sm-mono text-label-sm-mono text-on-surface">
+              Koonathara, Palakkad
+            </div>
+<div class="absolute top-3 right-3 bg-white/90 px-2 py-0.5 rounded-full flex items-center gap-1 font-label-sm-mono text-label-sm-mono text-primary">
+<span class="material-symbols-outlined text-xs">verified</span>
+<span class="">Verified</span>
+</div>
+</div>
+<div class="p-5 flex-1 flex flex-col justify-between">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 group-hover:text-primary transition-colors">
+                Kavalappara Tholpavakoothu Sangham
+              </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+                കൂനത്തറ തോൽപ്പാവക്കൂത്ത് സംഘം, പാലക്കാട്
+              </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+                The nocturnal temple shadow puppet tradition performed behind a 42-foot white screen illuminated by 21 coconut half-shell lamps.
+              </p>
+</div>
+<div class="mt-6 pt-4 border-t border-[#D8D6CD] flex items-center justify-between">
+<span class="font-label-mono text-label-mono bg-[#303336] text-[#F6F5F3] px-2 py-0.5 rounded">
+                № KL-PAL-06
+              </span>
+<a class="font-label-mono text-label-mono text-primary group-hover:text-[#d43f05] flex items-center gap-1 font-semibold" href="#">
+<span class="">Read story</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- ================= CULTURAL CALENDAR / UPCOMING FESTIVALS ================= -->
+<section class="py-space-xl border-b border-surface-container-highest bg-surface-container-low" id="calendar">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<!-- Section Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<span class="font-label-sm-mono text-label-sm-mono text-primary uppercase tracking-widest block mb-2">
+            CULTURAL CALENDAR
+          </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">
+            Upcoming Festivals &amp; Ritual Ceremonies
+          </h2>
+</div>
+<a class="inline-flex items-center gap-1.5 font-title-md text-title-md text-primary hover:text-[#d43f05] transition-colors" href="#calendar">
+<span class="">View complete festival calendar</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+<!-- 4 Event Cards (2x2 Grid) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Event 1: Thrissur Pooram -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded hover:border-[#202224] transition-all flex flex-col justify-between ambient-card-shadow">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="bg-[#202224] text-[#F6F5F3] px-3 py-2 rounded text-center min-w-[58px]">
+<span class="font-label-sm-mono text-[10px] tracking-wider block text-primary-fixed uppercase">APR</span>
+<span class="font-headline-sm text-headline-sm font-bold block leading-none">28</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">April 28, 2026</span>
+<span class="font-label-mono text-label-mono text-secondary">06:00 AM – Next Dawn</span>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono bg-[#E8F5E9] text-[#2E7D32] px-2 py-0.5 rounded border border-[#C8E6C9] font-semibold">
+                CONFIRMED
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">
+              Thrissur Pooram: Ilanjithara Melam &amp; Kudamattam
+            </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+              തൃശ്ശൂർ പൂരം: ഇലഞ്ഞിത്തറ മേളവും കുടമാറ്റവും
+            </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed mb-4">
+              The mother of all poorams, featuring the world-renowned Ilanjithara Melam led by 250 master percussionists and the dazzling rainbow parasol exchange (Kudamattam).
+            </p>
+</div>
+<div class="pt-4 border-t border-[#D8D6CD] flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 text-secondary font-label-mono text-label-mono">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Vadakkumnathan Temple Thekkinkadu Maidan, Thrissur</span>
+</div>
+<a class="font-label-mono text-label-mono text-primary hover:underline flex items-center gap-1 font-semibold" href="#">
+<span class="">View ritual schedule</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Event 2: Muthappan Thiruvappana -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded hover:border-[#202224] transition-all flex flex-col justify-between ambient-card-shadow">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="bg-[#202224] text-[#F6F5F3] px-3 py-2 rounded text-center min-w-[58px]">
+<span class="font-label-sm-mono text-[10px] tracking-wider block text-primary-fixed uppercase">MAR</span>
+<span class="font-headline-sm text-headline-sm font-bold block leading-none">12</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">March 12, 2026</span>
+<span class="font-label-mono text-label-mono text-secondary">05:00 PM – 04:00 AM</span>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono bg-[#E8F5E9] text-[#2E7D32] px-2 py-0.5 rounded border border-[#C8E6C9] font-semibold">
+                CONFIRMED
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">
+              Muthappan Thiruvappana &amp; Midnight Vellattam
+            </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+              പറശ്ശിനിക്കടവ് തിരുവപ്പന മഹോത്സവം
+            </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed mb-4">
+              The grand annual nocturnal manifestation of Muthappan, featuring non-stop drum ensembles, torchlight invocations, and individual blessings for devotees.
+            </p>
+</div>
+<div class="pt-4 border-t border-[#D8D6CD] flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 text-secondary font-label-mono text-label-mono">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Parassini Madappura Sacred Courtyard, Kannur</span>
+</div>
+<a class="font-label-mono text-label-mono text-primary hover:underline flex items-center gap-1 font-semibold" href="#">
+<span class="">View ritual schedule</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Event 3: Nishagandhi Classical Dance & Music Evenings -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded hover:border-[#202224] transition-all flex flex-col justify-between ambient-card-shadow">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="bg-[#202224] text-[#F6F5F3] px-3 py-2 rounded text-center min-w-[58px]">
+<span class="font-label-sm-mono text-[10px] tracking-wider block text-primary-fixed uppercase">FEB</span>
+<span class="font-headline-sm text-headline-sm font-bold block leading-none">20</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">February 20–26, 2026</span>
+<span class="font-label-mono text-label-mono text-secondary">06:00 PM – 09:30 PM</span>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono bg-[#E8F5E9] text-[#2E7D32] px-2 py-0.5 rounded border border-[#C8E6C9] font-semibold">
+                CONFIRMED
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">
+              Nishagandhi Classical Dance &amp; Music Evenings
+            </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+              നിശാഗന്ധി നൃത്തോത്സവം, തിരുവനന്തപുരം
+            </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed mb-4">
+              A 7-evening celebration under the open skies of the royal Kanakakkunnu Palace, presenting India’s finest maestros in Mohiniyattam, Kathakali, and classical percussion.
+            </p>
+</div>
+<div class="pt-4 border-t border-[#D8D6CD] flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 text-secondary font-label-mono text-label-mono">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Nishagandhi Open Air Auditorium, Kanakakkunnu Palace, TVM</span>
+</div>
+<a class="font-label-mono text-label-mono text-primary hover:underline flex items-center gap-1 font-semibold" href="#">
+<span class="">View ritual schedule</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</article>
+<!-- Event 4: Aranmula Uthrattathi Vallamkali & Valla Sadya -->
+<article class="bg-surface-container-lowest border border-[#D8D6CD] p-6 rounded hover:border-[#202224] transition-all flex flex-col justify-between ambient-card-shadow">
+<div>
+<div class="flex items-start justify-between mb-4">
+<div class="flex items-center gap-4">
+<div class="bg-[#202224] text-[#F6F5F3] px-3 py-2 rounded text-center min-w-[58px]">
+<span class="font-label-sm-mono text-[10px] tracking-wider block text-primary-fixed uppercase">AUG</span>
+<span class="font-headline-sm text-headline-sm font-bold block leading-none">30</span>
+</div>
+<div>
+<span class="font-title-md text-title-md text-on-surface block">August 30, 2026</span>
+<span class="font-label-mono text-label-mono text-secondary">10:00 AM – 04:30 PM</span>
+</div>
+</div>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container text-on-surface px-2 py-0.5 rounded border border-[#D8D6CD] font-semibold">
+                ANNUAL SEASON
+              </span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">
+              Aranmula Uthrattathi Vallamkali &amp; Valla Sadya
+            </h3>
+<p class="malayalam-script text-xs text-secondary mb-3">
+              ആറന്മുള ഉത്തൃട്ടാതി വള്ളംകളിയും വള്ളസദ്യയും
+            </p>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed mb-4">
+              Over 50 majestic Palliyodams (sacred royal snake boats) glide rhythmically down the sacred Pamba river, singing ancient boat verses in devotion.
+            </p>
+</div>
+<div class="pt-4 border-t border-[#D8D6CD] flex flex-wrap items-center justify-between gap-2">
+<div class="flex items-center gap-1.5 text-secondary font-label-mono text-label-mono">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<span class="">Pamba Riverfront, Parthasarathy Temple Ghats, Pathanamthitta</span>
+</div>
+<a class="font-label-mono text-label-mono text-primary hover:underline flex items-center gap-1 font-semibold" href="#">
+<span class="">View ritual schedule</span>
+<span class="material-symbols-outlined text-xs">arrow_forward</span>
+</a>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- ================= GEOGRAPHIC REGISTRY (14 KERALA DISTRICTS) ================= -->
+<section class="py-space-xl border-b border-surface-container-highest">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<div class="max-w-3xl mb-10">
+<span class="font-label-sm-mono text-label-sm-mono text-primary uppercase tracking-widest block mb-2">
+          GEOGRAPHIC REGISTRY
+        </span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-3">
+          Explore Kerala by District
+        </h2>
+<p class="font-body-md text-body-md text-secondary">
+          Select any of Kerala’s 14 districts to filter sacred sites, regional dialects, and living art forms.
+        </p>
+</div>
+<!-- District Grid -->
+<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3">
+<!-- KSD -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">KSD</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">14</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Kasaragod</h4>
+<span class="malayalam-script text-[11px] text-secondary block">കാസർഗോഡ്</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Yakshagana</span>
+</div>
+</a>
+<!-- KNR -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">KNR</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">38</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Kannur</h4>
+<span class="malayalam-script text-[11px] text-secondary block">കണ്ണൂർ</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Theyyam</span>
+</div>
+</a>
+<!-- WYD -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">WYD</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">19</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Wayanad</h4>
+<span class="malayalam-script text-[11px] text-secondary block">വയനാട്</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Paniya Tribal Dance</span>
+</div>
+</a>
+<!-- KKD -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">KKD</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">27</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Kozhikode</h4>
+<span class="malayalam-script text-[11px] text-secondary block">കോഴിക്കോട്</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Vadakkan Kalari</span>
+</div>
+</a>
+<!-- MLP -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">MLP</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">22</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Malappuram</h4>
+<span class="malayalam-script text-[11px] text-secondary block">മലപ്പുറം</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Mappila Songs</span>
+</div>
+</a>
+<!-- PKD -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">PKD</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">26</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Palakkad</h4>
+<span class="malayalam-script text-[11px] text-secondary block">പാലക്കാട്</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Tholpavakoothu</span>
+</div>
+</a>
+<!-- TSR -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">TSR</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">45</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Thrissur</h4>
+<span class="malayalam-script text-[11px] text-secondary block">തൃശ്ശൂർ</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Kathakali</span>
+</div>
+</a>
+<!-- EKM -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">EKM</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">34</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Ernakulam</h4>
+<span class="malayalam-script text-[11px] text-secondary block">എറണാകുളം</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Chavittu Nadakam</span>
+</div>
+</a>
+<!-- IDK -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">IDK</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">12</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Idukki</h4>
+<span class="malayalam-script text-[11px] text-secondary block">ഇടുക്കി</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Muthuvan Koothu</span>
+</div>
+</a>
+<!-- KTM -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">KTM</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">21</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Kottayam</h4>
+<span class="malayalam-script text-[11px] text-secondary block">കോട്ടയം</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Margamkali</span>
+</div>
+</a>
+<!-- ALP -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">ALP</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">29</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Alappuzha</h4>
+<span class="malayalam-script text-[11px] text-secondary block">ആലപ്പുഴ</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Vanchipattu</span>
+</div>
+</a>
+<!-- PTA -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">PTA</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">24</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Pathanamthitta</h4>
+<span class="malayalam-script text-[11px] text-secondary block">പത്തനംതിട്ട</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Patayani</span>
+</div>
+</a>
+<!-- KLM -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">KLM</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">18</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Kollam</h4>
+<span class="malayalam-script text-[11px] text-secondary block">കൊല്ലം</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Kollam Pooram</span>
+</div>
+</a>
+<!-- TVM -->
+<a class="bg-surface-container-lowest border border-[#D8D6CD] p-3 rounded hover:border-primary hover:shadow-sm transition-all group flex flex-col justify-between h-28" href="#directory">
+<div class="flex items-start justify-between">
+<span class="font-label-sm-mono text-label-sm-mono font-bold text-on-surface">TVM</span>
+<span class="font-label-sm-mono text-label-sm-mono bg-surface-container px-1.5 py-0.5 rounded text-secondary font-bold">39</span>
+</div>
+<div>
+<h4 class="font-title-md text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Thiruvananthapuram</h4>
+<span class="malayalam-script text-[11px] text-secondary block">തിരുവനന്തപുരം</span>
+<span class="font-label-sm-mono text-[10px] text-primary truncate block mt-0.5">Kathakali</span>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- ================= COMMUNITY VERIFICATION CHARTER (Deep Charcoal Banner) ================= -->
+<section class="py-space-xl px-margin md:px-margin-desktop">
+<div class="max-w-7xl mx-auto">
+<div class="bg-[#202224] text-[#F6F5F3] p-8 md:p-12 border border-[#303336] shadow-xl rounded-lg">
+<div class="max-w-3xl mb-8">
+<div class="inline-flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-primary text-base">verified</span>
+<span class="font-label-sm-mono text-label-sm-mono tracking-widest text-[#D8D6CD] uppercase">COMMUNITY VERIFICATION CHARTER</span>
+</div>
+<h2 class="font-headline-lg text-headline-lg text-[#F6F5F3] mb-4">
+            Non-commercial, public-interest cultural documentation.
+          </h2>
+<p class="font-body-md text-body-md text-[#D8D6CD] leading-relaxed">
+            Unlike commercial travel blogs or tourism aggregators, Nattuvazhi listings adhere to a 4-point verification protocol: geographical precision, hereditary practitioner consent, folklore archive cross-referencing, and cultural visitor etiquette.
+          </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6 border-t border-[#303336]">
+<!-- Pillar 1 -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-lg">auto_stories</span>
+<h4 class="font-title-md text-title-md text-[#F6F5F3]">Archival sources</h4>
+</div>
+<p class="font-body-sm text-body-sm text-[#D8D6CD]">
+              Cross-referenced with folklore academy monographs and gazetteers.
+            </p>
+</div>
+<!-- Pillar 2 -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-lg">nature_people</span>
+<h4 class="font-title-md text-title-md text-[#F6F5F3]">Custodial consent</h4>
+</div>
+<p class="font-body-sm text-body-sm text-[#D8D6CD]">
+              Documented with deep respect for hereditary traditions and temple guidelines.
+            </p>
+</div>
+<!-- Pillar 3 -->
+<div>
+<div class="flex items-center gap-2 mb-2">
+<span class="material-symbols-outlined text-primary text-lg">public</span>
+<h4 class="font-title-md text-title-md text-[#F6F5F3]">Open public GIS</h4>
+</div>
+<p class="font-body-sm text-body-sm text-[#D8D6CD]">
+              Free from commercial advertising or paid positioning.
+            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ================= COMMUNITY ARCHIVES CALLOUT ================= -->
+<section class="py-space-xl border-t border-b border-surface-container-highest bg-surface-container-low" id="contribute">
+<div class="max-w-7xl mx-auto px-margin md:px-margin-desktop">
+<div class="bg-surface-container-lowest border border-[#D8D6CD] p-8 md:p-10 flex flex-col md:flex-row md:items-center justify-between gap-6 ambient-card-shadow rounded-lg">
+<div class="max-w-2xl">
+<span class="font-label-sm-mono text-label-sm-mono text-primary uppercase tracking-widest block mb-1">
+            COMMUNITY ARCHIVES
+          </span>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">
+            Know an unmapped sacred grove, traditional craftsman, or oral art form?
+          </h3>
+<p class="font-body-md text-body-md text-secondary">
+            Help build the open cultural map of Kerala. Submit your discovery with citations and photographs for our curatorial circle to review.
+          </p>
+</div>
+<a class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-[#d43f05] text-white font-title-md text-title-md rounded-lg transition-all duration-150 transform hover:-translate-y-0.5 terracotta-glow whitespace-nowrap" href="#"><span class="material-symbols-outlined text-base">drive_file_rename_outline</span><span class="">Contribute a discovery</span></a>
+</div>
+</div>
+</section>
+<!-- ================= SCHOLARLY FOOTER (From Shared Components JSON) ================= -->
+<footer class="w-full border-t border-surface-container-highest dark:border-outline-variant px-margin md:px-margin-desktop py-space-xl bg-surface-container-low dark:bg-inverse-surface">
+<div class="max-w-7xl mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
+<!-- Brand column -->
+<div class="md:col-span-4">
+<div class="flex items-center gap-2 mb-3">
+<div class="w-6 h-6 bg-primary text-white flex items-center justify-center font-bold text-xs rounded-sm">
+              NV
+            </div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline-sm text-headline-sm font-semibold text-on-surface dark:text-inverse-on-surface">nattuvazhi</span>
+<span class="malayalam-script text-xs text-secondary font-medium">നാട്ടുവഴി</span>
+</div>
+</div>
+<p class="font-body-sm text-body-sm text-secondary dark:text-secondary-fixed-dim leading-relaxed mb-4 max-w-sm">
+            The Living Culture Map of Kerala. A community-informed cultural discovery platform for sacred groves, ritual performing arts, master practitioners, and living heritage.
+          </p>
+<div class="inline-flex items-center gap-2 font-label-sm-mono text-label-sm-mono text-secondary">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+<span class="">All records peer-verified before public discovery</span>
+</div>
+</div>
+<!-- Explore links -->
+<div class="md:col-span-3">
+<h4 class="font-title-md text-title-md text-on-surface dark:text-inverse-on-surface mb-3">Explore</h4>
+<ul class="space-y-2">
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Ritual arts &amp; Theyyam</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Sacred groves (Kavu)</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Craft guilds &amp; metallurgy</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Kalaripayattu lineages</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Festival calendar</a></li>
+</ul>
+</div>
+<!-- Community links -->
+<div class="md:col-span-2">
+<h4 class="font-title-md text-title-md text-on-surface dark:text-inverse-on-surface mb-3">Community</h4>
+<ul class="space-y-2">
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Submit a discovery</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Suggest correction</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Verification protocol</a></li>
+<li class=""><a class="text-secondary dark:text-secondary-fixed-dim font-body-sm text-body-sm hover:text-primary dark:hover:text-inverse-primary transition-colors duration-150" href="#">Curator portal</a></li>
+</ul>
+</div>
+<!-- Heritage Note -->
+<div class="md:col-span-3">
+<div class="bg-surface-container p-4 rounded border border-surface-container-highest">
+<h4 class="font-label-mono text-label-mono text-on-surface font-semibold mb-1 uppercase tracking-wide">Heritage Note</h4>
+<p class="font-body-sm text-body-sm text-secondary leading-relaxed">
+              Nattuvazhi is a non-commercial, public-interest cultural documentation initiative. Traditional rituals are documented with deep respect to community sanctities and temple guidelines.
+            </p>
+</div>
+</div>
+</div>
+<!-- Footer Bottom Bar -->
+<div class="pt-6 border-t border-surface-container-highest dark:border-outline-variant flex flex-col sm:flex-row items-center justify-between gap-4">
+<p class="font-label-sm-mono text-label-sm-mono text-secondary dark:text-secondary-fixed-dim">
+          © 2026 Nattuvazhi. Built with care for Kerala's Living Heritage.
+        </p>
+<div class="flex items-center gap-3 font-label-sm-mono text-label-sm-mono text-secondary">
+<span class="">Kasaragod to Thiruvananthapuram</span>
+<span class="">·</span>
+<a class="hover:text-primary transition-colors" href="#">Curator login</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

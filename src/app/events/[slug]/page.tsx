@@ -6,11 +6,8 @@ import {
   Calendar,
   Clock,
   MapPin,
-  ShieldCheck,
-  CheckCircle2,
   ExternalLink,
   Users,
-  Compass,
   ArrowLeft,
   Info
 } from 'lucide-react';
@@ -33,108 +30,104 @@ export default async function EventDetailPage({ params }: Props) {
     notFound();
   }
 
-  const relatedEvents = MOCK_EVENTS.filter((e) => e.id !== event.id).slice(0, 2);
-
   return (
-    <main className="flex-1 max-w-5xl w-full mx-auto px-4 md:px-6 py-8">
+    <main className="flex-1 max-w-5xl w-full mx-auto px-4 md:px-8 py-8">
       {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-2 text-xs text-stone-500 mb-6 flex-wrap">
-        <Link href="/" className="hover:text-black transition-colors">
+      <nav className="flex items-center gap-2 text-xs text-[#8C8273] mb-6 flex-wrap">
+        <Link href="/" className="hover:text-[#181512] transition-colors">
           Home
         </Link>
         <span>/</span>
-        <Link href="/events" className="hover:text-black transition-colors">
+        <Link href="/events" className="hover:text-[#181512] transition-colors">
           Events & Festivals
         </Link>
         <span>/</span>
-        <span className="text-stone-900 font-semibold truncate max-w-xs">{event.title}</span>
+        <span className="text-[#181512] font-medium truncate max-w-xs">{event.title}</span>
       </nav>
 
       {/* Header Block */}
-      <div className="flex flex-col gap-3 mb-8">
-        <div className="flex flex-wrap items-center gap-2.5">
-          <span className="px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-orange-100 text-[#FF5931] border border-orange-200">
+      <div className="flex flex-col gap-2 mb-8">
+        <div className="flex items-center gap-3 text-xs">
+          <span className="px-2 py-0.5 rounded-sm bg-[#F3EFE8] text-[#181512] font-mono text-[11px] border border-[#E8E2D6]">
             {event.category}
           </span>
-          <span className="px-3.5 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-            <span>{event.status}</span>
+          <span className="text-[#2D6A4F] font-medium">
+            {event.status}
           </span>
-          <span className="text-xs text-stone-500 ml-auto hidden sm:inline">
+          <span className="text-[#8C8273] ml-auto hidden sm:inline text-[11px]">
             {event.lastConfirmedDate}
           </span>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-950 tracking-tight leading-tight">
+        <h1 className="text-3xl sm:text-4xl font-semibold text-[#181512] tracking-tight leading-tight mt-1">
           {event.title}
         </h1>
 
         <div className="flex items-center gap-3">
-          <h2 className="text-xl sm:text-2xl text-stone-600 font-medium font-serif">
+          <h2 className="text-xl text-[#5C554B] font-serif">
             {event.titleMalayalam}
           </h2>
-          <span className="text-stone-400">·</span>
-          <div className="flex items-center gap-1.5 text-xs text-stone-600 font-medium">
-            <MapPin className="w-3.5 h-3.5 text-[#FF9041]" />
+          <span className="text-[#8C8273]">·</span>
+          <div className="flex items-center gap-1 text-xs text-[#5C554B]">
+            <MapPin className="w-3.5 h-3.5 text-[#8C8273]" />
             <span>{event.venue}, {event.district}</span>
           </div>
         </div>
       </div>
 
       {/* Hero Event Banner */}
-      <div className="relative rounded-3xl overflow-hidden border border-stone-200/90 shadow-md mb-10 bg-stone-900">
-        <div className="aspect-[16/9] w-full max-h-[480px] overflow-hidden">
+      <div className="relative rounded-xl overflow-hidden border border-[#E8E2D6] shadow-xs mb-8 bg-[#181512]">
+        <div className="aspect-[16/9] w-full max-h-[440px] overflow-hidden">
           <img
             src={event.imageUrl}
             alt={event.title}
             className="w-full h-full object-cover"
           />
         </div>
-        <div className="p-4 bg-stone-950/90 text-stone-300 text-xs flex flex-wrap items-center justify-between gap-4 border-t border-stone-800">
-          <div className="flex items-center gap-3">
-            <Calendar className="w-4 h-4 text-[#FF9041]" />
-            <span className="font-semibold text-white">{event.formattedDate} ({event.time})</span>
+        <div className="p-3 bg-[#181512] text-[#A8A29E] text-xs flex flex-wrap items-center justify-between gap-4 border-t border-[#2D2A26]">
+          <div className="flex items-center gap-2">
+            <Calendar className="w-3.5 h-3.5 text-[#E8E2D6]" />
+            <span className="text-white font-medium">{event.formattedDate} ({event.time})</span>
           </div>
-          <span className="text-stone-400 font-mono text-[11px]">{event.entryType}</span>
+          <span className="text-[#8C8273] font-mono text-[10px]">{event.entryType}</span>
         </div>
       </div>
 
       {/* Main Content Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* Left Column: Context, Schedule */}
-        <div className="lg:col-span-8 flex flex-col gap-8">
-          {/* Overview */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs">
-            <h3 className="text-lg font-bold text-stone-950 mb-3 pb-2 border-b border-stone-100">
-              About the Festival / Event
+        <div className="lg:col-span-8 flex flex-col gap-6">
+          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
+            <h3 className="text-sm font-semibold text-[#181512] mb-2 pb-2 border-b border-[#EDE7DC]">
+              About the festival
             </h3>
-            <p className="text-stone-700 leading-relaxed text-sm sm:text-base mb-6">
+            <p className="text-[#5C554B] leading-relaxed text-xs sm:text-sm mb-4">
               {event.description}
             </p>
 
-            <h4 className="text-sm font-bold uppercase tracking-wider text-[#FF9041] mb-2 font-mono">
-              Cultural & Historical Context
+            <h4 className="text-xs font-mono text-[#8C8273] mb-1.5">
+              CULTURAL & HISTORICAL CONTEXT
             </h4>
-            <p className="text-stone-600 text-sm leading-relaxed">
+            <p className="text-xs text-[#5C554B] leading-relaxed">
               {event.culturalContext}
             </p>
           </div>
 
           {/* Schedule Highlights Sequence */}
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-stone-200/90 shadow-xs">
-            <h3 className="text-lg font-bold text-stone-950 mb-4 pb-2 border-b border-stone-100 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-[#FF9041]" />
+          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
+            <h3 className="text-sm font-semibold text-[#181512] mb-4 pb-2 border-b border-[#EDE7DC] flex items-center gap-2">
+              <Clock className="w-4 h-4 text-[#8C8273]" />
               <span>Ritual & Performance Schedule</span>
             </h3>
 
-            <div className="relative border-l-2 border-orange-200 ml-3 space-y-6 pl-6 py-2">
+            <div className="border-l border-[#E8E2D6] ml-2 space-y-4 pl-4 py-1">
               {event.scheduleHighlights.map((highlight, index) => (
-                <div key={index} className="relative group">
-                  <div className="absolute -left-[31px] top-1 w-3.5 h-3.5 rounded-full bg-[#FF9041] border-2 border-white shadow-xs"></div>
-                  <div className="text-xs font-mono font-bold text-[#FF9041]">
+                <div key={index} className="relative">
+                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#B21C01] border-2 border-white"></div>
+                  <div className="text-xs font-mono text-[#8C8273] tabular-nums">
                     {highlight.time}
                   </div>
-                  <div className="text-sm font-semibold text-stone-900 mt-0.5">
+                  <div className="text-xs font-semibold text-[#181512] mt-0.5">
                     {highlight.item}
                   </div>
                 </div>
@@ -143,33 +136,30 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {/* Right Sidebar: Organizer, Venue, Source */}
-        <div className="lg:col-span-4 flex flex-col gap-6">
-          <div className="bg-white rounded-3xl p-6 border border-stone-200/90 shadow-xs flex flex-col gap-4">
-            <h3 className="text-sm font-bold text-stone-900 uppercase tracking-wider">
-              Organizer & Verification
+        {/* Right Sidebar */}
+        <div className="lg:col-span-4 flex flex-col gap-4">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
+            <h3 className="text-xs font-mono text-[#8C8273]">
+              ORGANIZER & NOTICE
             </h3>
 
-            <div className="flex items-start gap-3">
-              <div className="w-8 h-8 rounded-full bg-orange-50 flex items-center justify-center text-[#FF9041]">
-                <Users className="w-4 h-4" />
+            <div className="flex items-start gap-2.5">
+              <div className="w-7 h-7 rounded-md bg-[#F3EFE8] flex items-center justify-center text-[#8C8273]">
+                <Users className="w-3.5 h-3.5" />
               </div>
               <div className="text-xs">
-                <span className="text-[10px] font-mono uppercase text-stone-400 block">
-                  ORGANIZING BODY
-                </span>
-                <span className="font-bold text-stone-900">{event.organizer}</span>
-                <p className="text-stone-500 mt-0.5">{event.locality}, {event.district}</p>
+                <span className="font-semibold text-[#181512] block">{event.organizer}</span>
+                <p className="text-[#8C8273] text-[11px] mt-0.5">{event.locality}, {event.district}</p>
               </div>
             </div>
 
-            <div className="p-3.5 rounded-2xl bg-stone-50 border border-stone-200/80 text-xs text-stone-600">
-              <div className="flex items-center gap-1.5 font-semibold text-stone-900 mb-1">
-                <Info className="w-4 h-4 text-[#FF9041]" />
-                <span>Visitor Protocol</span>
+            <div className="p-3 rounded-md bg-[#F8F5EE] border border-[#E8E2D6] text-xs text-[#5C554B]">
+              <div className="flex items-center gap-1.5 font-medium text-[#181512] mb-1">
+                <Info className="w-3.5 h-3.5 text-[#8C8273]" />
+                <span>Visitor notice</span>
               </div>
               <p className="text-[11px] leading-relaxed">
-                Crowd controls and traditional dress code may be in effect at sacred venues. Please verify on-ground ritual timings before travel.
+                Crowd regulations and customary attire apply at temple sanctums. Verify local guidelines before attending.
               </p>
             </div>
 
@@ -177,18 +167,18 @@ export default async function EventDetailPage({ params }: Props) {
               href={event.sourceLink}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-full bg-stone-900 hover:bg-stone-800 text-white font-semibold text-xs py-2.5 px-4 text-center transition-colors flex items-center justify-center gap-1.5"
+              className="rounded-md bg-[#181512] hover:bg-[#B21C01] text-white font-medium text-xs py-2 px-3 text-center transition-colors flex items-center justify-center gap-1.5"
             >
-              <span>Official Event Announcement</span>
-              <ExternalLink className="w-3.5 h-3.5" />
+              <span>Official announcement</span>
+              <ExternalLink className="w-3 h-3" />
             </a>
 
             <Link
               href="/events"
-              className="rounded-full border border-stone-300 hover:border-black text-stone-800 font-semibold text-xs py-2 px-4 text-center transition-colors flex items-center justify-center gap-1"
+              className="rounded-md border border-[#E8E2D6] hover:border-[#181512] text-[#5C554B] hover:text-[#181512] font-medium text-xs py-1.5 px-3 text-center transition-colors flex items-center justify-center gap-1"
             >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Back to Calendar</span>
+              <ArrowLeft className="w-3 h-3" />
+              <span>Back to calendar</span>
             </Link>
           </div>
         </div>

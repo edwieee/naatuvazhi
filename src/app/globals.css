@@ -1,58 +1,66 @@
 @import "tailwindcss";
 
 :root {
-  --color-canvas: #F5F5F5;
-  --color-canvas-card: #FFFFFF;
-  --color-gold: #FFB658;
-  --color-warm-orange: #FF9041;
-  --color-coral: #FF5931;
-  --color-deep-red: #B21C01;
-  --color-ink: #000000;
-  --color-ink-muted: #57534E;
-  --color-border-subtle: #E7E5E4;
+  --color-canvas: #FBF9F5;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F3EFE8;
+  --color-surface-elevated: #F8F5EE;
+  --color-border: #E8E2D6;
+  --color-border-subtle: #EDE7DC;
 
-  --background: #F5F5F5;
-  --foreground: #000000;
+  --color-ink-primary: #181512;
+  --color-ink-secondary: #5C554B;
+  --color-ink-muted: #8C8273;
+
+  --color-accent-terracotta: #B21C01;
+  --color-accent-terracotta-hover: #961700;
+  --color-accent-ochre: #D97706;
+  --color-accent-forest: #2D6A4F;
+
+  --background: #FBF9F5;
+  --foreground: #181512;
 }
 
 @theme {
-  --color-offwhite: #F5F5F5;
-  --color-gold: #FFB658;
-  --color-warmorange: #FF9041;
-  --color-coral: #FF5931;
-  --color-deepred: #B21C01;
-  --color-ink: #000000;
-  --color-ink-soft: #1C1917;
-  --color-ink-muted: #57534E;
+  --color-canvas: #FBF9F5;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #F3EFE8;
+  --color-border: #E8E2D6;
+  --color-ink: #181512;
+  --color-ink-secondary: #5C554B;
+  --color-ink-muted: #8C8273;
+  --color-terracotta: #B21C01;
+  --color-terracotta-hover: #961700;
+  --color-ochre: #D97706;
 }
 
 body {
-  background-color: #F5F5F5;
-  color: #000000;
+  background-color: #FBF9F5;
+  color: #181512;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   -webkit-font-smoothing: antialiased;
 }
 
-/* Custom smooth scrollbar for directory panels */
+/* Subtle, calm coordinate grid without glowing orbs */
+.bg-archival-grid {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(24, 21, 18, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(24, 21, 18, 0.035) 1px, transparent 1px);
+}
+
+/* Custom quiet scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #D6D3D1;
-  border-radius: 9999px;
+  background: #D8D1C4;
+  border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8A29E;
-}
-
-/* Subtle grid pattern inspired by eppo varum paper preview */
-.bg-grid-paper {
-  background-size: 24px 24px;
-  background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background: #BFB5A5;
 }

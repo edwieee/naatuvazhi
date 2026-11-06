@@ -3,54 +3,54 @@
 import React from 'react';
 import Link from 'next/link';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
-import { Compass, ArrowRight, MapPin } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function DistrictSelector() {
   const { t } = useLanguage();
 
   return (
-    <section className="py-16 md:py-24">
-      <div className="max-w-6xl mx-auto px-4 md:px-6">
-        <div className="max-w-2xl mb-12">
-          <div className="text-xs font-bold uppercase tracking-widest text-[#FF5931] mb-2 font-mono">
+    <section className="py-16 md:py-24 border-b border-[#E8E2D6]">
+      <div className="max-w-6xl mx-auto px-4 md:px-8">
+        <div className="max-w-2xl mb-8">
+          <div className="text-xs font-mono text-[#8C8273] mb-1">
             {t('GEOGRAPHIC REGISTRY', 'ഭൂമിശാസ്ത്ര വിവരണം')}
           </div>
-          <h2 className="text-3xl font-extrabold text-stone-950 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#181512] tracking-tight">
             {t('Explore Kerala by District', 'ജില്ല തിരിച്ചുള്ള പൈതൃക യാത്ര')}
           </h2>
-          <p className="text-sm text-stone-600 mt-2">
+          <p className="text-xs sm:text-sm text-[#5C554B] mt-1.5 leading-relaxed">
             {t(
-              'Every district holds distinct ritual dialects, craft guilds, and oral histories. Select any district to filter the cultural map.',
+              'Select any of Kerala’s 14 districts to filter sacred sites, regional dialects, and living art forms.',
               'ഓരോ ജില്ലയ്ക്കും സ്വന്തമായ ആചാരഭാഷയും കരകൗശല കൂട്ടായ്മകളുമുണ്ട്. കണ്ടെത്താൻ ജില്ല തിരഞ്ഞെടുക്കൂ.'
             )}
           </p>
         </div>
 
         {/* 14 Districts Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-3 sm:gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7 gap-2.5">
           {KERALA_DISTRICTS.map((dist) => (
             <Link
               key={dist.code}
               href={`/explore?district=${encodeURIComponent(dist.name)}`}
-              className="group bg-white rounded-2xl p-4 border border-stone-200/90 hover:border-[#FF9041] hover:shadow-md transition-all flex flex-col justify-between"
+              className="bg-white rounded-md p-3.5 border border-[#E8E2D6] hover:border-[#181512] transition-colors flex flex-col justify-between"
             >
               <div>
-                <div className="flex items-center justify-between text-[11px] font-mono text-stone-400 group-hover:text-[#FF9041] transition-colors mb-2">
+                <div className="flex items-center justify-between text-[11px] font-mono text-[#8C8273] mb-1.5">
                   <span>{dist.code}</span>
-                  <span className="font-semibold text-stone-600">{dist.listingCount}</span>
+                  <span className="tabular-nums font-medium text-[#181512]">{dist.listingCount}</span>
                 </div>
-                <h4 className="font-bold text-sm text-stone-900 group-hover:text-[#FF5931] transition-colors">
+                <h4 className="font-semibold text-xs text-[#181512] leading-tight">
                   {dist.name}
                 </h4>
-                <div className="text-[11px] text-stone-500 font-medium">
+                <div className="text-[11px] text-[#8C8273] font-serif">
                   {dist.nameMalayalam}
                 </div>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-stone-100 flex items-center justify-between text-[10px] text-stone-400 group-hover:text-stone-700">
+              <div className="mt-3 pt-2 border-t border-[#EDE7DC] flex items-center justify-between text-[10px] text-[#8C8273]">
                 <span className="truncate">{dist.primaryArtForms[0]}</span>
-                <ArrowRight className="w-2.5 h-2.5 group-hover:translate-x-0.5 transition-transform" />
+                <ArrowRight className="w-2.5 h-2.5" />
               </div>
             </Link>
           ))}

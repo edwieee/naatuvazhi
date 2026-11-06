@@ -13,10 +13,11 @@ export default function DistrictSelector() {
     <section className="py-16 md:py-24 border-b border-[#E8E2D6]">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         <div className="max-w-2xl mb-8">
-          <div className="text-xs font-mono text-[#8C8273] mb-1">
-            {t('GEOGRAPHIC REGISTRY', 'ഭൂമിശാസ്ത്ര വിവരണം')}
+          <div className="flex items-center gap-2 text-xs font-mono text-[#5C554B] mb-1">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF9041]"></span>
+            <span>{t('GEOGRAPHIC REGISTRY', 'ഭൂമിശാസ്ത്ര വിവരണം')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#181512] tracking-tight">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#000000] tracking-tight">
             {t('Explore Kerala by District', 'ജില്ല തിരിച്ചുള്ള പൈതൃക യാത്ര')}
           </h2>
           <p className="text-xs sm:text-sm text-[#5C554B] mt-1.5 leading-relaxed">
@@ -33,24 +34,24 @@ export default function DistrictSelector() {
             <Link
               key={dist.code}
               href={`/explore?district=${encodeURIComponent(dist.name)}`}
-              className="bg-white rounded-md p-3.5 border border-[#E8E2D6] hover:border-[#181512] transition-colors flex flex-col justify-between"
+              className="group bg-white rounded-md p-3.5 border border-[#E8E2D6] hover:border-[#FF9041] hover:bg-[#FFFDFB] transition-colors flex flex-col justify-between shadow-2xs"
             >
               <div>
-                <div className="flex items-center justify-between text-[11px] font-mono text-[#8C8273] mb-1.5">
-                  <span>{dist.code}</span>
-                  <span className="tabular-nums font-medium text-[#181512]">{dist.listingCount}</span>
+                <div className="flex items-center justify-between text-[11px] font-mono text-[#5C554B] mb-1.5">
+                  <span className="group-hover:text-[#FF5931] transition-colors">{dist.code}</span>
+                  <span className="tabular-nums font-semibold text-[#FF9041]">{dist.listingCount}</span>
                 </div>
-                <h4 className="font-semibold text-xs text-[#181512] leading-tight">
+                <h4 className="font-semibold text-xs text-[#000000] leading-tight group-hover:text-[#FF5931] transition-colors">
                   {dist.name}
                 </h4>
-                <div className="text-[11px] text-[#8C8273] font-serif">
+                <div className="text-[11px] text-[#5C554B] font-serif">
                   {dist.nameMalayalam}
                 </div>
               </div>
 
-              <div className="mt-3 pt-2 border-t border-[#EDE7DC] flex items-center justify-between text-[10px] text-[#8C8273]">
+              <div className="mt-3 pt-2 border-t border-[#E8E2D6] flex items-center justify-between text-[10px] text-[#5C554B]">
                 <span className="truncate">{dist.primaryArtForms[0]}</span>
-                <ArrowRight className="w-2.5 h-2.5" />
+                <ArrowRight className="w-2.5 h-2.5 text-[#FF9041]" />
               </div>
             </Link>
           ))}

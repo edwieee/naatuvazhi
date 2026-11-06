@@ -47,10 +47,11 @@ export default function HowItWorks() {
       <div className="max-w-6xl mx-auto px-4 md:px-8">
         {/* Section Header */}
         <div className="max-w-2xl mb-12">
-          <div className="text-xs font-mono text-[#8C8273] mb-2">
-            {t('METHODOLOGY & VERIFICATION', 'കൂട്ടായ്മയിലൂടെയുള്ള പൈതൃക സംരക്ഷണം')}
+          <div className="flex items-center gap-2 text-xs font-mono text-[#5C554B] mb-2">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#FF9041]"></span>
+            <span>{t('METHODOLOGY & VERIFICATION', 'കൂട്ടായ്മയിലൂടെയുള്ള പൈതൃക സംരക്ഷണം')}</span>
           </div>
-          <h2 className="text-2xl sm:text-3xl font-semibold text-[#181512] tracking-tight leading-snug">
+          <h2 className="text-2xl sm:text-3xl font-semibold text-[#000000] tracking-tight leading-snug">
             {t(
               'A calm, human-checked workflow for living heritage.',
               'നാട്ടുപൈതൃകത്തിന് കരുതലോടെ ഒരു ഡിജിറ്റൽ ഭൂപടം.'
@@ -71,17 +72,17 @@ export default function HowItWorks() {
             return (
               <div
                 key={step.num}
-                className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col justify-between"
+                className="bg-white rounded-xl p-6 border border-[#E8E2D6] hover:border-[#FF9041] hover:bg-[#FFFDFB] transition-colors shadow-xs flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-5">
-                    <span className="text-xs font-mono font-semibold text-[#B21C01] tabular-nums">
+                    <span className="w-6 h-6 rounded-full bg-[#FFF2E0] border border-[#FFB658]/40 flex items-center justify-center text-xs font-mono font-bold text-[#FF9041] tabular-nums">
                       {step.num}
                     </span>
-                    <Icon className="w-4 h-4 text-[#8C8273]" />
+                    <Icon className="w-4 h-4 text-[#FF5931]" />
                   </div>
 
-                  <h3 className="text-base font-semibold text-[#181512] mb-2">
+                  <h3 className="text-base font-semibold text-[#000000] mb-2">
                     {t(step.titleEn, step.titleMl)}
                   </h3>
 

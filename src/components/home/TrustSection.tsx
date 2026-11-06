@@ -11,11 +11,11 @@ export default function TrustSection() {
   return (
     <section className="py-16 md:py-24">
       <div className="max-w-6xl mx-auto px-4 md:px-8">
-        {/* Verification Standards Block (Grounded, no glowing blobs) */}
+        {/* Verification Standards Block (Grounded Black Container) */}
         <div className="bg-[#181512] text-white rounded-xl p-8 md:p-12 shadow-xs mb-12">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-2 text-xs font-mono text-[#E8E2D6] mb-3">
-              <ShieldCheck className="w-3.5 h-3.5 text-[#B21C01]" />
+            <div className="flex items-center gap-2 text-xs font-mono text-[#FFB658] mb-3">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#FF9041]" />
               <span>COMMUNITY VERIFICATION CHARTER</span>
             </div>
 
@@ -35,7 +35,7 @@ export default function TrustSection() {
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 pt-6 border-t border-[#2D2A26] text-xs">
               <div className="flex items-start gap-2.5">
-                <FileCheck className="w-4 h-4 text-[#D97706] flex-shrink-0 mt-0.5" />
+                <FileCheck className="w-4 h-4 text-[#FFB658] flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-white mb-1">Archival sources</h4>
                   <p className="text-[#A8A29E] leading-relaxed">
@@ -45,7 +45,7 @@ export default function TrustSection() {
               </div>
 
               <div className="flex items-start gap-2.5">
-                <Users className="w-4 h-4 text-[#D97706] flex-shrink-0 mt-0.5" />
+                <Users className="w-4 h-4 text-[#FF9041] flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="font-semibold text-white mb-1">Custodial consent</h4>
                   <p className="text-[#A8A29E] leading-relaxed">
@@ -67,13 +67,14 @@ export default function TrustSection() {
           </div>
         </div>
 
-        {/* Community Contribution Box (Quiet surface with 1px border, no gradient wash) */}
-        <div className="rounded-xl bg-[#F8F5EE] border border-[#E8E2D6] p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        {/* Community Contribution Box with Subtle Golden-Orange Treatment */}
+        <div className="rounded-xl bg-[#FFF9F0] border border-[#FFB658]/35 p-8 md:p-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 shadow-2xs">
           <div className="max-w-xl">
-            <div className="text-xs font-mono text-[#8C8273] mb-1">
-              {t('COMMUNITY ARCHIVES', 'സമൂഹ പൈതൃക ശേഖരം')}
+            <div className="flex items-center gap-2 text-xs font-mono text-[#5C554B] mb-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#FF9041]"></span>
+              <span>{t('COMMUNITY ARCHIVES', 'സമൂഹ പൈതൃക ശേഖരം')}</span>
             </div>
-            <h3 className="text-xl md:text-2xl font-semibold text-[#181512] tracking-tight">
+            <h3 className="text-xl md:text-2xl font-semibold text-[#000000] tracking-tight">
               {t(
                 'Know an unmapped sacred grove, traditional craftsman, or oral art form?',
                 'നിങ്ങളുടെ നാട്ടിലെ അറിയപ്പെടാത്ത ഒരു കാവോ, കരകൗശല വിദഗ്ദ്ധനെയോ അറിയാമോ?'
@@ -89,9 +90,9 @@ export default function TrustSection() {
 
           <Link
             href="/contribute"
-            className="rounded-md bg-[#B21C01] hover:bg-[#961700] text-white font-medium text-xs sm:text-sm px-6 py-3 transition-colors flex items-center gap-2 flex-shrink-0 shadow-xs"
+            className="rounded-md bg-[#FF9041] hover:bg-[#f2812f] text-[#000000] font-semibold text-xs sm:text-sm px-6 py-3 transition-colors flex items-center gap-2 flex-shrink-0 shadow-xs"
           >
-            <PlusCircle className="w-4 h-4" />
+            <PlusCircle className="w-4 h-4 text-[#000000]" />
             <span>{t('Contribute a discovery', 'പുതിയ വിവരം ചേർക്കൂ')}</span>
           </Link>
         </div>

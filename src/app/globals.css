@@ -1,0 +1,58 @@
+@import "tailwindcss";
+
+:root {
+  --color-canvas: #F5F5F5;
+  --color-canvas-card: #FFFFFF;
+  --color-gold: #FFB658;
+  --color-warm-orange: #FF9041;
+  --color-coral: #FF5931;
+  --color-deep-red: #B21C01;
+  --color-ink: #000000;
+  --color-ink-muted: #57534E;
+  --color-border-subtle: #E7E5E4;
+
+  --background: #F5F5F5;
+  --foreground: #000000;
+}
+
+@theme {
+  --color-offwhite: #F5F5F5;
+  --color-gold: #FFB658;
+  --color-warmorange: #FF9041;
+  --color-coral: #FF5931;
+  --color-deepred: #B21C01;
+  --color-ink: #000000;
+  --color-ink-soft: #1C1917;
+  --color-ink-muted: #57534E;
+}
+
+body {
+  background-color: #F5F5F5;
+  color: #000000;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Custom smooth scrollbar for directory panels */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D6D3D1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #A8A29E;
+}
+
+/* Subtle grid pattern inspired by eppo varum paper preview */
+.bg-grid-paper {
+  background-size: 24px 24px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+}

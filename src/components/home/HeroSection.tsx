@@ -1,12 +1,34 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { PlusCircle, ArrowRight, Check } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function HeroSection() {
   const { t } = useLanguage();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    // Respect user's prefers-reduced-motion OS preference
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    if (mediaQuery.matches && videoRef.current) {
+      videoRef.current.pause();
+    }
+
+    const handleChange = (e: MediaQueryListEvent) => {
+      if (videoRef.current) {
+        if (e.matches) {
+          videoRef.current.pause();
+        } else {
+          videoRef.current.play().catch(() => {});
+        }
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleChange);
+    return () => mediaQuery.removeEventListener('change', handleChange);
+  }, []);
 
   return (
     <section className="relative border-b border-[#e5e0d4] bg-[#fcf9f0] overflow-hidden">
@@ -68,125 +90,30 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: Tactile Field Itinerary Ledger */}
-          <div className="lg:col-span-5 w-full">
-            <div className="bg-white border border-[#ded7c9] ambient-card-shadow overflow-hidden rounded-lg">
-              {/* Card Header */}
-              <div className="bg-[#26221e] text-[#fcf9f0] px-5 py-3.5 flex items-center justify-between border-b border-[#38332c]">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-[#e65c00]"></span>
-                  <span className="font-body text-xs font-semibold text-[#ded8cd] tracking-normal">
-                    Field itinerary survey
-                  </span>
-                </div>
-                <span className="font-mono text-xs text-[#d8d1c2] bg-[#3a342d] px-2 py-0.5 rounded-xs tabular-nums">
-                  № KL-SURVEY-26
-                </span>
-              </div>
-
-              {/* Waypoints List with balanced padding & tabular figures */}
-              <div className="divide-y divide-[#ece6da]">
-                {/* Item 01 */}
-                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
-                        01
-                      </span>
-                      <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
-                          Parassini Muthappan Vellattam
-                        </h4>
-                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
-                          Valapattanam Riverbank, Kannur
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
-                      05:45
-                    </span>
-                  </div>
-                </div>
-
-                {/* Item 02 */}
-                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
-                        02
-                      </span>
-                      <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
-                          Kalamandalam Koodiyattam
-                        </h4>
-                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
-                          Koothambalam, Cheruthuruthy
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
-                      09:30
-                    </span>
-                  </div>
-                </div>
-
-                {/* Item 03 */}
-                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
-                        03
-                      </span>
-                      <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
-                          Aranmula Metal Mirror Casting
-                        </h4>
-                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
-                          Vishwakarma Guild, Pathanamthitta
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
-                      14:15
-                    </span>
-                  </div>
-                </div>
-
-                {/* Item 04 */}
-                <div className="p-4 hover:bg-[#faf7f0] transition-colors group">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start gap-3">
-                      <span className="font-mono text-xs text-[#aa3000] font-semibold mt-0.5 tabular-nums">
-                        04
-                      </span>
-                      <div>
-                        <h4 className="font-body text-sm font-semibold text-[#1c1c16] group-hover:text-[#aa3000] transition-colors leading-snug">
-                          Mannarasala Sarpam Thullal
-                        </h4>
-                        <p className="font-body text-xs text-[#6e675d] mt-0.5">
-                          Sacred Grove, Haripad
-                        </p>
-                      </div>
-                    </div>
-                    <span className="font-mono text-xs text-[#26221e] font-medium bg-[#f3ede1] px-2 py-0.5 rounded-xs tabular-nums border border-[#ded7c9] flex-shrink-0">
-                      18:00
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Card Footer */}
-              <div className="bg-[#f5efe4] px-5 py-3 border-t border-[#ded7c9] flex items-center justify-between text-xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
-                  <span className="font-body text-xs font-medium text-[#26221e]">
-                    Field-verified corridor
-                  </span>
-                </div>
-                <span className="font-body text-xs text-[#6e675d]">
-                  Kannur → Alappuzha
-                </span>
-              </div>
+          {/* Right Column: Living Cultural Artwork (Google Flow Theyyam Animation) */}
+          <div className="lg:col-span-5 w-full flex items-center justify-center">
+            <div className="relative w-full aspect-video bg-[#fcf9f0] flex items-center justify-center overflow-hidden">
+              {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
+              <video
+                ref={videoRef}
+                src="/videos/theyyam-hero.mp4"
+                poster="/videos/theyyam-hero-poster.jpg"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="auto"
+                className="w-full h-full object-contain bg-[#fcf9f0] motion-reduce:hidden"
+                aria-label="Theyyam cultural ritual living animation"
+              />
+              {/* Static poster fallback when prefers-reduced-motion is active */}
+              <img
+                src="/videos/theyyam-hero-poster.jpg"
+                alt="Theyyam cultural ritual artwork"
+                width={1920}
+                height={1080}
+                className="hidden motion-reduce:block w-full h-full object-contain bg-[#fcf9f0]"
+              />
             </div>
           </div>
         </div>

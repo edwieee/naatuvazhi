@@ -107,7 +107,7 @@ export default function TrustSection() {
       </section>
 
       {/* 8. Final Contribution CTA */}
-      <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#f6f3eb]" id="contribute">
+      <section className="py-14 md:py-20 bg-[#f6f3eb]" id="contribute">
         <div className="max-w-7xl mx-auto px-4 md:px-12">
           <div className="bg-white border border-[#ded7c9] p-8 md:p-12 flex flex-col md:flex-row md:items-center justify-between gap-6 ambient-card-shadow rounded-lg">
             <div className="max-w-2xl">

@@ -31,11 +31,12 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative border-b border-[#e5e0d4] bg-[#fcf9f0] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-14 lg:py-20">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+    <section className="relative border-b border-[#e5e0d4] bg-[#fcfcec] overflow-hidden">
+      {/* Editorial Content Container */}
+      <div className="max-w-7xl mx-auto px-4 md:px-12 py-10 lg:py-0">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center lg:min-h-[580px] xl:min-h-[640px]">
           {/* Left Column: Editorial Archive Pitch */}
-          <div className="lg:col-span-7 flex flex-col justify-center">
+          <div className="lg:col-span-7 flex flex-col justify-center py-4 lg:py-16 relative z-10">
             {/* Subtle Eyebrow Label */}
             <div className="inline-flex items-center gap-2 mb-4">
               <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
@@ -71,7 +72,7 @@ export default function HeroSection() {
               </Link>
               <Link
                 href="/contribute"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#f6f3eb] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm rounded-md transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#f6f4ea] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm rounded-md transition-colors"
               >
                 <PlusCircle className="w-4 h-4 text-[#aa3000]" />
                 <span>{t('Submit a discovery', 'പുതിയ കേന്ദ്രം സമർപ്പിക്കൂ')}</span>
@@ -90,9 +91,11 @@ export default function HeroSection() {
             </div>
           </div>
 
-          {/* Right Column: Living Cultural Artwork (Google Flow Theyyam Animation) */}
-          <div className="lg:col-span-5 w-full flex items-center justify-center">
-            <div className="relative w-full aspect-video bg-[#fcf9f0] flex items-center justify-center overflow-hidden">
+          {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
+          {/* On Desktop: Expands to full hero height from immediately below header down to bottom border, aligned right */}
+          {/* On Mobile/Tablet: Responsive full-width below the text */}
+          <div className="lg:col-span-5 w-full lg:h-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[54vw] lg:max-w-[1150px] flex items-center lg:items-start justify-center lg:justify-end pointer-events-none select-none overflow-hidden pb-6 lg:pb-0 lg:[mask-image:linear-gradient(to_right,transparent_0%,black_15%)]">
+            <div className="relative w-full aspect-video lg:aspect-auto lg:h-full flex items-center lg:items-start justify-center lg:justify-end bg-[#fcfcec] lg:-mr-8 xl:-mr-14">
               {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
               <video
                 ref={videoRef}
@@ -103,16 +106,16 @@ export default function HeroSection() {
                 loop
                 playsInline
                 preload="auto"
-                className="w-full h-full object-contain bg-[#fcf9f0] motion-reduce:hidden"
+                className="w-full h-full lg:w-auto lg:h-full object-contain lg:object-right lg:object-top [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
                 aria-label="Theyyam cultural ritual living animation"
               />
-              {/* Static poster fallback when prefers-reduced-motion is active */}
+              {/* Fallback static poster for prefers-reduced-motion */}
               <img
                 src="/videos/theyyam-hero-poster.jpg"
                 alt="Theyyam cultural ritual artwork"
                 width={1920}
                 height={1080}
-                className="hidden motion-reduce:block w-full h-full object-contain bg-[#fcf9f0]"
+                className="hidden motion-reduce:block w-full h-full lg:w-auto lg:h-full object-contain lg:object-right lg:object-top [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
               />
             </div>
           </div>

@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 @theme {
-  --color-surface: #fcf9f0;
+  --color-surface: #fcfcec;
   --color-surface-container-low: #f6f4ea;
   --color-surface-container: #f0eee5;
   --color-surface-container-high: #eae8df;
@@ -25,12 +25,12 @@
 }
 
 :root {
-  --background: #fcf9f0;
+  --background: #fcfcec;
   --foreground: #1c1c16;
 }
 
 body {
-  background-color: #fcf9f0;
+  background-color: #fcfcec;
   color: #1c1c16;
   font-family: var(--font-plus-jakarta-sans), var(--font-noto-malayalam), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";

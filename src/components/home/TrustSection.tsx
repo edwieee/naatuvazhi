@@ -11,7 +11,7 @@ export default function TrustSection() {
   return (
     <>
       {/* Community Verification Charter */}
-      <section className="py-14 md:py-20 px-4 md:px-12 bg-[#fcf9f0]">
+      <section className="py-14 md:py-20 px-4 md:px-12 bg-[#fcfcec]">
         <div className="max-w-7xl mx-auto">
           <div className="bg-[#26221e] text-[#fcf9f0] p-8 md:p-12 border border-[#38332c] shadow-lg rounded-lg">
             <div className="max-w-3xl mb-8">

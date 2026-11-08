@@ -47,7 +47,7 @@ export default function RootLayout({
       lang="en"
       className={`${lora.variable} ${plusJakartaSans.variable} ${jetbrainsMono.variable} ${notoSansMalayalam.variable} h-full antialiased scroll-smooth`}
     >
-      <body className="min-h-full flex flex-col bg-[#fcf9f0] text-[#1c1c16] font-body selection:bg-[#aa3000] selection:text-white">
+      <body className="min-h-full flex flex-col bg-[#fcfcec] text-[#1c1c16] font-body selection:bg-[#aa3000] selection:text-white">
         <LanguageProvider>
           <Navbar />
           <div className="flex-1 flex flex-col">{children}</div>

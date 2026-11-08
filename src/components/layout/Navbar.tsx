@@ -23,7 +23,7 @@ export default function Navbar() {
   };
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-[#fcf9f0]/95 backdrop-blur-sm border-b border-[#e5e0d4]">
+    <header className="w-full sticky top-0 z-50 bg-[#fcfcec]/95 backdrop-blur-sm border-b border-[#e5e0d4]">
       <div className="max-w-7xl mx-auto w-full px-4 md:px-12 h-16 flex items-center justify-between">
         {/* Brand Anchor */}
         <Link 
@@ -96,7 +96,7 @@ export default function Navbar() {
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="border-t border-[#e5e0d4] py-4 px-6 flex flex-col gap-3 bg-[#fcf9f0] shadow-md md:hidden">
+        <div className="border-t border-[#e5e0d4] py-4 px-6 flex flex-col gap-3 bg-[#fcfcec] shadow-md md:hidden">
           {navLinks.map((link) => {
             const active = isActive(link.href);
             return (

@@ -76,7 +76,7 @@ export default function FeaturedListings() {
                 <div className="absolute top-3 left-3 bg-[#26221e]/90 text-[#fcf9f0] px-2.5 py-0.5 rounded-sm font-body text-[11px] font-medium">
                   {listing.category}
                 </div>
-                <div className="absolute bottom-3 left-3 bg-[#fcf9f0]/95 backdrop-blur-xs px-2.5 py-0.5 rounded-sm font-body text-[11px] text-[#1c1c16] border border-[#ded7c9]">
+                <div className="absolute bottom-3 left-3 bg-[#fcfcec]/95 backdrop-blur-xs px-2.5 py-0.5 rounded-sm font-body text-[11px] text-[#1c1c16] border border-[#ded7c9]">
                   {listing.locality}, {listing.district}
                 </div>
                 <div className="absolute top-3 right-3 bg-white/95 px-2.5 py-0.5 rounded-full flex items-center gap-1 font-body text-[11px] font-medium text-[#aa3000] shadow-xs">

@@ -1,3 +1,4 @@
+import React, { Suspense } from 'react';
 import type { Metadata } from 'next';
 import { Lora, Plus_Jakarta_Sans, JetBrains_Mono, Noto_Sans_Malayalam } from 'next/font/google';
 import './globals.css';
@@ -49,7 +50,9 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col bg-[#fcfcec] text-[#1c1c16] font-body selection:bg-[#aa3000] selection:text-white">
         <LanguageProvider>
-          <Navbar />
+          <Suspense fallback={<header className="h-16 border-b border-[#ece8df]" />}>
+            <Navbar />
+          </Suspense>
           <div className="flex-1 flex flex-col">{children}</div>
           <Footer />
         </LanguageProvider>

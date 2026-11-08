@@ -337,7 +337,7 @@ export async function getListings(filters?: ListingFilters, customSb?: any): Pro
 
       const { data, error } = await query;
       if (!error && data && data.length > 0) {
-        let results = data.map(mapDbListing);
+        let results: CulturalListing[] = data.map(mapDbListing);
 
         if (filters?.district && filters.district !== 'All') {
           results = results.filter((i) => i.district.toLowerCase() === filters.district!.toLowerCase());
@@ -620,7 +620,7 @@ export async function getEvents(filters?: EventFilters, customSb?: any): Promise
 
       const { data, error } = await query;
       if (!error && data && data.length > 0) {
-        let results = data.map(mapDbEvent);
+        let results: EventListing[] = data.map(mapDbEvent);
 
         if (filters?.upcomingOnly) {
           const today = new Date().toISOString().split('T')[0];
@@ -866,7 +866,7 @@ export async function getSubmissions(
 
       const { data, error } = await query;
       if (!error && data) {
-        let results = data.map(mapDbSubmission);
+        let results: SubmissionReviewItem[] = data.map(mapDbSubmission);
 
         if (filters?.search && filters.search.trim()) {
           const q = filters.search.toLowerCase().trim();
@@ -972,18 +972,17 @@ export async function createSubmission(
         },
       };
 
-      const { data: inserted, error } = await sb
-        .from('submissions')
-        .insert(insertPayload)
-        .select('*, districts(name)')
-        .single();
+      const { error } = await sb.from('submissions').insert(insertPayload);
 
       if (error) {
         console.error('Failed to insert submission into Supabase:', error);
         throw error;
       }
 
-      return mapDbSubmission(inserted);
+      return mapDbSubmission({
+        ...insertPayload,
+        districts: { name: data.district || 'Thrissur' },
+      });
     } catch (e) {
       console.error('Error creating submission in Supabase:', e);
       throw e;
@@ -1027,7 +1026,8 @@ export async function updateSubmissionStatus(
   status: 'Pending' | 'Approved' | 'Changes Requested' | 'Rejected',
   reviewerNotes?: string,
   customSb?: any,
-  reviewerInfo?: { name: string; email: string }
+  reviewerInfo?: { name: string; email: string },
+  targetIds?: { listingId?: string; eventId?: string }
 ): Promise<SubmissionReviewItem | null> {
   const sb = getSupabase(customSb);
   let updatedRecord: SubmissionReviewItem | null = null;
@@ -1051,6 +1051,8 @@ export async function updateSubmissionStatus(
 
       await sb.from('review_logs').insert({
         submission_id: id,
+        listing_id: targetIds?.listingId || null,
+        event_id: targetIds?.eventId || null,
         reviewer_name: reviewerInfo?.name || 'Curator Staff',
         reviewer_email: reviewerInfo?.email || 'curator.nattuvazhi@gmail.com',
         action: `submission_${status.toLowerCase().replace(/\s+/g, '_')}`,
@@ -1192,7 +1194,8 @@ export async function approveSubmissionAndPublish(
     'Approved',
     reviewerNotes || 'Approved and published to public cultural registry',
     sb,
-    reviewerInfo
+    reviewerInfo,
+    { listingId: createdListing?.id, eventId: createdEvent?.id }
   );
 
   return {

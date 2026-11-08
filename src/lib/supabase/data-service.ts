@@ -11,6 +11,39 @@ import { KERALA_DISTRICTS, DistrictInfo } from '@/data/mock-districts';
 import { MOCK_ADMIN_SUBMISSIONS } from '@/data/mock-admin';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 
+export interface CulturalCategory {
+  id: string;
+  slug: string;
+  name: string;
+  nameMalayalam: string;
+  description: string;
+  iconName?: string;
+  displayOrder: number;
+}
+
+export const HOMEPAGE_CATEGORY_SLUGS = [
+  'ritual-art',
+  'sacred-space',
+  'master-practitioner',
+  'traditional-craft',
+  'cultural-institution',
+  'martial-tradition',
+] as const;
+
+const FALLBACK_CATEGORIES: CulturalCategory[] = [
+  { id: 'fallback-ritual-art', slug: 'ritual-art', name: 'Ritual Art', nameMalayalam: 'അനുഷ്ഠാന കല', description: 'Living ritual performances and sacred arts documented across Kerala.', iconName: 'Sparkles', displayOrder: 1 },
+  { id: 'fallback-sacred-space', slug: 'sacred-space', name: 'Sacred Space', nameMalayalam: 'പുണ്യ സ്ഥാനങ്ങൾ', description: 'Temples, sacred groves and heritage places with living cultural meaning.', iconName: 'Landmark', displayOrder: 2 },
+  { id: 'fallback-master-practitioner', slug: 'master-practitioner', name: 'Master Practitioner', nameMalayalam: 'ഗുരുക്കന്മാർ', description: 'Individual custodians and teachers of Kerala’s cultural traditions.', iconName: 'Award', displayOrder: 3 },
+  { id: 'fallback-traditional-craft', slug: 'traditional-craft', name: 'Traditional Craft', nameMalayalam: 'പരമ്പരാഗത കരകൗശലം', description: 'Traditional materials, techniques and artisan-made cultural objects.', iconName: 'Hammer', displayOrder: 4 },
+  { id: 'fallback-cultural-institution', slug: 'cultural-institution', name: 'Cultural Institution', nameMalayalam: 'സാംസ്കാരിക സ്ഥാപനങ്ങൾ', description: 'Schools, archives and institutions that preserve and teach cultural practice.', iconName: 'Library', displayOrder: 5 },
+  { id: 'fallback-martial-tradition', slug: 'martial-tradition', name: 'Martial Tradition', nameMalayalam: 'യോദ്ധാ പാരമ്പര്യം', description: 'Kerala’s martial lineages, training traditions and related knowledge.', iconName: 'Shield', displayOrder: 6 },
+  { id: 'fallback-oral-heritage', slug: 'oral-heritage', name: 'Oral Heritage', nameMalayalam: 'മൗഖിക പാരമ്പര്യം', description: 'Songs, stories and spoken knowledge carried through generations.', iconName: 'BookOpen', displayOrder: 7 },
+  { id: 'fallback-contemporary-spaces', slug: 'contemporary-spaces', name: 'Contemporary & Folk', nameMalayalam: 'സമകാലിക ഇടങ്ങൾ', description: 'Community-led spaces and living cultural initiatives.', iconName: 'Compass', displayOrder: 8 },
+];
+
+const slugifyCategory = (name: string) =>
+  name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
 // In-memory mutable state for runtime fallback
 let liveListings: CulturalListing[] = [...MOCK_LISTINGS];
 let liveEvents: EventListing[] = [...MOCK_EVENTS];
@@ -95,6 +128,7 @@ function getSupabase() {
 function mapDbListing(row: any): CulturalListing {
   const districtName = row.districts?.name || row.district || 'Kannur';
   const categoryName = row.categories?.name || row.category || 'Ritual Art';
+  const categorySlug = row.categories?.slug || row.category_slug || slugifyCategory(categoryName);
 
   return {
     id: row.id,
@@ -102,6 +136,7 @@ function mapDbListing(row: any): CulturalListing {
     name: row.name,
     nameMalayalam: row.name_malayalam || '',
     category: categoryName as ListingCategory,
+    categorySlug,
     artForm: row.art_form,
     district: districtName as DistrictName,
     locality: row.locality,
@@ -133,6 +168,34 @@ function mapDbListing(row: any): CulturalListing {
     featured: row.featured,
     tags: row.tags || [],
   };
+}
+
+export async function getCategories(): Promise<CulturalCategory[]> {
+  const sb = getSupabase();
+  if (sb) {
+    try {
+      const { data, error } = await sb
+        .from('categories')
+        .select('id, slug, name, name_malayalam, description, icon_name, display_order')
+        .order('display_order');
+
+      if (!error && data && data.length > 0) {
+        return data.map((category: any) => ({
+          id: category.id,
+          slug: category.slug,
+          name: category.name,
+          nameMalayalam: category.name_malayalam,
+          description: category.description || '',
+          iconName: category.icon_name,
+          displayOrder: category.display_order,
+        }));
+      }
+    } catch (e) {
+      console.warn('Fallback to local categories:', e);
+    }
+  }
+
+  return FALLBACK_CATEGORIES;
 }
 
 function mapDbEvent(row: any): EventListing {
@@ -235,7 +298,7 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
     try {
       let query = sb
         .from('listings')
-        .select('*, districts(name), categories(name), media(*), sources(*)')
+        .select('*, districts(name), categories(name, slug), media(*), sources(*)')
         .eq('publication_status', 'published');
 
       if (filters?.featuredOnly) {
@@ -250,7 +313,7 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
           results = results.filter((i) => i.district.toLowerCase() === filters.district!.toLowerCase());
         }
         if (filters?.category && filters.category !== 'All') {
-          results = results.filter((i) => i.category.toLowerCase() === filters.category!.toLowerCase());
+          results = results.filter((i) => i.categorySlug === filters.category || i.category.toLowerCase() === filters.category!.toLowerCase());
         }
         if (filters?.search && filters.search.trim()) {
           const q = filters.search.toLowerCase().trim();
@@ -262,7 +325,10 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
               i.shortDescription.toLowerCase().includes(q)
           );
         }
-        return results;
+        return results.map((item) => ({
+          ...item,
+          categorySlug: item.categorySlug || slugifyCategory(item.category),
+        }));
       }
     } catch (e) {
       console.warn('Fallback to local listings:', e);
@@ -276,7 +342,10 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
     results = results.filter((item) => item.district.toLowerCase() === filters.district!.toLowerCase());
   }
   if (filters?.category && filters.category !== 'All') {
-    results = results.filter((item) => item.category.toLowerCase() === filters.category!.toLowerCase());
+    results = results.filter((item) => {
+      const categorySlug = item.categorySlug || slugifyCategory(item.category);
+      return categorySlug === filters.category || item.category.toLowerCase() === filters.category!.toLowerCase();
+    });
   }
   if (filters?.search && filters.search.trim()) {
     const q = filters.search.toLowerCase().trim();
@@ -289,7 +358,10 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
         item.shortDescription.toLowerCase().includes(q)
     );
   }
-  return results;
+  return results.map((item) => ({
+    ...item,
+    categorySlug: item.categorySlug || slugifyCategory(item.category),
+  }));
 }
 
 export async function getListingBySlug(slug: string): Promise<CulturalListing | null> {
@@ -298,7 +370,7 @@ export async function getListingBySlug(slug: string): Promise<CulturalListing | 
     try {
       const { data, error } = await sb
         .from('listings')
-        .select('*, districts(name), categories(name), media(*), sources(*)')
+        .select('*, districts(name), categories(name, slug), media(*), sources(*)')
         .eq('slug', slug)
         .single();
 

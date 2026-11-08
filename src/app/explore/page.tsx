@@ -1,11 +1,12 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { Suspense, useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { MOCK_LISTINGS } from '@/data/mock-listings';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { CulturalListing } from '@/lib/types';
-import { getListings } from '@/lib/supabase/data-service';
+import { getCategories, getListings, type CulturalCategory } from '@/lib/supabase/data-service';
 import KeralaMap from '@/components/map/KeralaMap';
 import {
   Search,
@@ -20,8 +21,10 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-export default function ExplorePage() {
+function ExplorePageContent() {
   const { t } = useLanguage();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   // Live database listings state (initialized with mock fallback for immediate render)
   const [listings, setListings] = useState<CulturalListing[]>(MOCK_LISTINGS);
@@ -30,7 +33,8 @@ export default function ExplorePage() {
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('All');
-  const [selectedCategory, setSelectedCategory] = useState<string>('All');
+  const [selectedCategory, setSelectedCategory] = useState<string>(() => searchParams.get('category') || 'All');
+  const [categories, setCategories] = useState<CulturalCategory[]>([]);
   const [selectedVerification, setSelectedVerification] = useState<string>('All');
   const [sortBy, setSortBy] = useState<'featured' | 'name' | 'district'>('featured');
   const [showFiltersDrawer, setShowFiltersDrawer] = useState(false);
@@ -52,6 +56,7 @@ export default function ExplorePage() {
         if (isMounted && data && data.length > 0) {
           setListings(data);
         }
+
       })
       .catch((err) => {
         console.warn('Using local listings fallback:', err);
@@ -67,6 +72,12 @@ export default function ExplorePage() {
     };
   }, []);
 
+  useEffect(() => {
+    getCategories()
+      .then(setCategories)
+      .catch((error) => console.warn('Using default category filter state:', error));
+  }, []);
+
   // Bi-directional selection: Scroll selected listing into view in the directory panel
   useEffect(() => {
     if (selectedListing) {
@@ -76,15 +87,6 @@ export default function ExplorePage() {
       }
     }
   }, [selectedListing]);
-
-  const categories = [
-    'All',
-    'Ritual Art',
-    'Sacred Space',
-    'Traditional Craft',
-    'Cultural Institution',
-    'Martial Tradition',
-  ];
 
   const verificationStatuses = ['All', 'Verified', 'Scholar Reviewed'];
 
@@ -104,7 +106,9 @@ export default function ExplorePage() {
         selectedDistrict === 'All' || listing.district === selectedDistrict;
 
       const matchesCategory =
-        selectedCategory === 'All' || listing.category === selectedCategory;
+        selectedCategory === 'All' ||
+        listing.categorySlug === selectedCategory ||
+        listing.category.toLowerCase() === selectedCategory.toLowerCase();
 
       const matchesVerification =
         selectedVerification === 'All' ||
@@ -129,6 +133,12 @@ export default function ExplorePage() {
     setSelectedCategory('All');
     setSelectedVerification('All');
     setSortBy('featured');
+    router.replace('/explore');
+  };
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategory(category);
+    router.replace(category === 'All' ? '/explore' : `/explore?category=${encodeURIComponent(category)}`);
   };
 
   const hasActiveFilters =
@@ -206,17 +216,20 @@ export default function ExplorePage() {
             {/* Category Tags & Filter Trigger */}
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 flex-1">
-                {categories.map((cat) => (
+                {[
+                  { slug: 'All', name: 'All' },
+                  ...categories.map((category) => ({ slug: category.slug, name: category.name })),
+                ].map((cat) => (
                   <button
-                    key={cat}
-                    onClick={() => setSelectedCategory(cat)}
+                    key={cat.slug}
+                    onClick={() => handleCategoryChange(cat.slug)}
                     className={`px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap transition-colors ${
-                      selectedCategory === cat
+                      selectedCategory === cat.slug
                         ? 'bg-[#181512] text-white'
                         : 'bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#5C554B]'
                     }`}
                   >
-                    {cat}
+                    {cat.name}
                   </button>
                 ))}
               </div>
@@ -383,7 +396,7 @@ export default function ExplorePage() {
 
         {/* RIGHT PANEL (55%): Fixed Kerala GIS Map */}
         <div
-          className={`w-full lg:w-[55%] h-full flex flex-col ${
+          className={`w-full lg:w-[55%] h-full flex-1 flex flex-col min-h-[480px] lg:min-h-0 ${
             mobileActiveView === 'list' ? 'hidden lg:flex' : 'flex'
           }`}
         >
@@ -418,5 +431,13 @@ export default function ExplorePage() {
         </button>
       </div>
     </div>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <Suspense fallback={<div className="flex-1 bg-[#FBF9F5]" />}>
+      <ExplorePageContent />
+    </Suspense>
   );
 }

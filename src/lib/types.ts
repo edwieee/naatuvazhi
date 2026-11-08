@@ -38,6 +38,7 @@ export interface CulturalListing {
   name: string;
   nameMalayalam: string;
   category: ListingCategory;
+  categorySlug?: string;
   artForm: string;
   district: DistrictName;
   locality: string;

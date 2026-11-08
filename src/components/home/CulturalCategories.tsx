@@ -1,125 +1,128 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { Sparkles, Landmark, Users, Hammer, Building2, Flame, ArrowRight } from 'lucide-react';
+import {
+  ArrowRight,
+  Award,
+  Hammer,
+  Landmark,
+  Library,
+  Shield,
+  Sparkles,
+} from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import {
+  getCategories,
+  getListings,
+  HOMEPAGE_CATEGORY_SLUGS,
+  type CulturalCategory,
+} from '@/lib/supabase/data-service';
+
+const iconByName = {
+  Sparkles,
+  Landmark,
+  Award,
+  Hammer,
+  Library,
+  Shield,
+};
+
+const fallbackCategories: CulturalCategory[] = [
+  { id: 'fallback-ritual-art', slug: 'ritual-art', name: 'Ritual Art', nameMalayalam: 'അനുഷ്ഠാന കല', description: 'Living ritual performances and sacred arts documented across Kerala.', iconName: 'Sparkles', displayOrder: 1 },
+  { id: 'fallback-sacred-space', slug: 'sacred-space', name: 'Sacred Space', nameMalayalam: 'പുണ്യ സ്ഥാനങ്ങൾ', description: 'Temples, sacred groves and heritage places with living cultural meaning.', iconName: 'Landmark', displayOrder: 2 },
+  { id: 'fallback-master-practitioner', slug: 'master-practitioner', name: 'Master Practitioner', nameMalayalam: 'ഗുരുക്കന്മാർ', description: 'Individual custodians and teachers of Kerala’s cultural traditions.', iconName: 'Award', displayOrder: 3 },
+  { id: 'fallback-traditional-craft', slug: 'traditional-craft', name: 'Traditional Craft', nameMalayalam: 'പരമ്പരാഗത കരകൗശലം', description: 'Traditional materials, techniques and artisan-made cultural objects.', iconName: 'Hammer', displayOrder: 4 },
+  { id: 'fallback-cultural-institution', slug: 'cultural-institution', name: 'Cultural Institution', nameMalayalam: 'സാംസ്കാരിക സ്ഥാപനങ്ങൾ', description: 'Schools, archives and institutions that preserve and teach cultural practice.', iconName: 'Library', displayOrder: 5 },
+  { id: 'fallback-martial-tradition', slug: 'martial-tradition', name: 'Martial Tradition', nameMalayalam: 'യോദ്ധാ പാരമ്പര്യം', description: 'Kerala’s martial lineages, training traditions and related knowledge.', iconName: 'Shield', displayOrder: 6 },
+];
 
 export default function CulturalCategories() {
   const { t } = useLanguage();
+  const [categories, setCategories] = useState<CulturalCategory[]>(fallbackCategories);
+  const [publishedCounts, setPublishedCounts] = useState<Record<string, number>>({});
 
-  const categories = [
-    {
-      id: 'art-forms',
-      titleEn: 'Traditional art forms',
-      titleMl: 'പരമ്പരാഗത കലാരൂപങ്ങൾ',
-      descEn: 'Ritual theatre, classical dance and folk performances like Theyyam, Kathakali, Koodiyattam and Padayani.',
-      descMl: 'തെയ്യം, കഥകളി, കൂടിയാട്ടം, പടയണി തുടങ്ങിയ അനുഷ്ഠാന-നാടോടി കലാരൂപങ്ങൾ.',
-      tag: 'Ritual arts & dance',
-      href: '/explore?category=Ritual+Art',
-      icon: Sparkles,
-    },
-    {
-      id: 'cultural-places',
-      titleEn: 'Cultural places',
-      titleMl: 'പൈതൃക കേന്ദ്രങ്ങൾ',
-      descEn: 'Sacred groves (Kavu), historic temples, ancestral homesteads and heritage sites across Kerala.',
-      descMl: 'കാവുകൾ, പുരാതന ക്ഷേത്രങ്ങൾ, നാലുകെട്ടുകൾ, ചരിത്ര സ്മാരകങ്ങൾ.',
-      tag: 'Sacred & historic sites',
-      href: '/explore?category=Sacred+Space',
-      icon: Landmark,
-    },
-    {
-      id: 'artists',
-      titleEn: 'Artists and practitioners',
-      titleMl: 'കലാകാരന്മാരും ഗുരുക്കന്മാരും',
-      descEn: 'Hereditary performers, ritual dancers, master percussionists and traditional storytellers.',
-      descMl: 'പാരമ്പര്യ കലാകാരന്മാർ, മേള പ്രമാണികൾ, നാട്ടുവിജ്ഞാന വാഹകർ.',
-      tag: 'Living masters',
-      href: '/explore?category=Master+Practitioner',
-      icon: Users,
-    },
-    {
-      id: 'crafts',
-      titleEn: 'Traditional crafts',
-      titleMl: 'പാരമ്പര്യ കരകൗശലങ്ങൾ',
-      descEn: 'Time-honoured crafts including bell-metal casting, Aranmula metal mirrors, handloom weaving and wood carving.',
-      descMl: 'വെങ്കല നിർമ്മാണം, ആറന്മുളക്കണ്ണാടി, കൈത്തറി, ദാരുശില്പം.',
-      tag: 'Crafts & metallurgy',
-      href: '/explore?category=Traditional+Craft',
-      icon: Hammer,
-    },
-    {
-      id: 'institutions',
-      titleEn: 'Cultural groups & institutions',
-      titleMl: 'സാംസ്കാരിക സ്ഥാപനങ്ങൾ',
-      descEn: 'Training institutions, Kalamandalam lineages, community troupes and historic Kalari sanghams.',
-      descMl: 'കലാമണ്ഡലം, കളരി സംഘങ്ങൾ, നാടൻ കലാസമിതികൾ.',
-      tag: 'Institutions & sanghams',
-      href: '/explore?category=Cultural+Institution',
-      icon: Building2,
-    },
-    {
-      id: 'traditions',
-      titleEn: 'Local traditions and performances',
-      titleMl: 'നാട്ടുവിശേഷങ്ങളും അനുഷ്ഠാനങ്ങളും',
-      descEn: 'Seasonal festivals, harvest celebrations, Vallam Kali boat races and regional community gatherings.',
-      descMl: 'ഉത്സവങ്ങൾ, വള്ളംകളി, നാട്ടുവിശേഷങ്ങൾ, ഗ്രാമോത്സവങ്ങൾ.',
-      tag: 'Festivals & gatherings',
-      href: '/events',
-      icon: Flame,
-    },
-  ];
+  useEffect(() => {
+    let isMounted = true;
+
+    Promise.all([getCategories(), getListings()])
+      .then(([loadedCategories, listings]) => {
+        if (!isMounted) return;
+
+        setCategories(loadedCategories);
+        const counts = listings.reduce<Record<string, number>>((result, listing) => {
+          if (listing.categorySlug) {
+            result[listing.categorySlug] = (result[listing.categorySlug] || 0) + 1;
+          }
+          return result;
+        }, {});
+        setPublishedCounts(counts);
+      })
+      .catch((error) => {
+        console.warn('Using fallback homepage categories:', error);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const homepageCategories = useMemo(() => {
+    const categoriesBySlug = new Map(categories.map((category) => [category.slug, category]));
+    return HOMEPAGE_CATEGORY_SLUGS.map((slug) => categoriesBySlug.get(slug)).filter(
+      (category): category is CulturalCategory => Boolean(category),
+    );
+  }, [categories]);
 
   return (
-    <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#fcfcec]">
-      <div className="max-w-7xl mx-auto px-4 md:px-12">
-        {/* Section Header */}
-        <div className="max-w-2xl mb-10">
-          <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
+    <section className="border-b border-[#e5e0d4] bg-[#fcfcec] py-14 md:py-20">
+      <div className="mx-auto max-w-7xl px-4 md:px-12">
+        <div className="mb-10 max-w-2xl">
+          <span className="font-body mb-2 block text-xs font-semibold text-[#aa3000]">
             {t('Cultural heritage', 'സാംസ്കാരിക പൈതൃകം')}
           </span>
-          <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] mb-3 tracking-tight">
+          <h2 className="font-headline mb-3 text-2xl font-semibold tracking-tight text-[#1c1c16] sm:text-3xl lg:text-[34px]">
             {t('What you can discover across Kerala', 'കേരളത്തിന്റെ സാംസ്കാരിക സമ്പത്ത്')}
           </h2>
-          <p className="font-body text-sm sm:text-base text-[#5d5e61] leading-relaxed">
+          <p className="font-body text-sm leading-relaxed text-[#5d5e61] sm:text-base">
             {t(
-              'Explore six distinct dimensions of Kerala’s living culture, documented with background stories, verified locations and original sources.',
-              'ക്ഷേത്രകലകളും കാവുകളും മുതൽ പരമ്പരാഗത കരകൗശലങ്ങൾ വരെ — കേരളത്തിന്റെ സാംസ്കാരിക അടയാളങ്ങളെ അടുത്തറിയാം.'
+              'Explore the cultural categories represented in the Nattuvazhi directory.',
+              'നാട്ടുവഴി ഡയറക്ടറിയിലെ സാംസ്കാരിക വിഭാഗങ്ങൾ കണ്ടെത്താം.',
             )}
           </p>
         </div>
 
-        {/* 6 Category Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {categories.map((cat) => {
-            const Icon = cat.icon;
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {homepageCategories.map((category) => {
+            const Icon = iconByName[category.iconName as keyof typeof iconByName] || Landmark;
+            const count = publishedCounts[category.slug];
+
             return (
               <Link
-                key={cat.id}
-                href={cat.href}
-                className="bg-white border border-[#ded7c9] p-6 rounded-lg flex flex-col justify-between hover:border-[#aa3000] transition-colors ambient-card-shadow group"
+                key={category.id}
+                href={`/explore?category=${encodeURIComponent(category.slug)}`}
+                className="group flex flex-col justify-between rounded-lg border border-[#ded7c9] bg-white p-6 transition-colors hover:border-[#aa3000] ambient-card-shadow"
               >
                 <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="w-10 h-10 rounded-md bg-[#f6f4ea] border border-[#ded7c9] flex items-center justify-center text-[#aa3000] group-hover:bg-[#aa3000] group-hover:text-white transition-colors">
-                      <Icon className="w-5 h-5" />
+                  <div className="mb-4 flex items-center justify-between">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-md border border-[#ded7c9] bg-[#f6f4ea] text-[#aa3000] transition-colors group-hover:bg-[#aa3000] group-hover:text-white">
+                      <Icon className="h-5 w-5" />
                     </div>
-                    <span className="font-body text-[11px] font-medium text-[#6e675d] bg-[#f6f4ea] px-2.5 py-0.5 rounded-full border border-[#ded7c9]">
-                      {cat.tag}
+                    <span className="font-body rounded-full border border-[#ded7c9] bg-[#f6f4ea] px-2.5 py-0.5 text-[11px] font-medium text-[#6e675d]">
+                      {count ? `${count} ${count === 1 ? 'record' : 'records'}` : 'Explore'}
                     </span>
                   </div>
-                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
-                    {t(cat.titleEn, cat.titleMl)}
+                  <h3 className="font-headline mb-1 text-lg font-semibold leading-snug text-[#1c1c16] transition-colors group-hover:text-[#aa3000]">
+                    {t(category.name, category.nameMalayalam)}
                   </h3>
-                  <p className="font-body text-xs sm:text-sm text-[#5d5e61] leading-relaxed mt-2">
-                    {t(cat.descEn, cat.descMl)}
+                  <p className="font-body mt-2 text-xs leading-relaxed text-[#5d5e61] sm:text-sm">
+                    {t(category.description, category.description)}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-3.5 border-t border-[#ece6da] flex items-center justify-between text-[#aa3000] font-body text-xs font-semibold group-hover:text-[#c23700]">
+                <div className="font-body mt-6 flex items-center justify-between border-t border-[#ece6da] pt-3.5 text-xs font-semibold text-[#aa3000] group-hover:text-[#c23700]">
                   <span>{t('Explore category', 'വിഭാഗം കാണുക')}</span>
-                  <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                 </div>
               </Link>
             );

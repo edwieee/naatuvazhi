@@ -3,11 +3,12 @@
 import React, { useEffect, useMemo, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
 import { CulturalListing } from '@/lib/types';
 import Link from 'next/link';
 import { ShieldCheck, MapPin, ExternalLink, RotateCcw, Plus, Minus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
+
+console.log('[OpenStreetMapClient module evaluated]');
 
 interface OpenStreetMapClientProps {
   listings: CulturalListing[];
@@ -43,6 +44,39 @@ function createCustomPin(isSelected: boolean, isHovered: boolean) {
     iconAnchor: [size / 2, size / 2],
     popupAnchor: [0, -size / 2 - 4],
   });
+}
+
+// Auto-invalidate map size when mounted or resized
+function InvalidateSizeController() {
+  const map = useMap();
+
+  useEffect(() => {
+    // Initial size calculation
+    map.invalidateSize();
+
+    // Trigger after a slight delay to ensure flex layout and transitions finish
+    const timer1 = setTimeout(() => {
+      map.invalidateSize();
+    }, 150);
+
+    const timer2 = setTimeout(() => {
+      map.invalidateSize();
+    }, 500);
+
+    const handleResize = () => {
+      map.invalidateSize();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [map]);
+
+  return null;
 }
 
 // Internal Map Controller for programmatic flyTo and view reset
@@ -139,7 +173,7 @@ export default function OpenStreetMapClient({
   }, [selectedListing]);
 
   return (
-    <div className="relative w-full h-full rounded-xl overflow-hidden border border-[#E8E2D6] shadow-xs select-none">
+    <div className="relative w-full h-full flex-1 flex flex-col min-h-[480px] rounded-xl overflow-hidden border border-[#E8E2D6] shadow-xs select-none">
       {/* Map Legend Banner (Top Right) */}
       <div className="absolute top-4 right-4 z-[400] hidden sm:flex items-center gap-2 bg-white/95 backdrop-blur-xs rounded-md px-3 py-1.5 shadow-xs border border-[#E8E2D6] text-xs text-[#5C554B]">
         <span className="w-2.5 h-2.5 rounded-full bg-[#B21C01] border border-white shadow-xs"></span>
@@ -153,9 +187,12 @@ export default function OpenStreetMapClient({
         zoom={KERALA_INITIAL_ZOOM}
         zoomControl={false}
         scrollWheelZoom={true}
-        className="w-full h-full"
-        style={{ width: '100%', height: '100%', backgroundColor: '#F4F2EC' }}
+        className="w-full h-full flex-1"
+        style={{ width: '100%', height: '100%', minHeight: '480px', backgroundColor: '#F4F2EC' }}
       >
+        {/* Dynamic Size & Resizing Controller */}
+        <InvalidateSizeController />
+
         {/* OpenStreetMap Standard Tiles */}
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'

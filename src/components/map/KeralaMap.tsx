@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
-import dynamic from 'next/dynamic';
+import React, { useState, useEffect } from 'react';
 import { CulturalListing } from '@/lib/types';
-import { Compass, Loader2 } from 'lucide-react';
+import { Compass } from 'lucide-react';
 
 interface KeralaMapProps {
   listings: CulturalListing[];
@@ -12,12 +11,45 @@ interface KeralaMapProps {
   hoveredListingId?: string | null;
 }
 
-// Dynamically import OpenStreetMapClient with SSR disabled to prevent Leaflet window errors
-const OpenStreetMapClient = dynamic(
-  () => import('@/components/map/OpenStreetMapClient'),
-  {
-    ssr: false,
-    loading: () => (
+export default function KeralaMap(props: KeralaMapProps) {
+  const [ClientMap, setClientMap] = useState<React.ComponentType<KeralaMapProps> | null>(null);
+  const [loadError, setLoadError] = useState<string | null>(null);
+
+  console.log('[KeralaMap component render] ClientMap is:', !!ClientMap);
+
+  useEffect(() => {
+    console.log('[KeralaMap useEffect triggered]');
+    let isMounted = true;
+    import('@/components/map/OpenStreetMapClient')
+      .then((mod) => {
+        if (isMounted) {
+          console.log('[KeralaMap] OpenStreetMapClient loaded successfully');
+          setClientMap(() => mod.default);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          console.error('[KeralaMap] Error importing OpenStreetMapClient:', err);
+          setLoadError(err?.message || String(err));
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  if (loadError) {
+    return (
+      <div className="relative w-full h-full min-h-[480px] bg-red-50/50 rounded-xl overflow-hidden border border-red-200 shadow-xs flex flex-col items-center justify-center text-center p-6 text-red-800">
+        <p className="font-semibold text-sm mb-1">Failed to initialize map engine</p>
+        <p className="text-xs font-mono text-red-600 max-w-md">{loadError}</p>
+      </div>
+    );
+  }
+
+  if (!ClientMap) {
+    return (
       <div className="relative w-full h-full min-h-[480px] bg-[#EDE7DC]/30 rounded-xl overflow-hidden border border-[#E8E2D6] shadow-xs flex flex-col items-center justify-center text-center p-6">
         <div className="w-12 h-12 rounded-full bg-white border border-[#E8E2D6] flex items-center justify-center text-[#B21C01] shadow-xs mb-3 animate-pulse">
           <Compass className="w-6 h-6 animate-spin" style={{ animationDuration: '3s' }} />
@@ -29,10 +61,12 @@ const OpenStreetMapClient = dynamic(
           Connecting coordinates across Kerala cultural cartography
         </span>
       </div>
-    ),
+    );
   }
-);
 
-export default function KeralaMap(props: KeralaMapProps) {
-  return <OpenStreetMapClient {...props} />;
+  return (
+    <div className="w-full h-full flex-1 flex flex-col min-h-[480px]">
+      <ClientMap {...props} />
+    </div>
+  );
 }

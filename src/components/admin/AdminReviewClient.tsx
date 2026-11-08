@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { SubmissionReviewItem } from '@/lib/types';
+import { actionModerateSubmission } from '@/app/actions/curator-actions';
 import {
   ShieldCheck,
   CheckSquare,
@@ -13,6 +14,7 @@ import {
   CheckCircle2,
   AlertTriangle,
   XCircle,
+  Loader2,
 } from 'lucide-react';
 
 interface Props {
@@ -28,21 +30,62 @@ export default function AdminReviewClient({ submission }: Props) {
   });
 
   const [notes, setNotes] = useState(submission.reviewerNotes || '');
-  const [actionNotice, setActionNotice] = useState<string | null>(null);
+  const [status, setStatus] = useState(submission.status);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [actionNotice, setActionNotice] = useState<{
+    text: string;
+    type: 'success' | 'warning' | 'error';
+    link?: string;
+  } | null>(null);
 
   const toggleCheck = (key: keyof typeof checklist) => {
     setChecklist((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
-  const handleAction = (type: 'approve' | 'request_changes' | 'reject') => {
-    if (type === 'approve') {
-      setActionNotice(
-        `Submission ${submission.id} has been APPROVED and scheduled for live map indexing.`
-      );
-    } else if (type === 'request_changes') {
-      setActionNotice(`Correction notice dispatched to ${submission.contributorEmail}.`);
-    } else {
-      setActionNotice(`Submission ${submission.id} marked as rejected.`);
+  const handleAction = async (type: 'approve' | 'request_changes' | 'reject') => {
+    setIsProcessing(true);
+    try {
+      if (type === 'approve') {
+        const res = await actionModerateSubmission(submission.id, 'Approved', notes);
+        if (res.success) {
+          setStatus('Approved');
+          const createdListing = 'listing' in res ? res.listing : undefined;
+          const slug = createdListing?.slug || submission.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+          setActionNotice({
+            text: `Submission ${submission.id} has been APPROVED and successfully indexed!`,
+            type: 'success',
+            link: `/culture/${slug}`,
+          });
+        } else {
+          setActionNotice({ text: res.error || 'Failed to approve', type: 'error' });
+        }
+      } else if (type === 'request_changes') {
+        const res = await actionModerateSubmission(submission.id, 'Changes Requested', notes);
+        if (res.success) {
+          setStatus('Changes Requested');
+          setActionNotice({
+            text: `Correction notice recorded. Contributor (${submission.contributorEmail}) will be notified.`,
+            type: 'warning',
+          });
+        } else {
+          setActionNotice({ text: res.error || 'Failed to update', type: 'error' });
+        }
+      } else {
+        const res = await actionModerateSubmission(submission.id, 'Rejected', notes);
+        if (res.success) {
+          setStatus('Rejected');
+          setActionNotice({
+            text: `Submission ${submission.id} marked as rejected. Record archived in audit log.`,
+            type: 'error',
+          });
+        } else {
+          setActionNotice({ text: res.error || 'Failed to reject', type: 'error' });
+        }
+      }
+    } catch (err: any) {
+      setActionNotice({ text: err.message || 'Error executing curatorial action', type: 'error' });
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -88,14 +131,37 @@ export default function AdminReviewClient({ submission }: Props) {
 
       {/* Action Notice */}
       {actionNotice && (
-        <div className="mb-6 p-3.5 rounded-md bg-[#F8F5EE] border border-[#E8E2D6] text-[#181512] text-xs flex items-center justify-between">
+        <div
+          className={`mb-6 p-4 rounded-xl border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+            actionNotice.type === 'success'
+              ? 'bg-[#F4F9F5] border-[#B7DFCA] text-[#1B4D36]'
+              : actionNotice.type === 'warning'
+              ? 'bg-[#FFFBEB] border-[#FDE68A] text-[#92400E]'
+              : 'bg-[#FEF2F2] border-[#FECACA] text-[#991B1B]'
+          }`}
+        >
           <div className="flex items-center gap-2">
-            <CheckCircle2 className="w-4 h-4 text-[#2D6A4F]" />
-            <span>{actionNotice}</span>
+            {actionNotice.type === 'success' && <CheckCircle2 className="w-4 h-4 text-[#2D6A4F] flex-shrink-0" />}
+            {actionNotice.type === 'warning' && <AlertTriangle className="w-4 h-4 text-[#D97706] flex-shrink-0" />}
+            {actionNotice.type === 'error' && <XCircle className="w-4 h-4 text-[#B21C01] flex-shrink-0" />}
+            <div>
+              <span className="font-medium">{actionNotice.text}</span>
+              {actionNotice.link && (
+                <div className="mt-1">
+                  <Link
+                    href={actionNotice.link}
+                    className="inline-flex items-center gap-1 font-semibold underline hover:text-[#181512]"
+                  >
+                    <span>View published public listing</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
           <button
             onClick={() => setActionNotice(null)}
-            className="text-[#8C8273] hover:text-[#181512] text-xs underline"
+            className="text-xs opacity-75 hover:opacity-100 underline self-start sm:self-center"
           >
             Dismiss
           </button>
@@ -272,17 +338,23 @@ export default function AdminReviewClient({ submission }: Props) {
             <div className="pt-3 border-t border-[#EDE7DC] flex flex-col gap-2">
               <button
                 type="button"
+                disabled={isProcessing}
                 onClick={() => handleAction('approve')}
-                className="w-full rounded-md bg-[#B21C01] hover:bg-[#961700] text-white font-medium text-xs py-2.5 transition-colors flex items-center justify-center gap-1.5 shadow-xs"
+                className="w-full rounded-md bg-[#B21C01] hover:bg-[#961700] disabled:opacity-50 text-white font-medium text-xs py-2.5 transition-colors flex items-center justify-center gap-1.5 shadow-xs"
               >
-                <CheckCircle2 className="w-3.5 h-3.5" />
+                {isProcessing ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                )}
                 <span>Approve & index on map</span>
               </button>
 
               <button
                 type="button"
+                disabled={isProcessing}
                 onClick={() => handleAction('request_changes')}
-                className="w-full rounded-md bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#181512] border border-[#E8E2D6] font-medium text-xs py-2 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full rounded-md bg-[#F3EFE8] hover:bg-[#EAE4D9] disabled:opacity-50 text-[#181512] border border-[#E8E2D6] font-medium text-xs py-2 transition-colors flex items-center justify-center gap-1.5"
               >
                 <AlertTriangle className="w-3.5 h-3.5 text-[#D97706]" />
                 <span>Request corrections</span>
@@ -290,8 +362,9 @@ export default function AdminReviewClient({ submission }: Props) {
 
               <button
                 type="button"
+                disabled={isProcessing}
                 onClick={() => handleAction('reject')}
-                className="w-full rounded-md border border-[#E8E2D6] hover:border-red-400 hover:text-red-700 text-[#8C8273] font-medium text-xs py-1.5 transition-colors flex items-center justify-center gap-1.5"
+                className="w-full rounded-md border border-[#E8E2D6] hover:border-red-400 hover:text-red-700 disabled:opacity-50 text-[#8C8273] font-medium text-xs py-1.5 transition-colors flex items-center justify-center gap-1.5"
               >
                 <XCircle className="w-3.5 h-3.5" />
                 <span>Reject submission</span>

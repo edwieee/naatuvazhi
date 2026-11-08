@@ -4,7 +4,6 @@ import CulturalCategories from '@/components/home/CulturalCategories';
 import FeaturedListings from '@/components/home/FeaturedListings';
 import UpcomingEventsRow from '@/components/home/UpcomingEventsRow';
 import HowItWorks from '@/components/home/HowItWorks';
-import DistrictSelector from '@/components/home/DistrictSelector';
 import TrustSection from '@/components/home/TrustSection';
 
 export default function HomePage() {
@@ -25,10 +24,7 @@ export default function HomePage() {
       {/* 5. Methodology & Verification: 4-step workflow (Discover, Learn, Verify, Contribute) */}
       <HowItWorks />
 
-      {/* 6. Geographic Registry: Explore Kerala district by district (Moved immediately after Methodology) */}
-      <DistrictSelector />
-
-      {/* 7 & 8. Community Verification Charter (5 standards) & Final Contribution CTA */}
+      {/* 6 & 7. Community Verification Charter (5 standards) & Final Contribution CTA */}
       <TrustSection />
     </main>
   );

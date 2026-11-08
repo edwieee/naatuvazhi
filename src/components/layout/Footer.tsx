@@ -69,13 +69,13 @@ export default function Footer() {
               </div>
               <p className="font-body text-xs sm:text-sm text-[#5d5e61] leading-relaxed mb-4 max-w-sm">
                 {t(
-                  'The Living Culture Map of Kerala. A community-informed cultural discovery platform for sacred groves, ritual performing arts, master practitioners, and living heritage.',
-                  'കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. ക്ഷേത്രകലകൾ, അനുഷ്ഠാന കലാരൂപങ്ങൾ, പാരമ്പര്യ കരകൗശലങ്ങൾ, നാട്ടുവിജ്ഞാനം എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
+                  'The Living Culture Map of Kerala. A public platform to discover cultural places, artists, traditional crafts and festivals across Kerala.',
+                  'കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. പൈതൃക കേന്ദ്രങ്ങൾ, കലാരൂപങ്ങൾ, കരകൗശലങ്ങൾ, ഉത്സവങ്ങൾ എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
                 )}
               </p>
               <div className="inline-flex items-center gap-2 font-body text-xs text-[#6e675d]">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
-                <span>All records peer-verified before public discovery</span>
+                <span>{t('Information checked before publication', 'വിവരങ്ങൾ പരിശോധിച്ച ശേഷം പ്രസിദ്ധീകരിക്കുന്നു')}</span>
               </div>
             </div>
 

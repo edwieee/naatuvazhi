@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { Map, ArrowRight } from 'lucide-react';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -9,21 +10,32 @@ export default function DistrictSelector() {
   const { t } = useLanguage();
 
   return (
-    <section className="py-14 md:py-20 border-b border-[#e5e0d4]">
+    <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#fcfcec]" id="districts">
       <div className="max-w-7xl mx-auto px-4 md:px-12">
-        <div className="max-w-2xl mb-10">
-          <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
-            {t('Geographic registry', 'ഭൂമിശാസ്ത്ര വിവരണം')}
-          </span>
-          <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] mb-3 tracking-tight">
-            {t('Explore Kerala by district', 'ജില്ല തിരിച്ചുള്ള പൈതൃക യാത്ര')}
-          </h2>
-          <p className="font-body text-sm sm:text-base text-[#5d5e61] leading-relaxed">
-            {t(
-              'Select any of Kerala’s 14 districts to filter sacred sites, regional dialects, and living art forms.',
-              'ഓരോ ജില്ലയ്ക്കും സ്വന്തമായ ആചാരഭാഷയും കരകൗശല കൂട്ടായ്മകളുമുണ്ട്. കണ്ടെത്താൻ ജില്ല തിരഞ്ഞെടുക്കൂ.'
-            )}
-          </p>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
+          <div className="max-w-2xl">
+            <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
+              {t('Geographic exploration', 'ഭൂമിശാസ്ത്ര വിവരണം')}
+            </span>
+            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] mb-3 tracking-tight">
+              {t('Explore Kerala, district by district', 'ജില്ല തിരിച്ചുള്ള പൈതൃക യാത്ര')}
+            </h2>
+            <p className="font-body text-sm sm:text-base text-[#5d5e61] leading-relaxed">
+              {t(
+                'Find cultural places, artists, traditions and events across all 14 districts of Kerala.',
+                'കേരളത്തിലെ 14 ജില്ലകളിലെയും പൈതൃക കേന്ദ്രങ്ങളും കലാരൂപങ്ങളും ഉത്സവങ്ങളും കണ്ടെത്താം.'
+              )}
+            </p>
+          </div>
+
+          <Link
+            href="/explore"
+            className="inline-flex items-center gap-2 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors whitespace-nowrap"
+          >
+            <Map className="w-4 h-4 text-[#aa3000]" />
+            <span>{t('Open interactive map', 'ഭൂപടം തുറക്കുക')}</span>
+            <ArrowRight className="w-4 h-4 text-[#aa3000]" />
+          </Link>
         </div>
 
         {/* 14 Districts Grid */}

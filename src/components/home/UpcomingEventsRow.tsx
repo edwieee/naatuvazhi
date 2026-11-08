@@ -14,18 +14,24 @@ export default function UpcomingEventsRow() {
       <div className="max-w-7xl mx-auto px-4 md:px-12">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
+          <div className="max-w-2xl">
             <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
               {t('Cultural calendar', 'സാംസ്കാരിക കലണ്ടർ')}
             </span>
-            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight">
-              {t('Upcoming festivals & ritual ceremonies', 'വരവറിയിക്കുന്ന ഉത്സവങ്ങളും അനുഷ്ഠാനങ്ങളും')}
+            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight mb-2">
+              {t('Festivals and events across Kerala', 'കേരളത്തിലെ ഉത്സവങ്ങളും സാംസ്കാരിക ഒത്തുചേരലുകളും')}
             </h2>
+            <p className="font-body text-sm text-[#5d5e61] leading-relaxed">
+              {t(
+                'Find upcoming festivals, performances and cultural gatherings. Check the date, location, organiser and original event information.',
+                'വരവറിയിക്കുന്ന ഉത്സവങ്ങളും അനുഷ്ഠാന കലകളും. തീയതി, സ്ഥലം, സംഘാടകർ, വിവരസ്രോതസ്സുകൾ എന്നിവ നേരിട്ടറിയാം.'
+              )}
+            </p>
           </div>
 
           <Link
             href="/events"
-            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors"
+            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors whitespace-nowrap"
           >
             <span>{t('View complete festival calendar', 'മുഴുവൻ കലണ്ടർ കാണുക')}</span>
             <ArrowRight className="w-4 h-4 text-[#aa3000]" />
@@ -67,17 +73,28 @@ export default function UpcomingEventsRow() {
                       </div>
                     </div>
 
-                    <span className="font-body text-[11px] bg-[#eef7ee] text-[#246b24] px-2.5 py-0.5 rounded-full border border-[#cbe6cb] font-medium">
-                      {event.status}
-                    </span>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-1.5">
+                      <span className="font-body text-[11px] bg-[#f6f4ea] text-[#7d3b24] px-2 py-0.5 rounded-sm border border-[#ded7c9] font-medium self-start sm:self-auto">
+                        {event.category}
+                      </span>
+                      <span className="font-body text-[11px] bg-[#eef7ee] text-[#246b24] px-2.5 py-0.5 rounded-full border border-[#cbe6cb] font-medium self-start sm:self-auto">
+                        {event.status}
+                      </span>
+                    </div>
                   </div>
 
                   <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
                     {event.title}
                   </h3>
-                  <p className="font-malayalam text-xs text-[#6e675d] mb-3">
+                  <p className="font-malayalam text-xs text-[#6e675d] mb-2">
                     {event.titleMalayalam}
                   </p>
+
+                  <div className="flex items-center gap-1.5 text-xs text-[#5d5e61] font-body mb-2.5">
+                    <span className="font-medium text-[#1c1c16]">{t('Organiser:', 'സംഘാടകർ:')}</span>
+                    <span className="truncate max-w-[320px]">{event.organizer}</span>
+                  </div>
+
                   <p className="font-body text-xs text-[#5d5e61] leading-relaxed mb-4 line-clamp-2">
                     {event.description}
                   </p>
@@ -89,7 +106,7 @@ export default function UpcomingEventsRow() {
                     <span className="truncate max-w-[280px]">{event.venue}, {event.district}</span>
                   </div>
                   <span className="font-body text-xs text-[#aa3000] group-hover:text-[#c23700] flex items-center gap-1 font-semibold">
-                    <span>{t('View ritual schedule', 'സമയക്രമം കാണുക')}</span>
+                    <span>{t('View event details', 'വിവരങ്ങൾ കാണുക')}</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#aa3000]" />
                   </span>
                 </div>

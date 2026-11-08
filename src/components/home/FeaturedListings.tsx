@@ -21,18 +21,24 @@ export default function FeaturedListings() {
       <div className="max-w-7xl mx-auto px-4 md:px-12">
         {/* Section Header with Archive Link */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
-          <div>
+          <div className="max-w-2xl">
             <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
               {t('Curated cultural heritage', 'തിരഞ്ഞെടുത്ത പൈതൃക കേന്ദ്രങ്ങൾ')}
             </span>
-            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight">
-              {t('Featured living traditions', 'പ്രധാന സാംസ്കാരിക കേന്ദ്രങ്ങൾ')}
+            <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] tracking-tight mb-2">
+              {t('Selected cultural stories across Kerala', 'പ്രധാന സാംസ്കാരിക കഥകളും കേന്ദ്രങ്ങളും')}
             </h2>
+            <p className="font-body text-sm text-[#5d5e61] leading-relaxed">
+              {t(
+                'Explore detailed entries with background stories, verified locations, photographs and original source citations.',
+                'വിശദമായ പശ്ചാത്തല ചരിത്രം, സ്ഥിരീകരിച്ച വിവരങ്ങൾ, യഥാർത്ഥ വിവരസ്രോതസ്സുകൾ എന്നിവയോടൊപ്പം.'
+              )}
+            </p>
           </div>
 
           <Link
             href="/explore"
-            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors"
+            className="inline-flex items-center gap-1.5 font-body text-sm font-semibold text-[#aa3000] hover:text-[#c23700] transition-colors whitespace-nowrap"
           >
             <span>{t('View complete directory', 'എല്ലാ കേന്ദ്രങ്ങളും കാണുക')}</span>
             <ArrowRight className="w-4 h-4 text-[#aa3000]" />

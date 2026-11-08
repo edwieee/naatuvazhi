@@ -12,13 +12,15 @@ export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { href: '/explore', labelEn: 'Directory & Map', labelMl: 'ഭൂപടം' },
-    { href: '/events', labelEn: 'Festivals', labelMl: 'ഉത്സവങ്ങൾ' },
+    { href: '/explore', labelEn: 'Explore', labelMl: 'ഭൂപടം' },
+    { href: '/events', labelEn: 'Events', labelMl: 'ഉത്സവങ്ങൾ' },
+    { href: '/#how-it-works', labelEn: 'How it works', labelMl: 'പ്രവർത്തനരീതി' },
     { href: '/contribute', labelEn: 'Contribute', labelMl: 'വിവരങ്ങൾ ചേർക്കുക' },
   ];
 
   const isActive = (href: string) => {
     if (href === '/') return pathname === '/';
+    if (href.startsWith('/#')) return false;
     return pathname.startsWith(href);
   };
 
@@ -104,7 +106,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`py-1 text-base font-medium ${
+                className={`py-1.5 text-base font-medium ${
                   active ? 'text-[#aa3000] font-semibold' : 'text-[#1c1c16]'
                 }`}
               >
@@ -118,7 +120,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="text-xs font-body font-medium text-[#5d5e61] hover:text-[#aa3000]"
             >
-              Curator portal
+              {t('Curator portal', 'ക്യുറേറ്റർ പോർട്ടൽ')}
             </Link>
           </div>
         </div>

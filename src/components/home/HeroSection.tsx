@@ -33,9 +33,10 @@ export default function HeroSection() {
   return (
     <section className="relative border-b border-[#e5e0d4] bg-[#fcfcec] overflow-hidden lg:h-[calc(100vh-4rem)] lg:min-h-[700px] lg:max-h-[950px] flex flex-col justify-center">
       {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
-      {/* Desktop: Anchored directly below header at top-0, fills full hero height down to bottom border, right-aligned with balanced margin */}
-      <div className="hidden lg:flex absolute inset-0 items-start justify-end pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_28%,black_45%)]">
-        <div className="relative h-full w-auto flex items-start justify-end bg-[#fcfcec] -mr-20 xl:-mr-28">
+      {/* Desktop: Reduced by exactly 30% (70% height), vertically centered on the right with balanced spacing */}
+      {/* Mobile/Tablet: Rendered below the text in single-column flow */}
+      <div className="hidden lg:flex absolute inset-y-0 right-0 w-[55vw] max-w-[1100px] items-center justify-end pr-8 xl:pr-16 pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_10%,black_30%)]">
+        <div className="relative h-[70%] aspect-video flex items-center justify-end bg-[#fcfcec]">
           {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
           <video
             ref={videoRef}
@@ -46,7 +47,7 @@ export default function HeroSection() {
             loop
             playsInline
             preload="auto"
-            className="h-full w-auto max-w-none object-contain object-top object-right [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
+            className="w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
             aria-label="Theyyam cultural ritual living animation"
           />
           {/* Fallback static poster for prefers-reduced-motion */}
@@ -55,7 +56,7 @@ export default function HeroSection() {
             alt="Theyyam cultural ritual artwork"
             width={1920}
             height={1080}
-            className="hidden motion-reduce:block h-full w-auto max-w-none object-contain object-top object-right [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+            className="hidden motion-reduce:block w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
           />
         </div>
       </div>

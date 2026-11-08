@@ -2,9 +2,8 @@
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import L from 'leaflet';
-import Link from 'next/link';
 import { CulturalListing } from '@/lib/types';
-import { ShieldCheck, MapPin, ExternalLink, RotateCcw, Plus, Minus } from 'lucide-react';
+import { RotateCcw, Plus, Minus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 interface OpenStreetMapClientProps {
@@ -105,7 +104,9 @@ export default function OpenStreetMapClient({
     [listings]
   );
 
-  onSelectListingRef.current = onSelectListing;
+  useEffect(() => {
+    onSelectListingRef.current = onSelectListing;
+  }, [onSelectListing]);
 
   useEffect(() => {
     const element = mapElementRef.current;

@@ -1,21 +1,17 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
-import { MOCK_ADMIN_SUBMISSIONS } from '@/data/mock-admin';
+import { getSubmissionById } from '@/lib/supabase/data-service';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 import AdminReviewClient from '@/components/admin/AdminReviewClient';
 
 interface Props {
   params: Promise<{ id: string }>;
 }
 
-export function generateStaticParams() {
-  return MOCK_ADMIN_SUBMISSIONS.map((sub) => ({
-    id: sub.id,
-  }));
-}
-
 export default async function AdminReviewPage({ params }: Props) {
   const { id } = await params;
-  const submission = MOCK_ADMIN_SUBMISSIONS.find((s) => s.id === id);
+  const supabase = await createServerClient();
+  const submission = await getSubmissionById(id, supabase);
 
   if (!submission) {
     notFound();

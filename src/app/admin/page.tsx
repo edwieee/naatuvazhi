@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import {
   getListings,
   getEvents,
@@ -44,6 +46,7 @@ import {
   X,
   Loader2,
   MapPin,
+  LogOut,
 } from 'lucide-react';
 
 const KERALA_DISTRICTS_LIST: DistrictName[] = [
@@ -74,13 +77,15 @@ const CATEGORIES_LIST: ListingCategory[] = [
 ];
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
+  const [curatorEmail, setCuratorEmail] = useState<string>('curator.nattuvazhi@gmail.com');
   const [currentTab, setCurrentTab] = useState<
     'submissions' | 'listings' | 'events' | 'homepage' | 'audit'
   >('submissions');
 
   // Submissions State
   const [submissions, setSubmissions] = useState<SubmissionReviewItem[]>([]);
-  const [subFilter, setSubFilter] = useState<'All' | 'Pending' | 'Approved' | 'Changes Requested'>('All');
+  const [subFilter, setSubFilter] = useState<'All' | 'Pending' | 'Approved' | 'Changes Requested' | 'Rejected'>('All');
   const [subSearch, setSubSearch] = useState('');
 
   // Listings State
@@ -107,10 +112,27 @@ export default function AdminDashboardPage() {
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load initial data
+  // Load initial data and curator session
   useEffect(() => {
+    const sb = createBrowserClient();
+    if (sb) {
+      sb.auth.getUser().then(({ data }) => {
+        if (data?.user?.email) {
+          setCuratorEmail(data.user.email);
+        }
+      });
+    }
     loadAllData();
   }, []);
+
+  async function handleSignOut() {
+    const sb = createBrowserClient();
+    if (sb) {
+      await sb.auth.signOut();
+    }
+    router.push('/admin/login');
+    router.refresh();
+  }
 
   async function loadAllData() {
     setIsLoading(true);
@@ -345,7 +367,7 @@ export default function AdminDashboardPage() {
       )}
 
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#E8E2D6]">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#E8E2D6]">
         <div>
           <div className="text-xs font-mono text-[#8C8273] mb-1">
             CURATORIAL VERIFICATION BUREAU · SUPABASE LIVE CMS
@@ -358,7 +380,13 @@ export default function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8F5EE] border border-[#E8E2D6] rounded-md text-xs">
+            <span className="w-2 h-2 rounded-full bg-[#2D6A4F] animate-pulse" />
+            <span className="text-[#8C8273]">Curator:</span>
+            <span className="font-mono font-medium text-[#181512]">{curatorEmail}</span>
+          </div>
+
           <Link
             href="/explore"
             className="rounded-md bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#181512] text-xs font-medium px-3 py-1.5 transition-colors"
@@ -371,9 +399,15 @@ export default function AdminDashboardPage() {
           >
             Calendar
           </Link>
-          <div className="w-7 h-7 rounded-md bg-[#B21C01] text-white font-mono text-xs flex items-center justify-center font-bold">
-            NV
-          </div>
+
+          <button
+            onClick={handleSignOut}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[#E8E2D6] hover:border-red-300 hover:bg-red-50 text-[#8C8273] hover:text-red-700 text-xs font-medium transition-colors"
+            title="Sign out of Curator Portal"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Sign Out</span>
+          </button>
         </div>
       </div>
 
@@ -466,7 +500,7 @@ export default function AdminDashboardPage() {
         <div className="bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden flex flex-col">
           <div className="p-4 border-b border-[#E8E2D6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FCFBF8]">
             <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
-              {(['All', 'Pending', 'Approved', 'Changes Requested'] as const).map((tab) => (
+              {(['All', 'Pending', 'Approved', 'Changes Requested', 'Rejected'] as const).map((tab) => (
                 <button
                   key={tab}
                   onClick={() => setSubFilter(tab)}
@@ -546,6 +580,8 @@ export default function AdminDashboardPage() {
                               ? 'bg-[#F4F9F5] text-[#2D6A4F] border border-[#B7DFCA]'
                               : sub.status === 'Pending'
                               ? 'bg-[#FEF2F2] text-[#B21C01] border border-[#FECACA]'
+                              : sub.status === 'Rejected'
+                              ? 'bg-[#F3F4F6] text-[#6B7280] border border-[#D1D5DB]'
                               : 'bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]'
                           }`}
                         >

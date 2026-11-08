@@ -12,9 +12,12 @@ import {
   Building2,
   Calendar,
   FileEdit,
-  ArrowRight,
   RotateCcw,
-  Compass
+  Compass,
+  MapPin,
+  Clock,
+  Sparkles,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -30,12 +33,29 @@ export default function ContributePage() {
   const [district, setDistrict] = useState('Thrissur');
   const [locality, setLocality] = useState('');
   const [address, setAddress] = useState('');
+
+  // Event specific fields
+  const [eventDate, setEventDate] = useState('');
+  const [eventTime, setEventTime] = useState('');
+  const [venue, setVenue] = useState('');
+  const [organizer, setOrganizer] = useState('');
+
+  // Geographic coordinates
+  const [latitude, setLatitude] = useState('');
+  const [longitude, setLongitude] = useState('');
+
+  // Narrative
   const [description, setDescription] = useState('');
   const [culturalBackground, setCulturalBackground] = useState('');
-  const [sourceUrls, setSourceUrls] = useState('');
-  const [websiteLink, setWebsiteLink] = useState('');
+
+  // Media and references
+  const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageCredit, setImageCredit] = useState('');
+  const [sourceUrls, setSourceUrls] = useState('');
+  const [websiteLink, setWebsiteLink] = useState('');
+
+  // Contributor details (No account or login required)
   const [contributorName, setContributorName] = useState('');
   const [contributorEmail, setContributorEmail] = useState('');
   const [hasConsent, setHasConsent] = useState(false);
@@ -45,15 +65,13 @@ export default function ContributePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submissionId, setSubmissionId] = useState('');
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // Unslop pass: Line icons only, no emojis!
-  const types: { id: SubmissionType; label: string; icon: any }[] = [
-    { id: 'Place', label: 'Cultural Place / Shrine', icon: Landmark },
-    { id: 'Artist', label: 'Artist / Practitioner', icon: User },
-    { id: 'Institution', label: 'Group / Institution', icon: Building2 },
-    { id: 'Event', label: 'Cultural Event / Festival', icon: Calendar },
-    { id: 'Correction', label: 'Factual Correction', icon: FileEdit },
+  const types: { id: SubmissionType; label: string; icon: any; desc: string }[] = [
+    { id: 'Place', label: 'Cultural Place / Shrine', icon: Landmark, desc: 'Sacred groves, kavu, ancient temples' },
+    { id: 'Artist', label: 'Artist / Practitioner', icon: User, desc: 'Master artisans, ritual performers' },
+    { id: 'Institution', label: 'Guild / Institution', icon: Building2, desc: 'Kalari schools, craft centers' },
+    { id: 'Event', label: 'Living Event / Festival', icon: Calendar, desc: 'Theyyam season, poorams, melam' },
+    { id: 'Correction', label: 'Factual Correction', icon: FileEdit, desc: 'Suggested update to indexed listing' },
   ];
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +79,9 @@ export default function ContributePage() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImagePreview(reader.result as string);
+        const base64 = reader.result as string;
+        setImagePreview(base64);
+        setImageUrl(base64);
       };
       reader.readAsDataURL(file);
     }
@@ -72,12 +92,22 @@ export default function ContributePage() {
     if (!title.trim()) newErrors.title = 'Title or name is required';
     if (!artForm.trim()) newErrors.artForm = 'Art form or tradition is required';
     if (!locality.trim()) newErrors.locality = 'Locality or village is required';
-    if (!description.trim() || description.length < 25)
+
+    if (submissionType === 'Event') {
+      if (!eventDate.trim()) newErrors.eventDate = 'Festival / Event date is required';
+      if (!venue.trim()) newErrors.venue = 'Venue or temple grounds is required';
+    }
+
+    if (!description.trim() || description.length < 25) {
       newErrors.description = 'Please provide a descriptive summary of at least 25 characters';
+    }
     if (!contributorName.trim()) newErrors.contributorName = 'Your name is required';
-    if (!contributorEmail.trim() || !contributorEmail.includes('@'))
-      newErrors.contributorEmail = 'A valid email address is required for verification contact';
-    if (!hasConsent) newErrors.consent = 'You must accept the community verification terms';
+    if (!contributorEmail.trim() || !contributorEmail.includes('@')) {
+      newErrors.contributorEmail = 'A valid contact email is required for peer verification notice';
+    }
+    if (!hasConsent) {
+      newErrors.consent = 'You must accept the community verification terms';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -88,19 +118,39 @@ export default function ContributePage() {
     if (!validate()) return;
 
     setIsSubmitting(true);
-    setSubmitError(null);
     try {
+      const parsedLat = latitude.trim() ? parseFloat(latitude.trim()) : undefined;
+      const parsedLng = longitude.trim() ? parseFloat(longitude.trim()) : undefined;
+
       const res = await actionSubmitContribution({
         type: submissionType,
-        name: title,
-        artForm: artForm,
+        name: title.trim(),
+        nameMalayalam: titleMalayalam.trim(),
+        artForm: artForm.trim(),
         district: district as any,
-        locality: locality,
-        description: description,
-        culturalSignificance: culturalBackground,
-        sources: sourceUrls ? sourceUrls.split('\n').filter(Boolean) : [],
-        contributorName: contributorName,
-        contributorEmail: contributorEmail,
+        locality: locality.trim(),
+        address: address.trim(),
+        eventDate: submissionType === 'Event' ? eventDate : undefined,
+        eventTime: submissionType === 'Event' ? eventTime.trim() : undefined,
+        venue: submissionType === 'Event' ? venue.trim() : undefined,
+        organizer: submissionType === 'Event' ? organizer.trim() : undefined,
+        coordinates:
+          parsedLat !== undefined && parsedLng !== undefined && !isNaN(parsedLat) && !isNaN(parsedLng)
+            ? { lat: parsedLat, lng: parsedLng }
+            : undefined,
+        description: description.trim(),
+        culturalSignificance: culturalBackground.trim(),
+        sources: sourceUrls
+          ? sourceUrls
+              .split('\n')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [],
+        imageUrl: imageUrl.trim() || undefined,
+        imageCredit: imageCredit.trim(),
+        websiteLink: websiteLink.trim(),
+        contributorName: contributorName.trim(),
+        contributorEmail: contributorEmail.trim(),
         urgency: 'Medium',
       });
 
@@ -108,11 +158,10 @@ export default function ContributePage() {
         setSubmissionId(res.submission.id);
         setIsSuccess(true);
       } else {
-        setSubmitError(res.error || 'We could not record this submission. Please try again.');
+        throw new Error(res.error || 'Submission could not be completed');
       }
-    } catch (error) {
-      console.error('[ContributePage] Submission failed:', error);
-      setSubmitError('We could not connect to the review queue. Please try again.');
+    } catch (err: any) {
+      alert(`Submission error: ${err.message || 'Please try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
@@ -124,18 +173,24 @@ export default function ContributePage() {
     setArtForm('');
     setLocality('');
     setAddress('');
+    setEventDate('');
+    setEventTime('');
+    setVenue('');
+    setOrganizer('');
+    setLatitude('');
+    setLongitude('');
     setDescription('');
     setCulturalBackground('');
-    setSourceUrls('');
-    setWebsiteLink('');
+    setImageUrl('');
     setImagePreview(null);
     setImageCredit('');
+    setSourceUrls('');
+    setWebsiteLink('');
     setContributorName('');
     setContributorEmail('');
     setHasConsent(false);
     setErrors({});
     setIsSuccess(false);
-    setSubmitError(null);
   };
 
   return (
@@ -143,15 +198,15 @@ export default function ContributePage() {
       {/* Header */}
       <div className="max-w-2xl mb-8">
         <div className="text-xs font-mono text-[#8C8273] mb-1">
-          {t('COMMUNITY ACCESSION', 'സമൂഹ പൈതൃക ശേഖരം')}
+          {t('PUBLIC COMMUNITY ACCESSION', 'സമൂഹ പൈതൃക ശേഖരം · ലോഗിൻ ആവശ്യമില്ല')}
         </div>
         <h1 className="text-2xl sm:text-3xl font-semibold text-[#181512] tracking-tight">
           {t('Contribute to Nattuvazhi', 'നാട്ടുവഴിയിലേക്ക് വിവരങ്ങൾ സമർപ്പിക്കാം')}
         </h1>
         <p className="text-xs sm:text-sm text-[#5C554B] mt-1.5 leading-relaxed">
           {t(
-            'Submit unmapped sacred shrines, master practitioners, or traditional craft guilds. Entries are reviewed by certified cultural scholars before indexing.',
-            'നിങ്ങളുടെ നാട്ടിലെ അറിവുകൾ, കലാരൂപങ്ങൾ, ക്ഷേത്രങ്ങൾ എന്നിവ പങ്കുവെക്കൂ. പരിശോധനയ്ക്ക് ശേഷം പ്രസിദ്ധീകരിക്കും.'
+            'No account or sign-in required. Anyone can submit sacred groves, master practitioners, traditional crafts, or living festivals. Submissions are peer-reviewed by cultural scholars before publication.',
+            'അക്കൗണ്ടോ ലോഗിനോ ആവശ്യമില്ല. നിങ്ങളുടെ പ്രദേശത്തെ അനുഷ്ഠാന കലകൾ, ക്ഷേത്രങ്ങൾ, ഗുരുക്കന്മാർ എന്നിവ രേഖപ്പെടുത്താം. പരിശോധനയ്ക്ക് ശേഷം ഭൂപടത്തിൽ ഉൾപ്പെടുത്തും.'
           )}
         </p>
       </div>
@@ -172,7 +227,7 @@ export default function ContributePage() {
           </h2>
 
           <p className="text-xs sm:text-sm text-[#5C554B] max-w-md leading-relaxed">
-            Your submission for <strong>"{title}"</strong> has been logged. Our regional editorial circle will cross-reference citations, verify coordinates, and notify you at <strong>{contributorEmail}</strong>.
+            Your submission for <strong>"{title}"</strong> has been logged in Supabase as a Pending accession. Our curatorial circle will verify citations and publish it to the live Kerala Culture Map.
           </p>
 
           <div className="flex items-center gap-3 pt-4">
@@ -195,15 +250,7 @@ export default function ContributePage() {
       ) : (
         /* The Contribution Form */
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-          {submitError && (
-            <div
-              role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-            >
-              {submitError}
-            </div>
-          )}
-          {/* Section 1: Submission Type Selection (Clean Line Icons, no emojis!) */}
+          {/* Section 1: Submission Type Selection */}
           <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
             <label className="text-xs font-semibold text-[#181512] mb-3 block">
               1. Select category of entry
@@ -223,14 +270,14 @@ export default function ContributePage() {
                     }`}
                   >
                     <Icon className="w-4 h-4" />
-                    <span>{type.label}</span>
+                    <span className="font-semibold">{type.label}</span>
                   </button>
                 );
               })}
             </div>
           </div>
 
-          {/* Section 2: Basic Information */}
+          {/* Section 2: Basic Identification */}
           <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
               2. BASIC IDENTIFICATION
@@ -274,7 +321,7 @@ export default function ContributePage() {
                   type="text"
                   value={artForm}
                   onChange={(e) => setArtForm(e.target.value)}
-                  placeholder="e.g. Theyyam, Kathakali, Metal Mirror Casting..."
+                  placeholder="e.g. Muthappan Theyyam, Kathakali, Metal Mirror Casting..."
                   className={`w-full text-xs bg-[#FBF9F5] border rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors ${
                     errors.artForm ? 'border-red-400' : 'border-[#E8E2D6] focus:border-[#181512]'
                   }`}
@@ -307,7 +354,7 @@ export default function ContributePage() {
                   type="text"
                   value={locality}
                   onChange={(e) => setLocality(e.target.value)}
-                  placeholder="e.g. Cheruthuruthy, Gothuruth, Haripad"
+                  placeholder="e.g. Cheruthuruthy, Anthoor, Haripad"
                   className={`w-full text-xs bg-[#FBF9F5] border rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors ${
                     errors.locality ? 'border-red-400' : 'border-[#E8E2D6] focus:border-[#181512]'
                   }`}
@@ -325,12 +372,114 @@ export default function ContributePage() {
                   type="text"
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
-                  placeholder="e.g. Near Pamba River Ghat, Anthoor"
+                  placeholder="e.g. Near Valapattanam River, Anthoor"
                   className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none transition-colors"
                 />
               </div>
             </div>
+
+            {/* Coordinates for OpenStreetMap pinpointing */}
+            <div className="pt-2">
+              <label className="text-xs font-medium text-[#181512] mb-1 block flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-[#B21C01]" />
+                <span>Geographic Coordinates (Optional)</span>
+              </label>
+              <p className="text-[11px] text-[#8C8273] mb-2">
+                Providing coordinates plots your discovery precisely on OpenStreetMap.
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <input
+                  type="text"
+                  value={latitude}
+                  onChange={(e) => setLatitude(e.target.value)}
+                  placeholder="Latitude (e.g. 11.9742)"
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2 focus:bg-white focus:outline-none"
+                />
+                <input
+                  type="text"
+                  value={longitude}
+                  onChange={(e) => setLongitude(e.target.value)}
+                  placeholder="Longitude (e.g. 75.3611)"
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2 focus:bg-white focus:outline-none"
+                />
+              </div>
+            </div>
           </div>
+
+          {/* Section: Event Specific Logistics (Rendered if Event is selected) */}
+          {submissionType === 'Event' && (
+            <div className="bg-[#FFFDF9] rounded-xl p-6 border border-[#E0D8C7] shadow-xs flex flex-col gap-4">
+              <div className="flex items-center gap-2 pb-2 border-b border-[#E0D8C7]">
+                <Calendar className="w-4 h-4 text-[#B21C01]" />
+                <h3 className="text-xs font-mono font-semibold text-[#181512]">
+                  EVENT & FESTIVAL SCHEDULE DETAILS
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                    Event Date <span className="text-[#B21C01]">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    value={eventDate}
+                    onChange={(e) => setEventDate(e.target.value)}
+                    className={`w-full text-xs bg-[#FBF9F5] border rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors ${
+                      errors.eventDate ? 'border-red-400' : 'border-[#E8E2D6] focus:border-[#181512]'
+                    }`}
+                  />
+                  {errors.eventDate && (
+                    <p className="text-[11px] text-red-600 mt-1">{errors.eventDate}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                    Event Time / Session
+                  </label>
+                  <input
+                    type="text"
+                    value={eventTime}
+                    onChange={(e) => setEventTime(e.target.value)}
+                    placeholder="e.g. 05:00 AM – 11:30 PM (All Day)"
+                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none transition-colors"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                    Venue / Grounds <span className="text-[#B21C01]">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={venue}
+                    onChange={(e) => setVenue(e.target.value)}
+                    placeholder="e.g. Madappura Temple Courtyard"
+                    className={`w-full text-xs bg-[#FBF9F5] border rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors ${
+                      errors.venue ? 'border-red-400' : 'border-[#E8E2D6] focus:border-[#181512]'
+                    }`}
+                  />
+                  {errors.venue && (
+                    <p className="text-[11px] text-red-600 mt-1">{errors.venue}</p>
+                  )}
+                </div>
+
+                <div>
+                  <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                    Organizer / Trust / Committee
+                  </label>
+                  <input
+                    type="text"
+                    value={organizer}
+                    onChange={(e) => setOrganizer(e.target.value)}
+                    placeholder="e.g. Parassini Madappura Devaswom Board"
+                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none transition-colors"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Section 3: Cultural Story */}
           <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
@@ -378,7 +527,7 @@ export default function ContributePage() {
 
             <div>
               <label className="text-xs font-medium text-[#181512] mb-2 block">
-                Field Photograph
+                Field Photograph or Image
               </label>
               <div className="border border-dashed border-[#D8D1C4] rounded-md p-5 text-center bg-[#FBF9F5] flex flex-col items-center justify-center">
                 {imagePreview ? (
@@ -390,7 +539,10 @@ export default function ContributePage() {
                     />
                     <button
                       type="button"
-                      onClick={() => setImagePreview(null)}
+                      onClick={() => {
+                        setImagePreview(null);
+                        setImageUrl('');
+                      }}
                       className="text-xs text-red-600 hover:underline"
                     >
                       Remove photo
@@ -403,7 +555,7 @@ export default function ContributePage() {
                       Upload photograph
                     </span>
                     <span className="text-[11px] text-[#8C8273] mt-0.5">
-                      JPG, PNG or WEBP (Max 10MB)
+                      JPG, PNG or WEBP (or enter image URL below)
                     </span>
                     <input
                       type="file"
@@ -417,6 +569,24 @@ export default function ContributePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                  Image URL (if hosted online)
+                </label>
+                <input
+                  type="url"
+                  value={imageUrl}
+                  onChange={(e) => {
+                    setImageUrl(e.target.value);
+                    if (e.target.value.startsWith('http')) {
+                      setImagePreview(e.target.value);
+                    }
+                  }}
+                  placeholder="https://images.unsplash.com/..."
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors"
+                />
+              </div>
+
               <div>
                 <label className="text-xs font-medium text-[#181512] mb-1.5 block">
                   Image Credit & License
@@ -442,13 +612,26 @@ export default function ContributePage() {
                   className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors"
                 />
               </div>
+
+              <div>
+                <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                  Official Website / Social Link (Optional)
+                </label>
+                <input
+                  type="url"
+                  value={websiteLink}
+                  onChange={(e) => setWebsiteLink(e.target.value)}
+                  placeholder="https://..."
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Section 5: Contributor */}
+          {/* Section 5: Contributor Details (Anonymous public submission) */}
           <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
-              5. CONTRIBUTOR DETAILS
+              5. CONTRIBUTOR CONTACT (NO LOGIN REQUIRED)
             </h3>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -474,7 +657,7 @@ export default function ContributePage() {
 
               <div>
                 <label className="text-xs font-medium text-[#181512] mb-1.5 block">
-                  Email Address for Verification Contact <span className="text-[#B21C01]">*</span>
+                  Email Address for Verification Notice <span className="text-[#B21C01]">*</span>
                 </label>
                 <input
                   type="email"
@@ -510,9 +693,9 @@ export default function ContributePage() {
               )}
             </div>
 
-            <div className="pt-4 border-t border-[#EDE7DC] flex items-center justify-between">
+            <div className="pt-4 border-t border-[#EDE7DC] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <span className="text-xs text-[#8C8273]">
-                Peer-reviewed before public publishing
+                Direct accession into Supabase · Peer-reviewed before publication
               </span>
 
               <button

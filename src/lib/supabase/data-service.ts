@@ -8,8 +8,8 @@ import {
 import { MOCK_LISTINGS } from '@/data/mock-listings';
 import { MOCK_EVENTS } from '@/data/mock-events';
 import { KERALA_DISTRICTS, DistrictInfo } from '@/data/mock-districts';
-import { MOCK_ADMIN_SUBMISSIONS } from '@/data/mock-admin';
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
 
 export interface CulturalCategory {
   id: string;
@@ -44,10 +44,10 @@ const FALLBACK_CATEGORIES: CulturalCategory[] = [
 const slugifyCategory = (name: string) =>
   name.toLowerCase().replace(/&/g, 'and').replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
-// In-memory mutable state for runtime fallback
+// In-memory fallback caches (Admin submissions & logs start empty so real data is single source of truth)
 let liveListings: CulturalListing[] = [...MOCK_LISTINGS];
 let liveEvents: EventListing[] = [...MOCK_EVENTS];
-let liveSubmissions: SubmissionReviewItem[] = [...MOCK_ADMIN_SUBMISSIONS];
+let liveSubmissions: SubmissionReviewItem[] = [];
 let liveReviewLogs: {
   id: string;
   submissionId?: string;
@@ -57,24 +57,7 @@ let liveReviewLogs: {
   action: string;
   notes: string;
   createdAt: string;
-}[] = [
-  {
-    id: 'log-01',
-    submissionId: 'sub-102',
-    reviewerName: 'Dr. Radhakrishnan (Folklore Academy)',
-    action: 'approved',
-    notes: 'Verified with Kalamandalam alumni directory and archival photography permissions.',
-    createdAt: '2026-03-02T15:00:00Z',
-  },
-  {
-    id: 'log-02',
-    submissionId: 'sub-104',
-    reviewerName: 'Devika Warrier',
-    action: 'changes_requested',
-    notes: 'Requested official guild authorization seal.',
-    createdAt: '2026-03-04T12:00:00Z',
-  },
-];
+}[] = [];
 
 let liveHomepageConfig: Record<string, any> = {
   hero_headline: 'Discover the culture that lives around you',
@@ -107,7 +90,18 @@ let liveHomepageConfig: Record<string, any> = {
   },
 };
 
-function getSupabase() {
+export function getSupabase(customClient?: any) {
+  if (customClient) return customClient;
+
+  if (typeof window !== 'undefined') {
+    try {
+      const browserClient = createBrowserClient();
+      if (browserClient) return browserClient;
+    } catch {
+      // ignore
+    }
+  }
+
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key =
     process.env.SUPABASE_SERVICE_ROLE_KEY ||
@@ -165,13 +159,13 @@ function mapDbListing(row: any): CulturalListing {
       role: row.contributor_role || 'Contributor',
       dateSubmitted: row.contributor_submitted_at ? row.contributor_submitted_at.split('T')[0] : '',
     },
-    featured: row.featured,
+    featured: Boolean(row.featured),
     tags: row.tags || [],
   };
 }
 
-export async function getCategories(): Promise<CulturalCategory[]> {
-  const sb = getSupabase();
+export async function getCategories(customSb?: any): Promise<CulturalCategory[]> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data, error } = await sb
@@ -229,12 +223,47 @@ function mapDbEvent(row: any): EventListing {
   };
 }
 
+function mapDbSubmission(row: any): SubmissionReviewItem {
+  const districtName = row.districts?.name || row.district || 'Kannur';
+
+  return {
+    id: row.id,
+    type: row.type,
+    name: row.name,
+    nameMalayalam: row.name_malayalam || '',
+    artForm: row.art_form || '',
+    district: districtName as DistrictName,
+    locality: row.locality || '',
+    address: row.address || '',
+    description: row.description || '',
+    culturalSignificance: row.cultural_significance || '',
+    sources: Array.isArray(row.sources) ? row.sources : [],
+    contributorName: row.contributor_name || 'Community Contributor',
+    contributorEmail: row.contributor_email || '',
+    submittedAt: row.submitted_at || row.created_at || new Date().toISOString(),
+    status: row.status || 'Pending',
+    reviewerNotes: row.reviewer_notes || '',
+    urgency: row.urgency || 'Medium',
+    eventDate: row.event_date || '',
+    eventTime: row.event_time || '',
+    venue: row.venue || '',
+    organizer: row.organizer || '',
+    coordinates:
+      row.latitude && row.longitude
+        ? { lat: Number(row.latitude), lng: Number(row.longitude) }
+        : undefined,
+    imageUrl: row.image_url || '',
+    imageCredit: row.image_credit || '',
+    websiteLink: row.website_link || '',
+  };
+}
+
 // ====================================================================
 // DISTRICTS & GEOGRAPHIC REGISTRY
 // ====================================================================
 
-export async function getDistricts(): Promise<DistrictInfo[]> {
-  const sb = getSupabase();
+export async function getDistricts(customSb?: any): Promise<DistrictInfo[]> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data: dbDistricts, error: distErr } = await sb
@@ -292,14 +321,15 @@ export interface ListingFilters {
   status?: string;
 }
 
-export async function getListings(filters?: ListingFilters): Promise<CulturalListing[]> {
-  const sb = getSupabase();
+export async function getListings(filters?: ListingFilters, customSb?: any): Promise<CulturalListing[]> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       let query = sb
         .from('listings')
         .select('*, districts(name), categories(name, slug), media(*), sources(*)')
-        .eq('publication_status', 'published');
+        .eq('publication_status', 'published')
+        .order('created_at', { ascending: false });
 
       if (filters?.featuredOnly) {
         query = query.eq('featured', true);
@@ -313,7 +343,9 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
           results = results.filter((i) => i.district.toLowerCase() === filters.district!.toLowerCase());
         }
         if (filters?.category && filters.category !== 'All') {
-          results = results.filter((i) => i.categorySlug === filters.category || i.category.toLowerCase() === filters.category!.toLowerCase());
+          results = results.filter(
+            (i) => i.categorySlug === filters.category || i.category.toLowerCase() === filters.category!.toLowerCase()
+          );
         }
         if (filters?.search && filters.search.trim()) {
           const q = filters.search.toLowerCase().trim();
@@ -352,7 +384,6 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
     results = results.filter(
       (item) =>
         item.name.toLowerCase().includes(q) ||
-        item.nameMalayalam.toLowerCase().includes(q) ||
         item.artForm.toLowerCase().includes(q) ||
         item.locality.toLowerCase().includes(q) ||
         item.shortDescription.toLowerCase().includes(q)
@@ -364,14 +395,15 @@ export async function getListings(filters?: ListingFilters): Promise<CulturalLis
   }));
 }
 
-export async function getListingBySlug(slug: string): Promise<CulturalListing | null> {
-  const sb = getSupabase();
+export async function getListingBySlug(slug: string, customSb?: any): Promise<CulturalListing | null> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data, error } = await sb
         .from('listings')
         .select('*, districts(name), categories(name, slug), media(*), sources(*)')
         .eq('slug', slug)
+        .eq('publication_status', 'published')
         .single();
 
       if (!error && data) {
@@ -386,7 +418,7 @@ export async function getListingBySlug(slug: string): Promise<CulturalListing | 
   return listing || null;
 }
 
-export async function createListing(data: Partial<CulturalListing>): Promise<CulturalListing> {
+export async function createListing(data: Partial<CulturalListing>, customSb?: any): Promise<CulturalListing> {
   const slug =
     data.slug ||
     data.name?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') ||
@@ -424,24 +456,29 @@ export async function createListing(data: Partial<CulturalListing>): Promise<Cul
     tags: data.tags || [data.artForm || 'Culture', data.district || 'Kerala'],
   };
 
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
-      const { data: dist } = await sb.from('districts').select('id').eq('name', newListing.district).single();
+      const { data: dist } = await sb.from('districts').select('id, center_lat, center_lng').eq('name', newListing.district).single();
       const { data: cat } = await sb.from('categories').select('id').eq('name', newListing.category).single();
 
-      if (dist) {
-        await sb.from('listings').insert({
+      const districtId = dist?.id || 'c86a50d4-7964-4546-9b92-3d3edbd92553'; // Default Thrissur
+      const lat = newListing.coordinates?.lat || dist?.center_lat || 10.8505;
+      const lng = newListing.coordinates?.lng || dist?.center_lng || 76.2711;
+
+      const { data: inserted, error: insertError } = await sb
+        .from('listings')
+        .insert({
           slug: newListing.slug,
           name: newListing.name,
           name_malayalam: newListing.nameMalayalam,
           category_id: cat?.id || null,
           art_form: newListing.artForm,
-          district_id: dist.id,
+          district_id: districtId,
           locality: newListing.locality,
           address: newListing.address,
-          latitude: newListing.coordinates.lat,
-          longitude: newListing.coordinates.lng,
+          latitude: lat,
+          longitude: lng,
           short_description: newListing.shortDescription,
           full_story: newListing.fullStory,
           cultural_significance: newListing.culturalSignificance,
@@ -453,41 +490,68 @@ export async function createListing(data: Partial<CulturalListing>): Promise<Cul
           featured: newListing.featured,
           tags: newListing.tags,
           publication_status: 'published',
-        });
+        })
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error inserting listing into Supabase:', insertError);
+      } else if (inserted?.id) {
+        newListing.id = inserted.id;
+
+        // Link sources
+        if (newListing.sourceCitations && newListing.sourceCitations.length > 0) {
+          for (const s of newListing.sourceCitations) {
+            await sb.from('sources').insert({
+              listing_id: inserted.id,
+              source_type: 'Archival Reference',
+              title: s.title,
+              author_or_archive: s.authorOrArchive || 'Submitted Documentation',
+              year: s.year || null,
+              url: s.url || (s.title.startsWith('http') ? s.title : null),
+              checked_at: new Date().toISOString(),
+            });
+          }
+        }
+
+        // Link media
+        if (newListing.imageUrl) {
+          await sb.from('media').insert({
+            listing_id: inserted.id,
+            url: newListing.imageUrl,
+            caption: newListing.name,
+            credit: newListing.imageCredit || 'Community Documenter / Open Archive',
+            permission_status: 'Granted',
+            display_order: 1,
+          });
+        }
       }
     } catch (e) {
-      console.warn('Could not insert to Supabase, stored in memory cache:', e);
+      console.warn('Could not insert to Supabase:', e);
     }
   }
 
   liveListings = [newListing, ...liveListings];
-  liveReviewLogs.unshift({
-    id: `log-${Date.now()}`,
-    listingId: newListing.id,
-    reviewerName: 'Curator Portal',
-    action: 'created_listing',
-    notes: `Created new cultural listing: ${newListing.name}`,
-    createdAt: new Date().toISOString(),
-  });
-
   return newListing;
 }
 
 export async function updateListing(
   id: string,
-  data: Partial<CulturalListing>
+  data: Partial<CulturalListing>,
+  customSb?: any
 ): Promise<CulturalListing | null> {
   const index = liveListings.findIndex((item) => item.id === id || item.slug === id);
-  if (index === -1) return null;
+  const existing = index !== -1 ? liveListings[index] : null;
 
-  const existing = liveListings[index];
-  const updated: CulturalListing = {
-    ...existing,
-    ...data,
-    lastReviewed: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
-  };
+  const updated: CulturalListing = existing
+    ? {
+        ...existing,
+        ...data,
+        lastReviewed: new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }),
+      }
+    : (data as CulturalListing);
 
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       await sb
@@ -503,6 +567,7 @@ export async function updateListing(
           featured: updated.featured,
           verification_status: updated.verificationStatus,
           verified_by: updated.verifiedBy,
+          updated_at: new Date().toISOString(),
         })
         .or(`id.eq.${id},slug.eq.${id}`);
     } catch (e) {
@@ -510,21 +575,14 @@ export async function updateListing(
     }
   }
 
-  liveListings[index] = updated;
-  liveReviewLogs.unshift({
-    id: `log-${Date.now()}`,
-    listingId: updated.id,
-    reviewerName: 'Curator Portal',
-    action: 'updated_listing',
-    notes: `Updated listing information for ${updated.name}`,
-    createdAt: new Date().toISOString(),
-  });
-
+  if (index !== -1) {
+    liveListings[index] = updated;
+  }
   return updated;
 }
 
-export async function deleteListing(id: string): Promise<boolean> {
-  const sb = getSupabase();
+export async function deleteListing(id: string, customSb?: any): Promise<boolean> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       await sb.from('listings').update({ publication_status: 'archived' }).or(`id.eq.${id},slug.eq.${id}`);
@@ -535,7 +593,7 @@ export async function deleteListing(id: string): Promise<boolean> {
 
   const initialLen = liveListings.length;
   liveListings = liveListings.filter((item) => item.id !== id && item.slug !== id);
-  return liveListings.length < initialLen;
+  return liveListings.length < initialLen || Boolean(sb);
 }
 
 // ====================================================================
@@ -550,8 +608,8 @@ export interface EventFilters {
   upcomingOnly?: boolean;
 }
 
-export async function getEvents(filters?: EventFilters): Promise<EventListing[]> {
-  const sb = getSupabase();
+export async function getEvents(filters?: EventFilters, customSb?: any): Promise<EventListing[]> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       let query = sb
@@ -615,14 +673,15 @@ export async function getEvents(filters?: EventFilters): Promise<EventListing[]>
   return results;
 }
 
-export async function getEventBySlug(slug: string): Promise<EventListing | null> {
-  const sb = getSupabase();
+export async function getEventBySlug(slug: string, customSb?: any): Promise<EventListing | null> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data, error } = await sb
         .from('events')
         .select('*, districts(name)')
         .eq('slug', slug)
+        .eq('publication_status', 'published')
         .single();
 
       if (!error && data) {
@@ -637,7 +696,7 @@ export async function getEventBySlug(slug: string): Promise<EventListing | null>
   return event || null;
 }
 
-export async function createEvent(data: Partial<EventListing>): Promise<EventListing> {
+export async function createEvent(data: Partial<EventListing>, customSb?: any): Promise<EventListing> {
   const slug =
     data.slug ||
     data.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') ||
@@ -647,7 +706,7 @@ export async function createEvent(data: Partial<EventListing>): Promise<EventLis
     id: data.id || `ev-${Date.now().toString().slice(-4)}`,
     slug,
     title: data.title || 'Untitled Cultural Gathering',
-    titleMalayalam: data.titleMalayalam || '',
+    titleMalayalam: data.titleMalayalam || data.title || '',
     category: data.category || 'Temple Festival & Percussion',
     artForm: data.artForm || 'Ritual Ensembles',
     date: data.date || new Date().toISOString().split('T')[0],
@@ -676,12 +735,15 @@ export async function createEvent(data: Partial<EventListing>): Promise<EventLis
     scheduleHighlights: data.scheduleHighlights || [],
   };
 
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data: dist } = await sb.from('districts').select('id').eq('name', newEvent.district).single();
-      if (dist) {
-        await sb.from('events').insert({
+      const districtId = dist?.id || 'c86a50d4-7964-4546-9b92-3d3edbd92553';
+
+      const { data: inserted, error } = await sb
+        .from('events')
+        .insert({
           slug: newEvent.slug,
           title: newEvent.title,
           title_malayalam: newEvent.titleMalayalam,
@@ -691,7 +753,7 @@ export async function createEvent(data: Partial<EventListing>): Promise<EventLis
           formatted_date: newEvent.formattedDate,
           time: newEvent.time,
           venue: newEvent.venue,
-          district_id: dist.id,
+          district_id: districtId,
           locality: newEvent.locality,
           address: newEvent.address,
           organizer: newEvent.organizer,
@@ -702,9 +764,14 @@ export async function createEvent(data: Partial<EventListing>): Promise<EventLis
           image_url: newEvent.imageUrl,
           entry_type: newEvent.entryType,
           schedule_highlights: newEvent.scheduleHighlights,
-          featured: true,
+          featured: false,
           publication_status: 'published',
-        });
+        })
+        .select()
+        .single();
+
+      if (!error && inserted?.id) {
+        newEvent.id = inserted.id;
       }
     } catch (e) {
       console.warn('Could not insert event to Supabase:', e);
@@ -712,33 +779,26 @@ export async function createEvent(data: Partial<EventListing>): Promise<EventLis
   }
 
   liveEvents = [newEvent, ...liveEvents];
-  liveReviewLogs.unshift({
-    id: `log-${Date.now()}`,
-    eventId: newEvent.id,
-    reviewerName: 'Curator Portal',
-    action: 'created_event',
-    notes: `Added event: ${newEvent.title} on ${newEvent.date}`,
-    createdAt: new Date().toISOString(),
-  });
-
   return newEvent;
 }
 
 export async function updateEvent(
   id: string,
-  data: Partial<EventListing>
+  data: Partial<EventListing>,
+  customSb?: any
 ): Promise<EventListing | null> {
   const index = liveEvents.findIndex((ev) => ev.id === id || ev.slug === id);
-  if (index === -1) return null;
+  const existing = index !== -1 ? liveEvents[index] : null;
 
-  const existing = liveEvents[index];
-  const updated: EventListing = {
-    ...existing,
-    ...data,
-    lastConfirmedDate: `Verified on ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} via Curator Portal`,
-  };
+  const updated: EventListing = existing
+    ? {
+        ...existing,
+        ...data,
+        lastConfirmedDate: `Verified on ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} via Curator Portal`,
+      }
+    : (data as EventListing);
 
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       await sb
@@ -752,6 +812,7 @@ export async function updateEvent(
           status: updated.status,
           source_link: updated.sourceLink,
           last_confirmed_date: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
         })
         .or(`id.eq.${id},slug.eq.${id}`);
     } catch (e) {
@@ -759,21 +820,14 @@ export async function updateEvent(
     }
   }
 
-  liveEvents[index] = updated;
-  liveReviewLogs.unshift({
-    id: `log-${Date.now()}`,
-    eventId: updated.id,
-    reviewerName: 'Curator Portal',
-    action: 'updated_event_date_or_status',
-    notes: `Updated event ${updated.title} — Date: ${updated.date}, Status: ${updated.status}`,
-    createdAt: new Date().toISOString(),
-  });
-
+  if (index !== -1) {
+    liveEvents[index] = updated;
+  }
   return updated;
 }
 
-export async function deleteEvent(id: string): Promise<boolean> {
-  const sb = getSupabase();
+export async function deleteEvent(id: string, customSb?: any): Promise<boolean> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       await sb.from('events').update({ publication_status: 'archived' }).or(`id.eq.${id},slug.eq.${id}`);
@@ -784,48 +838,50 @@ export async function deleteEvent(id: string): Promise<boolean> {
 
   const initialLen = liveEvents.length;
   liveEvents = liveEvents.filter((ev) => ev.id !== id && ev.slug !== id);
-  return liveEvents.length < initialLen;
+  return liveEvents.length < initialLen || Boolean(sb);
 }
 
 // ====================================================================
 // SUBMISSIONS & MODERATION WORKFLOW
 // ====================================================================
 
-export async function getSubmissions(filters?: {
-  status?: string;
-  search?: string;
-}): Promise<SubmissionReviewItem[]> {
-  const sb = getSupabase();
+export async function getSubmissions(
+  filters?: {
+    status?: string;
+    search?: string;
+  },
+  customSb?: any
+): Promise<SubmissionReviewItem[]> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
-      let query = sb.from('submissions').select('*, districts(name)').order('submitted_at', { ascending: false });
+      let query = sb
+        .from('submissions')
+        .select('*, districts(name)')
+        .order('submitted_at', { ascending: false });
 
       if (filters?.status && filters.status !== 'All') {
         query = query.eq('status', filters.status);
       }
 
       const { data, error } = await query;
-      if (!error && data && data.length > 0) {
-        return data.map((sub: any) => ({
-          id: sub.id,
-          type: sub.type,
-          name: sub.name,
-          artForm: sub.art_form,
-          district: (sub.districts?.name || 'Kannur') as DistrictName,
-          locality: sub.locality,
-          description: sub.description,
-          culturalSignificance: sub.cultural_significance,
-          sources: sub.sources || [],
-          contributorName: sub.contributor_name,
-          contributorEmail: sub.contributor_email,
-          submittedAt: sub.submitted_at,
-          status: sub.status,
-          reviewerNotes: sub.reviewer_notes,
-          urgency: sub.urgency,
-        }));
+      if (!error && data) {
+        let results = data.map(mapDbSubmission);
+
+        if (filters?.search && filters.search.trim()) {
+          const q = filters.search.toLowerCase().trim();
+          results = results.filter(
+            (sub) =>
+              sub.name.toLowerCase().includes(q) ||
+              sub.contributorName.toLowerCase().includes(q) ||
+              sub.district.toLowerCase().includes(q) ||
+              sub.artForm.toLowerCase().includes(q)
+          );
+        }
+        return results;
       }
     } catch (e) {
-      console.warn('Fallback to local submissions:', e);
+      console.warn('Error fetching submissions from Supabase:', e);
     }
   }
 
@@ -845,80 +901,158 @@ export async function getSubmissions(filters?: {
   return results;
 }
 
-export async function getSubmissionById(id: string): Promise<SubmissionReviewItem | null> {
-  const subs = await getSubmissions();
-  return subs.find((s) => s.id === id) || null;
-}
-
-export async function createSubmission(data: Partial<SubmissionReviewItem>): Promise<SubmissionReviewItem> {
-  const newSub: SubmissionReviewItem = {
-    id: `sub-${Math.floor(100 + Math.random() * 900)}`,
-    type: data.type || 'Place',
-    name: data.name || 'Untitled Submission',
-    artForm: data.artForm || '',
-    district: data.district || 'Kannur',
-    locality: data.locality || '',
-    description: data.description || '',
-    culturalSignificance: data.culturalSignificance || '',
-    sources: data.sources || [],
-    contributorName: data.contributorName || 'Anonymous Custodian',
-    contributorEmail: data.contributorEmail || 'contributor@nattuvazhi.org',
-    submittedAt: new Date().toISOString(),
-    status: 'Pending',
-    reviewerNotes: '',
-    urgency: data.urgency || 'Medium',
-  };
-
-  const sb = getSupabase();
+export async function getSubmissionById(id: string, customSb?: any): Promise<SubmissionReviewItem | null> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
-      const { data: dist } = await sb.from('districts').select('id').eq('name', newSub.district).single();
-      if (dist) {
-        await sb.from('submissions').insert({
-          id: newSub.id,
-          type: newSub.type,
-          name: newSub.name,
-          art_form: newSub.artForm,
-          district_id: dist.id,
-          locality: newSub.locality,
-          description: newSub.description,
-          cultural_significance: newSub.culturalSignificance,
-          sources: newSub.sources,
-          contributor_name: newSub.contributorName,
-          contributor_email: newSub.contributorEmail,
-          status: 'Pending',
-          urgency: newSub.urgency,
-        });
+      const { data, error } = await sb
+        .from('submissions')
+        .select('*, districts(name)')
+        .eq('id', id)
+        .single();
+
+      if (!error && data) {
+        return mapDbSubmission(data);
       }
     } catch (e) {
-      console.warn('Could not insert submission to Supabase:', e);
+      console.warn('Error fetching submission by id:', e);
     }
   }
 
-  liveSubmissions.unshift(newSub);
-  return newSub;
+  const sub = liveSubmissions.find((s) => s.id === id);
+  return sub || null;
+}
+
+export async function createSubmission(
+  data: Partial<SubmissionReviewItem>,
+  customSb?: any
+): Promise<SubmissionReviewItem> {
+  const subId = `sub-${Date.now().toString().slice(-4)}${Math.floor(10 + Math.random() * 90)}`;
+  const submittedAt = new Date().toISOString();
+
+  const sb = getSupabase(customSb);
+  if (sb) {
+    try {
+      let districtId = 'c86a50d4-7964-4546-9b92-3d3edbd92553'; // Thrissur fallback
+      if (data.district) {
+        const { data: dist } = await sb.from('districts').select('id').eq('name', data.district).single();
+        if (dist?.id) districtId = dist.id;
+      }
+
+      const insertPayload = {
+        id: subId,
+        type: data.type || 'Place',
+        name: data.name || 'Untitled Discovery',
+        name_malayalam: data.nameMalayalam || null,
+        art_form: data.artForm || 'Traditional Culture',
+        district_id: districtId,
+        locality: data.locality || '',
+        address: data.address || null,
+        description: data.description || '',
+        cultural_significance: data.culturalSignificance || '',
+        sources: Array.isArray(data.sources) ? data.sources : [],
+        contributor_name: data.contributorName || 'Community Contributor',
+        contributor_email: data.contributorEmail || '',
+        status: 'Pending',
+        urgency: data.urgency || 'Medium',
+        rights_confirmed: true,
+        submitted_at: submittedAt,
+        event_date: data.eventDate || null,
+        event_time: data.eventTime || null,
+        venue: data.venue || null,
+        organizer: data.organizer || null,
+        latitude: data.coordinates?.lat || null,
+        longitude: data.coordinates?.lng || null,
+        image_url: data.imageUrl || null,
+        image_credit: data.imageCredit || null,
+        website_link: data.websiteLink || null,
+        raw_data: {
+          submittedVia: 'Public Accession Portal',
+          ...data,
+        },
+      };
+
+      const { data: inserted, error } = await sb
+        .from('submissions')
+        .insert(insertPayload)
+        .select('*, districts(name)')
+        .single();
+
+      if (error) {
+        console.error('Failed to insert submission into Supabase:', error);
+        throw error;
+      }
+
+      return mapDbSubmission(inserted);
+    } catch (e) {
+      console.error('Error creating submission in Supabase:', e);
+      throw e;
+    }
+  }
+
+  const fallbackSub: SubmissionReviewItem = {
+    id: subId,
+    type: data.type || 'Place',
+    name: data.name || 'Untitled Discovery',
+    nameMalayalam: data.nameMalayalam || '',
+    artForm: data.artForm || '',
+    district: data.district || 'Thrissur',
+    locality: data.locality || '',
+    address: data.address || '',
+    description: data.description || '',
+    culturalSignificance: data.culturalSignificance || '',
+    sources: data.sources || [],
+    contributorName: data.contributorName || 'Community Contributor',
+    contributorEmail: data.contributorEmail || '',
+    submittedAt,
+    status: 'Pending',
+    reviewerNotes: '',
+    urgency: data.urgency || 'Medium',
+    eventDate: data.eventDate || '',
+    eventTime: data.eventTime || '',
+    venue: data.venue || '',
+    organizer: data.organizer || '',
+    coordinates: data.coordinates,
+    imageUrl: data.imageUrl || '',
+    imageCredit: data.imageCredit || '',
+    websiteLink: data.websiteLink || '',
+  };
+
+  liveSubmissions.unshift(fallbackSub);
+  return fallbackSub;
 }
 
 export async function updateSubmissionStatus(
   id: string,
   status: 'Pending' | 'Approved' | 'Changes Requested' | 'Rejected',
-  reviewerNotes?: string
+  reviewerNotes?: string,
+  customSb?: any,
+  reviewerInfo?: { name: string; email: string }
 ): Promise<SubmissionReviewItem | null> {
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
+  let updatedRecord: SubmissionReviewItem | null = null;
+
   if (sb) {
     try {
-      await sb
+      const { data, error } = await sb
         .from('submissions')
         .update({
           status,
           reviewer_notes: reviewerNotes || null,
+          updated_at: new Date().toISOString(),
         })
-        .eq('id', id);
+        .eq('id', id)
+        .select('*, districts(name)')
+        .single();
+
+      if (!error && data) {
+        updatedRecord = mapDbSubmission(data);
+      }
 
       await sb.from('review_logs').insert({
         submission_id: id,
-        reviewer_name: 'Curator Staff',
-        reviewer_email: 'curator@nattuvazhi.org',
+        reviewer_name: reviewerInfo?.name || 'Curator Staff',
+        reviewer_email: reviewerInfo?.email || 'curator.nattuvazhi@gmail.com',
         action: `submission_${status.toLowerCase().replace(/\s+/g, '_')}`,
         notes: reviewerNotes || `Status updated to ${status}`,
       });
@@ -928,83 +1062,152 @@ export async function updateSubmissionStatus(
   }
 
   const index = liveSubmissions.findIndex((s) => s.id === id);
-  if (index === -1) return null;
+  if (index !== -1) {
+    liveSubmissions[index] = {
+      ...liveSubmissions[index],
+      status,
+      reviewerNotes: reviewerNotes ?? liveSubmissions[index].reviewerNotes,
+    };
+    if (!updatedRecord) updatedRecord = liveSubmissions[index];
+  }
 
-  const existing = liveSubmissions[index];
-  const updated: SubmissionReviewItem = {
-    ...existing,
-    status,
-    reviewerNotes: reviewerNotes ?? existing.reviewerNotes,
-  };
-
-  liveSubmissions[index] = updated;
   liveReviewLogs.unshift({
     id: `log-${Date.now()}`,
     submissionId: id,
-    reviewerName: 'Curator Staff',
+    reviewerName: reviewerInfo?.name || 'Curator Staff',
     action: `submission_${status.toLowerCase().replace(/\s+/g, '_')}`,
     notes: reviewerNotes || `Status updated to ${status}`,
     createdAt: new Date().toISOString(),
   });
 
-  return updated;
+  return updatedRecord;
 }
 
 export async function approveSubmissionAndPublish(
   id: string,
-  reviewerNotes?: string
-): Promise<{ submission: SubmissionReviewItem; listing?: CulturalListing }> {
-  const sub = await updateSubmissionStatus(id, 'Approved', reviewerNotes);
+  reviewerNotes?: string,
+  customSb?: any,
+  reviewerInfo?: { name: string; email: string }
+): Promise<{ submission: SubmissionReviewItem; listing?: CulturalListing; event?: EventListing }> {
+  const sb = getSupabase(customSb);
+  const sub = await getSubmissionById(id, sb);
   if (!sub) {
     throw new Error(`Submission ${id} not found.`);
   }
 
-  let created: CulturalListing | undefined;
-
-  if (['Place', 'Artist', 'Institution'].includes(sub.type)) {
-    const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
-    created = await createListing({
-      slug,
-      name: sub.name,
-      nameMalayalam: '',
-      category:
-        sub.type === 'Artist'
-          ? 'Master Practitioner'
-          : sub.type === 'Institution'
-          ? 'Cultural Institution'
-          : 'Sacred Space',
-      artForm: sub.artForm,
-      district: sub.district,
-      locality: sub.locality,
-      address: `${sub.locality}, ${sub.district}, Kerala`,
-      shortDescription: sub.description,
-      fullStory: `${sub.description}\n\nCultural Significance:\n${sub.culturalSignificance}`,
-      culturalSignificance: sub.culturalSignificance,
-      visitorProtocol: 'Respectful visitation in accordance with hereditary customs.',
-      verificationStatus: 'Verified',
-      verifiedBy: 'Folklore Academy Peer Review',
-      sourceCitations: sub.sources.map((s) => ({
-        title: s,
-        authorOrArchive: 'Submitted Source Documentation',
-      })),
-      contributor: {
-        name: sub.contributorName,
-        role: 'Community Heritage Contributor',
-        dateSubmitted: sub.submittedAt.split('T')[0],
-      },
-      featured: false,
-    });
+  // Prevent duplicate publishing
+  if (sub.status === 'Approved') {
+    if (sub.type === 'Event') {
+      const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const existingEvent = await getEventBySlug(slug, sb);
+      return { submission: sub, event: existingEvent || undefined };
+    } else {
+      const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const existingListing = await getListingBySlug(slug, sb);
+      return { submission: sub, listing: existingListing || undefined };
+    }
   }
 
-  return { submission: sub, listing: created };
+  let createdListing: CulturalListing | undefined;
+  let createdEvent: EventListing | undefined;
+
+  if (['Place', 'Artist', 'Institution', 'Correction'].includes(sub.type)) {
+    const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    // Map submission category
+    const category: ListingCategory =
+      sub.type === 'Artist'
+        ? 'Master Practitioner'
+        : sub.type === 'Institution'
+        ? 'Cultural Institution'
+        : 'Sacred Space';
+
+    createdListing = await createListing(
+      {
+        slug,
+        name: sub.name,
+        nameMalayalam: sub.nameMalayalam || '',
+        category,
+        artForm: sub.artForm,
+        district: sub.district,
+        locality: sub.locality,
+        address: sub.address || `${sub.locality}, ${sub.district}, Kerala`,
+        coordinates: sub.coordinates,
+        shortDescription: sub.description,
+        fullStory: sub.culturalSignificance
+          ? `${sub.description}\n\nCultural Significance & Context:\n${sub.culturalSignificance}`
+          : sub.description,
+        culturalSignificance: sub.culturalSignificance,
+        visitorProtocol: 'Respectful visitation in accordance with hereditary customs.',
+        imageUrl: sub.imageUrl || 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop',
+        imageCredit: sub.imageCredit || 'Community Heritage Contributor',
+        verificationStatus: 'Verified',
+        verifiedBy: 'Regional Curatorial Bureau',
+        sourceCitations: sub.sources.map((s) => ({
+          title: s,
+          authorOrArchive: 'Submitted Source Documentation',
+          url: s.startsWith('http') ? s : undefined,
+        })),
+        officialWebsite: sub.websiteLink || undefined,
+        contributor: {
+          name: sub.contributorName,
+          role: 'Community Heritage Contributor',
+          dateSubmitted: sub.submittedAt.split('T')[0],
+        },
+        featured: false,
+      },
+      sb
+    );
+  } else if (sub.type === 'Event') {
+    const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+
+    createdEvent = await createEvent(
+      {
+        slug,
+        title: sub.name,
+        titleMalayalam: sub.nameMalayalam || sub.name,
+        category: sub.artForm ? `${sub.artForm} Gathering` : 'Temple Festival & Percussion',
+        artForm: sub.artForm || 'Ritual Ensembles',
+        date: sub.eventDate || new Date().toISOString().split('T')[0],
+        time: sub.eventTime || '10:00 AM – 09:00 PM',
+        venue: sub.venue || sub.locality || 'Heritage Grounds',
+        district: sub.district,
+        locality: sub.locality,
+        address: sub.address || `${sub.locality}, ${sub.district}, Kerala`,
+        organizer: sub.organizer || sub.contributorName || 'Festival Trustee Committee',
+        description: sub.description,
+        culturalContext: sub.culturalSignificance || sub.description,
+        sourceLink: sub.websiteLink || (sub.sources[0]?.startsWith('http') ? sub.sources[0] : 'https://keralatourism.org'),
+        status: 'Confirmed',
+        imageUrl: sub.imageUrl || 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop',
+        entryType: 'Free Entry',
+      },
+      sb
+    );
+  }
+
+  // Update submission status to Approved and record review log
+  const updatedSub = await updateSubmissionStatus(
+    id,
+    'Approved',
+    reviewerNotes || 'Approved and published to public cultural registry',
+    sb,
+    reviewerInfo
+  );
+
+  return {
+    submission: updatedSub || { ...sub, status: 'Approved' },
+    listing: createdListing,
+    event: createdEvent,
+  };
 }
 
 // ====================================================================
 // HOMEPAGE CONFIG & AUDIT LOGS
 // ====================================================================
 
-export async function getHomepageConfig(): Promise<Record<string, any>> {
-  const sb = getSupabase();
+export async function getHomepageConfig(customSb?: any): Promise<Record<string, any>> {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data, error } = await sb.from('homepage_config').select('key, value_json');
@@ -1026,9 +1229,10 @@ export async function getHomepageConfig(): Promise<Record<string, any>> {
 export async function updateHomepageConfig(
   key: string,
   value: any,
-  updatedBy: string = 'Curator'
+  updatedBy: string = 'Curator',
+  customSb?: any
 ): Promise<boolean> {
-  const sb = getSupabase();
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       await sb.from('homepage_config').upsert({
@@ -1053,8 +1257,8 @@ export async function updateHomepageConfig(
   return true;
 }
 
-export async function getReviewLogs() {
-  const sb = getSupabase();
+export async function getReviewLogs(customSb?: any) {
+  const sb = getSupabase(customSb);
   if (sb) {
     try {
       const { data, error } = await sb

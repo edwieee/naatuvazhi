@@ -92,10 +92,10 @@ export default function HeroSection() {
           </div>
 
           {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
-          {/* On Desktop: Expands to full hero height from immediately below header down to bottom border, aligned right */}
-          {/* On Mobile/Tablet: Responsive full-width below the text */}
-          <div className="lg:col-span-5 w-full lg:h-full lg:absolute lg:right-0 lg:top-0 lg:bottom-0 lg:w-[54vw] lg:max-w-[1150px] flex items-center lg:items-start justify-center lg:justify-end pointer-events-none select-none overflow-hidden pb-6 lg:pb-0 lg:[mask-image:linear-gradient(to_right,transparent_0%,black_15%)]">
-            <div className="relative w-full aspect-video lg:aspect-auto lg:h-full flex items-center lg:items-start justify-center lg:justify-end bg-[#fcfcec] lg:-mr-8 xl:-mr-14">
+          {/* Desktop: 120% scale, shifted 4vw left of viewport edge, top-aligned to nav bottom */}
+          {/* Mobile/Tablet: Responsive full-width below the text */}
+          <div className="lg:col-span-5 w-full lg:h-full lg:absolute lg:right-[4vw] lg:top-0 lg:bottom-0 lg:w-[58vw] lg:max-w-[1200px] flex items-center lg:items-start justify-center lg:justify-center pointer-events-none select-none overflow-hidden pb-6 lg:pb-0 lg:[mask-image:linear-gradient(to_right,transparent_0%,black_12%)]">
+            <div className="relative w-full aspect-video lg:aspect-auto lg:h-[120%] lg:-mt-[2%] flex items-center lg:items-start justify-center lg:justify-center bg-[#fcfcec]">
               {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
               <video
                 ref={videoRef}
@@ -106,7 +106,7 @@ export default function HeroSection() {
                 loop
                 playsInline
                 preload="auto"
-                className="w-full h-full lg:w-auto lg:h-full object-contain lg:object-right lg:object-top [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
+                className="w-full h-full lg:w-auto lg:h-full object-contain lg:object-[65%_top] [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
                 aria-label="Theyyam cultural ritual living animation"
               />
               {/* Fallback static poster for prefers-reduced-motion */}
@@ -115,7 +115,7 @@ export default function HeroSection() {
                 alt="Theyyam cultural ritual artwork"
                 width={1920}
                 height={1080}
-                className="hidden motion-reduce:block w-full h-full lg:w-auto lg:h-full object-contain lg:object-right lg:object-top [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+                className="hidden motion-reduce:block w-full h-full lg:w-auto lg:h-full object-contain lg:object-[65%_top] [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
               />
             </div>
           </div>

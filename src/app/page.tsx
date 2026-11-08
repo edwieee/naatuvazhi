@@ -3,6 +3,7 @@ import HeroSection from '@/components/home/HeroSection';
 import CulturalCategories from '@/components/home/CulturalCategories';
 import FeaturedListings from '@/components/home/FeaturedListings';
 import UpcomingEventsRow from '@/components/home/UpcomingEventsRow';
+import CulturalGallery from '@/components/home/CulturalGallery';
 import HowItWorks from '@/components/home/HowItWorks';
 import TrustSection from '@/components/home/TrustSection';
 
@@ -21,10 +22,13 @@ export default function HomePage() {
       {/* 4. Cultural Calendar: Upcoming festivals, dates, locations, organisers, source links */}
       <UpcomingEventsRow />
 
-      {/* 5. Methodology & Verification: 4-step workflow (Discover, Learn, Verify, Contribute) */}
+      {/* 5. Kerala heritage gallery */}
+      <CulturalGallery />
+
+      {/* 6. Methodology & Verification: 4-step workflow (Discover, Learn, Verify, Contribute) */}
       <HowItWorks />
 
-      {/* 6 & 7. Community Verification Charter (5 standards) & Final Contribution CTA */}
+      {/* 7 & 8. Community Verification Charter (5 standards) & Final Contribution CTA */}
       <TrustSection />
     </main>
   );

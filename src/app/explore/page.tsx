@@ -1,10 +1,11 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { MOCK_LISTINGS } from '@/data/mock-listings';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { CulturalListing } from '@/lib/types';
+import { getListings } from '@/lib/supabase/data-service';
 import KeralaMap from '@/components/map/KeralaMap';
 import {
   Search,
@@ -22,6 +23,10 @@ import { useLanguage } from '@/components/ui/LanguageContext';
 export default function ExplorePage() {
   const { t } = useLanguage();
 
+  // Live database listings state (initialized with mock fallback for immediate render)
+  const [listings, setListings] = useState<CulturalListing[]>(MOCK_LISTINGS);
+  const [isLoadingListings, setIsLoadingListings] = useState(false);
+
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('All');
@@ -37,6 +42,41 @@ export default function ExplorePage() {
   // Mobile Map vs List toggle
   const [mobileActiveView, setMobileActiveView] = useState<'list' | 'map'>('list');
 
+  // Fetch real listings from Supabase
+  useEffect(() => {
+    let isMounted = true;
+    setIsLoadingListings(true);
+
+    getListings()
+      .then((data) => {
+        if (isMounted && data && data.length > 0) {
+          setListings(data);
+        }
+      })
+      .catch((err) => {
+        console.warn('Using local listings fallback:', err);
+      })
+      .finally(() => {
+        if (isMounted) {
+          setIsLoadingListings(false);
+        }
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  // Bi-directional selection: Scroll selected listing into view in the directory panel
+  useEffect(() => {
+    if (selectedListing) {
+      const el = document.getElementById(`listing-card-${selectedListing.id}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+    }
+  }, [selectedListing]);
+
   const categories = [
     'All',
     'Ritual Art',
@@ -49,12 +89,12 @@ export default function ExplorePage() {
   const verificationStatuses = ['All', 'Verified', 'Scholar Reviewed'];
 
   const filteredListings = useMemo(() => {
-    return MOCK_LISTINGS.filter((listing) => {
+    return listings.filter((listing) => {
       const q = searchQuery.toLowerCase().trim();
       const matchesSearch =
         !q ||
         listing.name.toLowerCase().includes(q) ||
-        listing.nameMalayalam.toLowerCase().includes(q) ||
+        (listing.nameMalayalam && listing.nameMalayalam.toLowerCase().includes(q)) ||
         listing.artForm.toLowerCase().includes(q) ||
         listing.locality.toLowerCase().includes(q) ||
         listing.district.toLowerCase().includes(q) ||
@@ -81,7 +121,7 @@ export default function ExplorePage() {
       if (sortBy === 'district') return a.district.localeCompare(b.district);
       return (b.featured ? 1 : 0) - (a.featured ? 1 : 0);
     });
-  }, [searchQuery, selectedDistrict, selectedCategory, selectedVerification, sortBy]);
+  }, [listings, searchQuery, selectedDistrict, selectedCategory, selectedVerification, sortBy]);
 
   const handleClearFilters = () => {
     setSearchQuery('');
@@ -276,15 +316,16 @@ export default function ExplorePage() {
                 return (
                   <div
                     key={listing.id}
+                    id={`listing-card-${listing.id}`}
                     onMouseEnter={() => setHoveredListingId(listing.id)}
                     onMouseLeave={() => setHoveredListingId(null)}
                     onClick={() => setSelectedListing(listing)}
-                    className={`pt-3 first:pt-0 cursor-pointer rounded-lg p-2.5 transition-colors ${
+                    className={`pt-3 first:pt-0 cursor-pointer rounded-lg p-2.5 transition-all ${
                       isSelected
-                        ? 'bg-[#F8F5EE] border border-[#E8E2D6]'
+                        ? 'bg-[#F8F5EE] border border-[#B21C01]/50 shadow-xs ring-1 ring-[#B21C01]/20'
                         : isHovered
-                        ? 'bg-[#FBF9F5]'
-                        : 'bg-transparent'
+                        ? 'bg-[#FBF9F5] border border-[#E8E2D6]'
+                        : 'bg-transparent border border-transparent'
                     }`}
                   >
                     <div className="flex gap-3">

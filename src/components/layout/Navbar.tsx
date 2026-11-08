@@ -14,6 +14,7 @@ export default function Navbar() {
   const navLinks = [
     { href: '/explore', labelEn: 'Explore', labelMl: 'ഭൂപടം' },
     { href: '/events', labelEn: 'Events', labelMl: 'ഉത്സവങ്ങൾ' },
+    { href: '/#gallery', labelEn: 'Gallery', labelMl: 'ഗാലറി' },
     { href: '/#how-it-works', labelEn: 'How it works', labelMl: 'പ്രവർത്തനരീതി' },
     { href: '/contribute', labelEn: 'Contribute', labelMl: 'വിവരങ്ങൾ ചേർക്കുക' },
   ];

@@ -76,3 +76,22 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #BFB5A5;
 }
+
+/* Leaflet custom popup styling for Nattuvazhi */
+.nattuvazhi-custom-popup .leaflet-popup-content-wrapper {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+  border-radius: 12px !important;
+}
+
+.nattuvazhi-custom-popup .leaflet-popup-content {
+  margin: 0 !important;
+  line-height: inherit !important;
+}
+
+.nattuvazhi-custom-popup .leaflet-popup-tip {
+  background: white !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+

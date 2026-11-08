@@ -9,9 +9,9 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="relative w-full bg-[#FCFBEF] overflow-hidden">
+    <footer className="relative w-full bg-[#F5F2E9] overflow-hidden">
       {/* 3-Column Content Container: Full Width, Borderless, Balanced Edge-to-Edge Spacing */}
-      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 pt-10 md:pt-14 pb-2">
+      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 pt-10 md:pt-14 pb-2 bg-[#F5F2E9]">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 lg:gap-16">
           {/* Column 1 — Nattuvazhi Brand */}
           <div className="w-full md:max-w-[420px] lg:max-w-[480px] flex flex-col items-start">
@@ -146,7 +146,7 @@ export default function Footer() {
       </div>
 
       {/* Seamless, Borderless Kerala Cultural Panorama: tight vertical spacing, full width */}
-      <div className="w-full mt-2 sm:mt-4">
+      <div className="w-full">
         <KeralaHeritageScene
           paperColor="#f6f3eb"
           inkColor="#692820"

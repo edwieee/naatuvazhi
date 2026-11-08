@@ -47,19 +47,7 @@ export default async function EventDetailPage({ params }: Props) {
 
       {/* Header Block */}
       <div className="flex flex-col gap-2 mb-8">
-        <div className="flex items-center gap-3 text-xs">
-          <span className="px-2 py-0.5 rounded-sm bg-[#F3EFE8] text-[#181512] font-mono text-[11px] border border-[#E8E2D6]">
-            {event.category}
-          </span>
-          <span className="text-[#2D6A4F] font-medium">
-            {event.status}
-          </span>
-          <span className="text-[#8C8273] ml-auto hidden sm:inline text-[11px]">
-            {event.lastConfirmedDate}
-          </span>
-        </div>
-
-        <h1 className="text-3xl sm:text-4xl font-semibold text-[#181512] tracking-tight leading-tight mt-1">
+        <h1 className="text-3xl sm:text-4xl font-semibold text-[#181512] tracking-tight leading-tight">
           {event.title}
         </h1>
 

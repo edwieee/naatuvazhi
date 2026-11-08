@@ -11,7 +11,7 @@ export default function Footer() {
   return (
     <footer className="relative w-full bg-[#f6f3eb] overflow-hidden">
       {/* 3-Column Content Container: Full Width, Borderless, Balanced Edge-to-Edge Spacing */}
-      <div className="max-w-7xl mx-auto px-4 md:px-12 pt-10 md:pt-14 pb-2">
+      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 pt-10 md:pt-14 pb-2">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 lg:gap-16">
           {/* Column 1 — Nattuvazhi Brand */}
           <div className="w-full md:max-w-[420px] lg:max-w-[480px] flex flex-col items-start">
@@ -60,7 +60,7 @@ export default function Footer() {
               <ul className="space-y-2 text-xs sm:text-sm text-[#5d5e61] font-body">
                 <li>
                   <Link
-                    href="/explore?category=Ritual+Art"
+                    href="/explore?category=ritual-art"
                     className="hover:text-[#692820] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#692820] rounded-xs"
                   >
                     Ritual arts &amp; Theyyam
@@ -68,7 +68,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/explore?category=Sacred+Space"
+                    href="/explore?category=sacred-space"
                     className="hover:text-[#692820] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#692820] rounded-xs"
                   >
                     Sacred groves (Kavu)
@@ -76,7 +76,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/explore?category=Traditional+Craft"
+                    href="/explore?category=traditional-craft"
                     className="hover:text-[#692820] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#692820] rounded-xs"
                   >
                     Craft guilds &amp; metallurgy
@@ -84,7 +84,7 @@ export default function Footer() {
                 </li>
                 <li>
                   <Link
-                    href="/explore?category=Martial+Tradition"
+                    href="/explore?category=martial-tradition"
                     className="hover:text-[#692820] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#692820] rounded-xs"
                   >
                     Kalaripayattu lineages

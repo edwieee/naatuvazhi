@@ -97,7 +97,7 @@ const heritageGallery: CardItem[] = [
 export default function CulturalGallery() {
   return (
     <section id="gallery" className="border-b border-[#e5e0d4] bg-[#fcfcec] py-14 md:py-20">
-      <div className="mx-auto max-w-7xl px-4 md:px-12">
+      <div className="mx-auto max-w-[1120px] px-4 md:px-10 xl:px-0">
         <div className="mb-10 max-w-2xl">
           <span className="font-body mb-2 block text-xs font-semibold text-[#aa3000]">
             Kerala heritage in focus

@@ -244,7 +244,7 @@ export default function OpenStreetMapClient({
                     {listing.name}
                   </h4>
                   {listing.nameMalayalam && (
-                    <p className="text-[10px] text-[#8C8273] font-serif line-clamp-1 mb-1">
+                    <p className="text-[10px] text-[#8C8273] font-malayalam line-clamp-1 mb-1">
                       {listing.nameMalayalam}
                     </p>
                   )}

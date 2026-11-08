@@ -81,7 +81,7 @@ export default async function CulturalDetailPage({ params }: Props) {
         </h1>
 
         <div className="flex items-center gap-3">
-          <h2 className="text-xl text-[#5C554B] font-serif">
+          <h2 className="text-xl text-[#5C554B] font-malayalam">
             {listing.nameMalayalam}
           </h2>
           <span className="text-[#8C8273]">·</span>

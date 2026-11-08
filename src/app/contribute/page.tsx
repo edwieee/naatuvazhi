@@ -45,6 +45,7 @@ export default function ContributePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [submissionId, setSubmissionId] = useState('');
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   // Unslop pass: Line icons only, no emojis!
   const types: { id: SubmissionType; label: string; icon: any }[] = [
@@ -87,6 +88,7 @@ export default function ContributePage() {
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setSubmitError(null);
     try {
       const res = await actionSubmitContribution({
         type: submissionType,
@@ -106,12 +108,11 @@ export default function ContributePage() {
         setSubmissionId(res.submission.id);
         setIsSuccess(true);
       } else {
-        setSubmissionId(`NV-2026-${Math.floor(1000 + Math.random() * 9000)}`);
-        setIsSuccess(true);
+        setSubmitError(res.error || 'We could not record this submission. Please try again.');
       }
-    } catch {
-      setSubmissionId(`NV-2026-${Math.floor(1000 + Math.random() * 9000)}`);
-      setIsSuccess(true);
+    } catch (error) {
+      console.error('[ContributePage] Submission failed:', error);
+      setSubmitError('We could not connect to the review queue. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -134,6 +135,7 @@ export default function ContributePage() {
     setHasConsent(false);
     setErrors({});
     setIsSuccess(false);
+    setSubmitError(null);
   };
 
   return (
@@ -193,6 +195,14 @@ export default function ContributePage() {
       ) : (
         /* The Contribution Form */
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+          {submitError && (
+            <div
+              role="alert"
+              className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+            >
+              {submitError}
+            </div>
+          )}
           {/* Section 1: Submission Type Selection (Clean Line Icons, no emojis!) */}
           <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
             <label className="text-xs font-semibold text-[#181512] mb-3 block">

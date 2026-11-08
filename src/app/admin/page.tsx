@@ -624,7 +624,7 @@ export default function AdminDashboardPage() {
                           {item.name}
                         </Link>
                         {item.nameMalayalam && (
-                          <span className="text-[11px] text-[#8C8273] font-serif block">
+                          <span className="text-[11px] text-[#8C8273] font-malayalam block">
                             {item.nameMalayalam}
                           </span>
                         )}

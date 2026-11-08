@@ -365,7 +365,7 @@ function ExplorePageContent() {
                           <h3 className="font-semibold text-xs sm:text-sm text-[#181512] hover:text-[#B21C01] transition-colors leading-snug mt-0.5">
                             {listing.name}
                           </h3>
-                          <div className="text-[11px] text-[#8C8273] font-serif">
+                          <div className="text-[11px] text-[#8C8273] font-malayalam">
                             {listing.nameMalayalam}
                           </div>
                         </div>

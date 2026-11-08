@@ -167,7 +167,7 @@ export default function EventsPage() {
                       {event.title}
                     </h3>
                   </Link>
-                  <div className="text-xs text-[#8C8273] font-serif mt-0.5 mb-2">
+                  <div className="text-xs text-[#8C8273] font-malayalam mt-0.5 mb-2">
                     {event.titleMalayalam}
                   </div>
 

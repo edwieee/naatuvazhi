@@ -11,7 +11,7 @@ export default function UpcomingEventsRow() {
 
   return (
     <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#f6f3eb]" id="calendar">
-      <div className="max-w-7xl mx-auto px-4 md:px-12">
+      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
           <div className="max-w-2xl">

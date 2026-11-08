@@ -53,7 +53,7 @@ export default function HowItWorks() {
 
   return (
     <section id="how-it-works" className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#f6f3eb]">
-      <div className="max-w-7xl mx-auto px-4 md:px-12">
+      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0">
         <div className="max-w-2xl mb-10">
           <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
             {t('Methodology & verification', 'വിവരശേഖരണ രീതി')}

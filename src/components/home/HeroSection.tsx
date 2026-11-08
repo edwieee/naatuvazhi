@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef } from 'react';
 import Link from 'next/link';
-import { PlusCircle, ArrowRight, Check } from 'lucide-react';
+import { PlusCircle, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function HeroSection() {
@@ -31,22 +31,50 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section className="relative border-b border-[#e5e0d4] bg-[#fcfcec] overflow-hidden">
+    <section className="relative border-b border-[#e5e0d4] bg-[#fcfcec] overflow-hidden lg:h-[calc(100vh-4rem)] lg:min-h-[700px] lg:max-h-[950px] flex flex-col justify-center">
+      {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
+      {/* Desktop: Anchored directly below header at top-0, fills full hero height down to bottom border, right-aligned with balanced margin */}
+      <div className="hidden lg:flex absolute inset-0 items-start justify-end pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_28%,black_45%)]">
+        <div className="relative h-full w-auto flex items-start justify-end bg-[#fcfcec] -mr-20 xl:-mr-28">
+          {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
+          <video
+            ref={videoRef}
+            src="/videos/theyyam-hero.mp4"
+            poster="/videos/theyyam-hero-poster.jpg"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="h-full w-auto max-w-none object-contain object-top object-right [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
+            aria-label="Theyyam cultural ritual living animation"
+          />
+          {/* Fallback static poster for prefers-reduced-motion */}
+          <img
+            src="/videos/theyyam-hero-poster.jpg"
+            alt="Theyyam cultural ritual artwork"
+            width={1920}
+            height={1080}
+            className="hidden motion-reduce:block h-full w-auto max-w-none object-contain object-top object-right [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+          />
+        </div>
+      </div>
+
       {/* Editorial Content Container */}
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-10 lg:py-0">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center lg:min-h-[580px] xl:min-h-[640px]">
+      <div className="max-w-7xl mx-auto px-4 md:px-12 w-full py-10 lg:py-0 flex-1 flex flex-col justify-center relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center h-full">
           {/* Left Column: Editorial Archive Pitch */}
-          <div className="lg:col-span-7 flex flex-col justify-center py-4 lg:py-16 relative z-10">
+          <div className="lg:col-span-7 flex flex-col justify-center py-6 lg:py-10 max-w-lg lg:max-w-[500px] xl:max-w-[540px]">
             {/* Subtle Eyebrow Label */}
-            <div className="inline-flex items-center gap-2 mb-4">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]"></span>
-              <span className="font-body text-xs font-medium text-[#7d3b24] tracking-normal">
+            <div className="inline-flex items-center gap-2.5 mb-5 lg:mb-6">
+              <span className="w-2 h-2 rounded-full bg-[#aa3000]"></span>
+              <span className="font-body text-xs sm:text-[13px] font-medium text-[#7d3b24] tracking-normal">
                 {t('Kerala cultural cartography · Public open archive', 'കേരള സാംസ്കാരിക ഭൂപടം · പബ്ലിക് ഓപ്പൺ ആർക്കൈവ്')}
               </span>
             </div>
 
             {/* Display Headline without trailing period */}
-            <h1 className="font-headline text-4xl sm:text-5xl lg:text-[54px] lg:leading-[1.12] text-[#1c1c16] mb-5 tracking-tight font-medium">
+            <h1 className="font-headline text-4xl sm:text-5xl lg:text-[50px] xl:text-[58px] lg:leading-[1.14] xl:leading-[1.1] text-[#1c1c16] mb-6 lg:mb-7 tracking-tight font-medium">
               {t(
                 'Discover the culture that lives around you',
                 'നിങ്ങൾക്ക് ചുറ്റും ജീവിക്കുന്ന സംസ്കാരം കണ്ടെത്തൂ'
@@ -54,7 +82,7 @@ export default function HeroSection() {
             </h1>
 
             {/* Supporting Description */}
-            <p className="font-body text-base sm:text-lg text-[#5d5e61] mb-8 max-w-xl leading-relaxed">
+            <p className="font-body text-base sm:text-lg lg:text-[18px] xl:text-[19px] text-[#5d5e61] mb-8 lg:mb-10 leading-relaxed max-w-md lg:max-w-[480px]">
               {t(
                 'A community-informed, scholar-verified living map of Kerala’s sacred groves, ritual performing arts, master practitioners, and craft guilds.',
                 'നാട്ടുവഴി — കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. ക്ഷേത്രകലകൾ, കാവുകൾ, പാരമ്പര്യ കരകൗശലങ്ങൾ, നാട്ടുവിജ്ഞാനം എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
@@ -62,43 +90,28 @@ export default function HeroSection() {
             </p>
 
             {/* Quiet, Well-balanced Dual CTAs */}
-            <div className="flex flex-wrap items-center gap-3.5 mb-8">
+            <div className="flex flex-wrap items-center gap-4">
               <Link
                 href="/explore"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-sm rounded-md transition-colors shadow-xs"
+                className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-sm sm:text-base rounded-md transition-colors shadow-xs"
               >
                 <span>{t('Explore the directory', 'ഭൂപടം തുറക്കുക')}</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
               </Link>
               <Link
                 href="/contribute"
-                className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-[#f6f4ea] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm rounded-md transition-colors"
+                className="inline-flex items-center justify-center gap-2.5 px-5 sm:px-6 py-3.5 sm:py-4 bg-[#f6f4ea] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm sm:text-base rounded-md transition-colors"
               >
-                <PlusCircle className="w-4 h-4 text-[#aa3000]" />
+                <PlusCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#aa3000]" />
                 <span>{t('Submit a discovery', 'പുതിയ കേന്ദ്രം സമർപ്പിക്കൂ')}</span>
               </Link>
             </div>
-
-            {/* Trust Line with proper typography */}
-            <div className="pt-5 border-t border-[#e5e0d4] flex items-center gap-2.5">
-              <Check className="w-4 h-4 text-[#aa3000] flex-shrink-0" />
-              <p className="font-body text-xs sm:text-sm text-[#5d5e61]">
-                {t(
-                  'Verified against folklore academy archives and local hereditary custodians',
-                  'നാട്ടറിവ് വിദഗ്ദ്ധരും ഫോക്‌ലോർ പണ്ഡിതരും പരിശോധിച്ചു ഉറപ്പുവരുത്തിയത്'
-                )}
-              </p>
-            </div>
           </div>
 
-          {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
-          {/* Desktop: 120% scale, shifted 4vw left of viewport edge, top-aligned to nav bottom */}
-          {/* Mobile/Tablet: Responsive full-width below the text */}
-          <div className="lg:col-span-5 w-full lg:h-full lg:absolute lg:right-[4vw] lg:top-0 lg:bottom-0 lg:w-[58vw] lg:max-w-[1200px] flex items-center lg:items-start justify-center lg:justify-center pointer-events-none select-none overflow-hidden pb-6 lg:pb-0 lg:[mask-image:linear-gradient(to_right,transparent_0%,black_12%)]">
-            <div className="relative w-full aspect-video lg:aspect-auto lg:h-[120%] lg:-mt-[2%] flex items-center lg:items-start justify-center lg:justify-center bg-[#fcfcec]">
-              {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
+          {/* Mobile/Tablet Fallback Visual (In-flow below text) */}
+          <div className="lg:hidden w-full flex items-center justify-center pb-6">
+            <div className="relative w-full aspect-video flex items-center justify-center bg-[#fcfcec] overflow-hidden">
               <video
-                ref={videoRef}
                 src="/videos/theyyam-hero.mp4"
                 poster="/videos/theyyam-hero-poster.jpg"
                 autoPlay
@@ -106,16 +119,15 @@ export default function HeroSection() {
                 loop
                 playsInline
                 preload="auto"
-                className="w-full h-full lg:w-auto lg:h-full object-contain lg:object-[65%_top] [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
+                className="w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec] motion-reduce:hidden"
                 aria-label="Theyyam cultural ritual living animation"
               />
-              {/* Fallback static poster for prefers-reduced-motion */}
               <img
                 src="/videos/theyyam-hero-poster.jpg"
                 alt="Theyyam cultural ritual artwork"
                 width={1920}
                 height={1080}
-                className="hidden motion-reduce:block w-full h-full lg:w-auto lg:h-full object-contain lg:object-[65%_top] [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+                className="hidden motion-reduce:block w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
               />
             </div>
           </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { Languages, Menu, X } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
@@ -31,19 +32,16 @@ export default function Navbar() {
         {/* Brand Anchor */}
         <Link 
           href="/" 
-          className="flex items-center gap-2.5 group transition-opacity hover:opacity-90 focus:outline-none"
+          className="flex items-center group transition-opacity hover:opacity-90 focus:outline-none"
         >
-          <div className="w-7 h-7 bg-[#aa3000] text-white flex items-center justify-center font-bold text-xs tracking-tight rounded-sm shadow-xs">
-            NV
-          </div>
-          <div className="flex items-baseline gap-2">
-            <span className="font-headline text-xl font-semibold text-[#1c1c16] tracking-tight">
-              nattuvazhi
-            </span>
-            <span className="font-malayalam text-xs text-[#6b645b] font-normal hidden sm:inline">
-              നാട്ടുവഴി
-            </span>
-          </div>
+          <Image
+            src="/images/naatuvazhi-logo.png"
+            alt="Naatuvazhi"
+            width={2000}
+            height={667}
+            className="h-auto w-[170px] object-contain"
+            priority
+          />
         </Link>
 
         {/* Desktop Navigation Links */}
@@ -70,7 +68,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/admin"
-            className="hidden sm:inline-flex items-center font-body text-xs font-medium bg-[#f6f4ea] hover:bg-[#ede7da] text-[#1c1c16] px-3 py-1.5 border border-[#ded7c9] rounded-md transition-colors shadow-2xs"
+            className="hidden sm:inline-flex items-center font-body text-sm font-medium bg-[#f6f4ea] hover:bg-[#ede7da] text-[#1c1c16] px-3 py-1.5 border border-[#ded7c9] rounded-md transition-colors shadow-2xs"
           >
             {t('Admin Portal', 'അഡ്മിൻ പോർട്ടൽ')}
           </Link>
@@ -79,11 +77,11 @@ export default function Navbar() {
           <button
             onClick={toggleLanguage}
             type="button"
-            className="font-body text-xs bg-[#f6f4ea] hover:bg-[#ede7da] text-[#1c1c16] px-3 py-1.5 border border-[#ded7c9] rounded-md flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="font-body text-sm bg-[#f6f4ea] hover:bg-[#ede7da] text-[#1c1c16] px-3 py-1.5 border border-[#ded7c9] rounded-md flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Toggle language / ഭാഷ മാറ്റുക"
           >
             <Languages className="w-3.5 h-3.5 text-[#aa3000]" />
-            <span className="font-malayalam font-medium">{language === 'en' ? 'മലയാളം' : 'English'}</span>
+            <span className="font-malayalam text-sm font-medium">{language === 'en' ? 'മലയാളം' : 'English'}</span>
           </button>
 
           {/* Mobile Menu Button */}
@@ -119,7 +117,7 @@ export default function Navbar() {
             <Link
               href="/admin"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-xs font-body font-medium text-[#5d5e61] hover:text-[#aa3000]"
+              className="text-sm font-body font-medium text-[#5d5e61] hover:text-[#aa3000]"
             >
               {t('Admin Portal', 'അഡ്മിൻ പോർട്ടൽ')}
             </Link>

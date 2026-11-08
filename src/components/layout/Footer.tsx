@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import KeralaHeritageScene from '@/components/ui/kerala-heritage-scene';
 
@@ -17,19 +18,15 @@ export default function Footer() {
           <div className="w-full md:max-w-[420px] lg:max-w-[480px] flex flex-col items-start">
             <Link
               href="/"
-              className="flex items-center gap-2.5 mb-3 group transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#aa3000] rounded-sm"
+              className="flex items-center mb-3 group transition-opacity hover:opacity-90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#aa3000] rounded-sm"
             >
-              <div className="w-6 h-6 bg-[#aa3000] text-white flex items-center justify-center font-bold text-xs rounded-sm shadow-xs">
-                NV
-              </div>
-              <div className="flex items-baseline gap-2">
-                <span className="font-headline text-lg font-semibold text-[#1c1c16]">
-                  nattuvazhi
-                </span>
-                <span className="font-malayalam text-xs text-[#6e675d] font-normal">
-                  നാട്ടുവഴി
-                </span>
-              </div>
+              <Image
+                src="/images/naatuvazhi-logo.png"
+                alt="Naatuvazhi"
+                width={2000}
+                height={667}
+                className="h-auto w-[190px] object-contain"
+              />
             </Link>
 
             <p className="font-body text-xs sm:text-sm text-[#5d5e61] leading-relaxed mb-4 max-w-md">

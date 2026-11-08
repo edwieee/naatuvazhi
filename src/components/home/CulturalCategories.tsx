@@ -29,13 +29,22 @@ const iconByName = {
 };
 
 const fallbackCategories: CulturalCategory[] = [
-  { id: 'fallback-ritual-art', slug: 'ritual-art', name: 'Ritual Art', nameMalayalam: 'അനുഷ്ഠാന കല', description: 'Living ritual performances and sacred arts documented across Kerala.', iconName: 'Sparkles', displayOrder: 1 },
-  { id: 'fallback-sacred-space', slug: 'sacred-space', name: 'Sacred Space', nameMalayalam: 'പുണ്യ സ്ഥാനങ്ങൾ', description: 'Temples, sacred groves and heritage places with living cultural meaning.', iconName: 'Landmark', displayOrder: 2 },
-  { id: 'fallback-master-practitioner', slug: 'master-practitioner', name: 'Master Practitioner', nameMalayalam: 'ഗുരുക്കന്മാർ', description: 'Individual custodians and teachers of Kerala’s cultural traditions.', iconName: 'Award', displayOrder: 3 },
-  { id: 'fallback-traditional-craft', slug: 'traditional-craft', name: 'Traditional Craft', nameMalayalam: 'പരമ്പരാഗത കരകൗശലം', description: 'Traditional materials, techniques and artisan-made cultural objects.', iconName: 'Hammer', displayOrder: 4 },
-  { id: 'fallback-cultural-institution', slug: 'cultural-institution', name: 'Cultural Institution', nameMalayalam: 'സാംസ്കാരിക സ്ഥാപനങ്ങൾ', description: 'Schools, archives and institutions that preserve and teach cultural practice.', iconName: 'Library', displayOrder: 5 },
-  { id: 'fallback-martial-tradition', slug: 'martial-tradition', name: 'Martial Tradition', nameMalayalam: 'യോദ്ധാ പാരമ്പര്യം', description: 'Kerala’s martial lineages, training traditions and related knowledge.', iconName: 'Shield', displayOrder: 6 },
+  { id: 'fallback-ritual-art', slug: 'ritual-art', name: 'Ritual Art', nameMalayalam: 'അനുഷ്ഠാന കല', description: 'Discover traditional performances, Theyyam, ritual dances and local art forms.', iconName: 'Sparkles', displayOrder: 1 },
+  { id: 'fallback-sacred-space', slug: 'sacred-space', name: 'Sacred Space', nameMalayalam: 'പുണ്യ സ്ഥാനങ്ങൾ', description: 'Explore sacred groves, old temples, hill shrines and other special places.', iconName: 'Landmark', displayOrder: 2 },
+  { id: 'fallback-master-practitioner', slug: 'master-practitioner', name: 'Master Practitioner', nameMalayalam: 'ഗുരുക്കന്മാർ', description: "Meet skilled artists, performers and people who keep Kerala's traditions alive.", iconName: 'Award', displayOrder: 3 },
+  { id: 'fallback-traditional-craft', slug: 'traditional-craft', name: 'Traditional Craft', nameMalayalam: 'പരമ്പരാഗത കരകൗശലം', description: 'Discover traditional crafts such as bell-metal work, coir weaving and wood carving.', iconName: 'Hammer', displayOrder: 4 },
+  { id: 'fallback-cultural-institution', slug: 'cultural-institution', name: 'Cultural Institution', nameMalayalam: 'സാംസ്കാരിക സ്ഥാപനങ്ങൾ', description: "Explore art schools, cultural groups and centres that teach and preserve Kerala's traditions.", iconName: 'Library', displayOrder: 5 },
+  { id: 'fallback-martial-tradition', slug: 'martial-tradition', name: 'Martial Tradition', nameMalayalam: 'യോദ്ധാ പാരമ്പര്യം', description: "Discover Kerala's traditional martial arts, Kalaripayattu and its healing practices.", iconName: 'Shield', displayOrder: 6 },
 ];
+
+const homepageDescriptions: Record<string, string> = {
+  'ritual-art': 'Discover traditional performances, Theyyam, ritual dances and local art forms.',
+  'sacred-space': 'Explore sacred groves, old temples, hill shrines and other special places.',
+  'master-practitioner': "Meet skilled artists, performers and people who keep Kerala's traditions alive.",
+  'traditional-craft': 'Discover traditional crafts such as bell-metal work, coir weaving and wood carving.',
+  'cultural-institution': "Explore art schools, cultural groups and centres that teach and preserve Kerala's traditions.",
+  'martial-tradition': "Discover Kerala's traditional martial arts, Kalaripayattu and its healing practices.",
+};
 
 export default function CulturalCategories() {
   const { t } = useLanguage();
@@ -116,7 +125,7 @@ export default function CulturalCategories() {
                     {t(category.name, category.nameMalayalam)}
                   </h3>
                   <p className="font-body mt-2 text-xs leading-relaxed text-[#5d5e61] sm:text-sm">
-                    {t(category.description, category.description)}
+                    {t(homepageDescriptions[category.slug] || category.description, category.description)}
                   </p>
                 </div>
 

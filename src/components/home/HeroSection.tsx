@@ -33,10 +33,10 @@ export default function HeroSection() {
   return (
     <section className="relative border-b border-[#e5e0d4] bg-[#fcfcec] overflow-hidden lg:h-[calc(100vh-4rem)] lg:min-h-[700px] lg:max-h-[950px] flex flex-col justify-center">
       {/* Right Column: Living Cultural Artwork (Theyyam Video) */}
-      {/* Desktop: Reduced by exactly 30% (70% height), vertically centered on the right with balanced spacing */}
+      {/* Desktop: Top edge anchored directly below navigation header (top-0), bottom edge fixed at existing position (85% height), preserving aspect ratio */}
       {/* Mobile/Tablet: Rendered below the text in single-column flow */}
-      <div className="hidden lg:flex absolute inset-y-0 right-0 w-[55vw] max-w-[1100px] items-center justify-end pr-8 xl:pr-16 pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_10%,black_30%)]">
-        <div className="relative h-[70%] aspect-video flex items-center justify-end bg-[#fcfcec]">
+      <div className="hidden lg:flex absolute inset-y-0 right-0 w-[58vw] max-w-[1200px] items-start justify-end pr-8 xl:pr-16 pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_10%,black_30%)]">
+        <div className="relative h-[85%] aspect-video flex items-start justify-end bg-[#fcfcec]">
           {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
           <video
             ref={videoRef}

@@ -65,9 +65,9 @@ export default function HeroSection() {
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 w-full py-10 lg:py-0 flex-1 flex flex-col justify-center relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center h-full">
           {/* Left Column: Editorial Archive Pitch */}
-          <div className="lg:col-span-7 flex flex-col justify-center py-0 max-w-[480px] lg:max-w-[480px]">
+          <div className="lg:col-span-7 flex flex-col justify-center py-0 max-w-[480px] lg:max-w-[520px]">
             {/* Subtle Eyebrow Label */}
-            <div className="inline-flex items-center gap-2.5 mb-[12px]">
+            <div className="inline-flex items-center gap-2.5 mb-[16px]">
               <span className="w-2 h-2 rounded-full bg-[#aa3000]"></span>
               <span className="font-body text-[12px] font-medium text-[#7d3b24] tracking-normal">
                 {t('The Living Culture Map of Kerala · Public open archive', 'കേരള സാംസ്കാരിക ഭൂപടം · പബ്ലിക് ഓപ്പൺ ആർക്കൈവ്')}
@@ -75,13 +75,13 @@ export default function HeroSection() {
             </div>
 
             {/* Display Headline without trailing period */}
-            <h1 className="font-headline text-[32px] sm:text-[38px] lg:text-[44px] leading-[1.05] sm:leading-[0.98] lg:leading-[0.96] tracking-[-0.02em] text-[#1c1c16] max-w-[15ch] mb-[16px] font-medium">
-              <span className="block">{t('Discover the culture', 'സംസ്കാരം കണ്ടെത്തൂ')}</span>
-              <span className="block">{t('that lives around you', 'നിങ്ങളെ ചുറ്റും ജീവിക്കുന്നു')}</span>
+            <h1 className="font-headline text-[30px] sm:text-[40px] lg:text-[52px] leading-[1.1] tracking-[-0.02em] text-[#1c1c16] max-w-[520px] mb-[20px] font-medium">
+              <span className="block lg:whitespace-nowrap">{t('Discover the culture', 'സംസ്കാരം കണ്ടെത്തൂ')}</span>
+              <span className="block lg:whitespace-nowrap">{t('that lives around you', 'നിങ്ങളെ ചുറ്റും ജീവിക്കുന്നു')}</span>
             </h1>
 
             {/* Supporting Description */}
-            <p className="font-body text-[14px] sm:text-[15.5px] leading-[1.65] text-[#5d5e61] max-w-[480px]">
+            <p className="font-body text-[16px] leading-[1.65] text-[#5d5e61] max-w-[460px]">
               {t(
                 'Explore cultural places, artists, traditional crafts and festivals across Kerala. Discover their stories, learn about local traditions and find reliable information.',
                 'കേരളത്തിലെ പൈതൃക കേന്ദ്രങ്ങൾ, പരമ്പരാഗത കലാരൂപങ്ങൾ, കരകൗശലങ്ങൾ, ഉത്സവങ്ങൾ എന്നിവയെ അറിയാം. അവയുടെ ചരിത്രവും വിവരങ്ങളും നേരിട്ട് കണ്ടെത്തൂ.'
@@ -89,7 +89,7 @@ export default function HeroSection() {
             </p>
 
             {/* Quiet, Well-balanced Dual CTAs */}
-            <div className="mt-[24px] sm:mt-[28px] flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+            <div className="mt-[30px] flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
               <Link
                 href="/explore"
                 className="inline-flex h-[40px] items-center justify-center gap-2.5 px-6 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-[14px] rounded-md transition-colors shadow-xs"

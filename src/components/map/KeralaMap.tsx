@@ -15,27 +15,22 @@ export default function KeralaMap(props: KeralaMapProps) {
   const [ClientMap, setClientMap] = useState<React.ComponentType<KeralaMapProps> | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
 
-  console.log('[KeralaMap component render] ClientMap is:', !!ClientMap);
-
   useEffect(() => {
-    console.log('[KeralaMap useEffect triggered]');
     let isMounted = true;
     import('@/components/map/OpenStreetMapClient')
       .then((mod) => {
-        console.log('[KeralaMap] PROMISE RESOLVED! mod=', !!mod, 'default=', !!mod?.default);
         if (isMounted) {
           setClientMap(() => mod.default);
         }
       })
       .catch((err) => {
-        console.error('[KeralaMap] PROMISE REJECTED!', err);
+        console.error('[KeralaMap] Failed to load OpenStreetMapClient:', err);
         if (isMounted) {
           setLoadError(err?.message || String(err));
         }
       });
 
     return () => {
-      console.log('[KeralaMap useEffect cleanup]');
       isMounted = false;
     };
   }, []);

@@ -8,8 +8,6 @@ import Link from 'next/link';
 import { ShieldCheck, MapPin, ExternalLink, RotateCcw, Plus, Minus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
-console.log('[OpenStreetMapClient module evaluated]');
-
 interface OpenStreetMapClientProps {
   listings: CulturalListing[];
   selectedListing: CulturalListing | null;

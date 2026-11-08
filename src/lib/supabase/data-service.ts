@@ -30,6 +30,13 @@ export const HOMEPAGE_CATEGORY_SLUGS = [
   'martial-tradition',
 ] as const;
 
+export const EVENT_CATEGORIES = [
+  'Temple Festival & Percussion',
+  'Ritual Theatre',
+  'Classical Arts Festival',
+  'Water Heritage & Feasting',
+] as const;
+
 const FALLBACK_CATEGORIES: CulturalCategory[] = [
   { id: 'fallback-ritual-art', slug: 'ritual-art', name: 'Ritual Art', nameMalayalam: 'അനുഷ്ഠാന കല', description: 'Living ritual performances and sacred arts documented across Kerala.', iconName: 'Sparkles', displayOrder: 1 },
   { id: 'fallback-sacred-space', slug: 'sacred-space', name: 'Sacred Space', nameMalayalam: 'പുണ്യ സ്ഥാനങ്ങൾ', description: 'Temples, sacred groves and heritage places with living cultural meaning.', iconName: 'Landmark', displayOrder: 2 },
@@ -255,6 +262,9 @@ function mapDbSubmission(row: any): SubmissionReviewItem {
     imageUrl: row.image_url || '',
     imageCredit: row.image_credit || '',
     websiteLink: row.website_link || '',
+    listingCategory: row.raw_data?.listingCategory,
+    listingCategorySlug: row.raw_data?.listingCategorySlug,
+    eventCategory: row.raw_data?.eventCategory,
   };
 }
 
@@ -1015,6 +1025,9 @@ export async function createSubmission(
     imageUrl: data.imageUrl || '',
     imageCredit: data.imageCredit || '',
     websiteLink: data.websiteLink || '',
+    listingCategory: data.listingCategory,
+    listingCategorySlug: data.listingCategorySlug,
+    eventCategory: data.eventCategory,
   };
 
   liveSubmissions.unshift(fallbackSub);
@@ -1118,11 +1131,12 @@ export async function approveSubmissionAndPublish(
 
     // Map submission category
     const category: ListingCategory =
-      sub.type === 'Artist'
+      sub.listingCategory ||
+      (sub.type === 'Artist'
         ? 'Master Practitioner'
         : sub.type === 'Institution'
         ? 'Cultural Institution'
-        : 'Sacred Space';
+        : 'Sacred Space');
 
     createdListing = await createListing(
       {
@@ -1168,7 +1182,7 @@ export async function approveSubmissionAndPublish(
         slug,
         title: sub.name,
         titleMalayalam: sub.nameMalayalam || sub.name,
-        category: sub.artForm ? `${sub.artForm} Gathering` : 'Temple Festival & Percussion',
+        category: sub.eventCategory || 'Temple Festival & Percussion',
         artForm: sub.artForm || 'Ritual Ensembles',
         date: sub.eventDate || new Date().toISOString().split('T')[0],
         time: sub.eventTime || '10:00 AM – 09:00 PM',

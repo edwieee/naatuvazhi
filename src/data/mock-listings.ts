@@ -18,7 +18,7 @@ export const MOCK_LISTINGS: CulturalListing[] = [
 Unlike seasonal temple festivals that occur only during the Malayalam winter months, Parassini witnesses daily dawn and dusk manifestations. The deity accepts offerings of dried fish, toddy, and roasted grains, listening directly to devotees in personal, whispered conversations. The elaborate face painting (Mukhathezhuthu), tower-like headdresses (Mudi), and blazing torch dances represent one of humanity's oldest surviving ritual theater traditions.`,
     culturalSignificance: 'Parassini represents a vital bridge between indigenous tribal animism and folk Hinduism, maintaining caste-free community feeding (Annadhanam) and daily ritual invocation of subaltern guardian deities.',
     visitorProtocol: 'Modest traditional dress is encouraged. Photography of the deity listening to devotees is restricted in innermost sanctum; follow temple custodian directions. Free meal is offered to all visitors.',
-    imageUrl: '/images/stitch/parassini-theyyam.jpg',
+    imageUrl: '/images/cultural/parassini-theyyam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop',
@@ -31,7 +31,7 @@ Unlike seasonal temple festivals that occur only during the Malayalam winter mon
         credit: 'Cultural Documentation Project, Kerala'
       }
     ],
-    imageCredit: 'Archival Collection / CC-BY-NC Kerala Cultural Heritage Foundation',
+    imageCredit: 'Photo: Sreejithk2000 / Wikimedia Commons / CC BY-SA 3.0',
     verificationStatus: 'Verified',
     verifiedBy: 'Malabar Folklore Archives & District Cultural Officer',
     lastReviewed: '14 January 2026',
@@ -74,7 +74,7 @@ Unlike seasonal temple festivals that occur only during the Malayalam winter mon
 Students at Kalamandalam awaken before dawn to the rhythmic thrum of the Maddalam and Chenda. Rigorous physical disciplines, eye exercises, and mudra training are practiced in open-air 'Kalaris' beneath riverine trees. Its legendary Koothambalam—the traditional temple theater designed according to Natyashastra architectural principles—stands as an acoustic and aesthetic marvel.`,
     culturalSignificance: 'Declared a Deemed University for Arts and Culture, Kalamandalam serves as the world benchmark for pedagogical transmission of UNESCO-recognized master traditions like Koodiyattam and classical Kathakali.',
     visitorProtocol: 'Visitors are welcomed between 9:00 AM and 1:00 PM on working days under the "A Day with the Masters" cultural immersion protocol. Silence is strictly observed near active practice classrooms.',
-    imageUrl: '/images/stitch/kalamandalam.jpg',
+    imageUrl: '/images/cultural/kalamandalam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1582711012124-a56cf82307a0?q=80&w=1200&auto=format&fit=crop',
@@ -82,7 +82,7 @@ Students at Kalamandalam awaken before dawn to the rhythmic thrum of the Maddala
         credit: 'Kerala Kalamandalam Archives'
       }
     ],
-    imageCredit: 'Kerala Sangeetha Nataka Akademi / Kalamandalam Repository',
+    imageCredit: 'Photo: Arayilpdas / Koothambalam at Kalamandalam / CC BY 3.0',
     verificationStatus: 'Verified',
     verifiedBy: 'Prof. K. G. Vasudevan, Dean of Kathakali Studies',
     lastReviewed: '03 February 2026',
@@ -120,7 +120,7 @@ Students at Kalamandalam awaken before dawn to the rhythmic thrum of the Maddala
 Because the reflection occurs directly on the polished metal surface rather than behind glass, light suffers zero refraction or secondary distortion. When an object touches the mirror, there is zero gap between the object and its image. The alloy is melted in clay crucibles, poured into mud molds, and hand-polished for weeks using river silt, velvet cloths, and coconut oil until an immaculate reflection emerges.`,
     culturalSignificance: 'Ranked among the eight auspicious items (Ashtamangalyam) in Kerala spiritual rites, it earned India’s earliest Geographical Indication (GI) registration for indigenous metallurgy.',
     visitorProtocol: 'Artisan workshops are open to visitors during daylight hours. Visitors may observe the polishing stages. Counterfeits abound in commercial tourist shops; look for the hologram seal of the Vishwabrahmana Guild.',
-    imageUrl: '/images/stitch/aranmula-kannadi.jpg',
+    imageUrl: '/images/cultural/aranmula-kannadi.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
@@ -128,7 +128,7 @@ Because the reflection occurs directly on the polished metal surface rather than
         credit: 'Aranmula Heritage Trust'
       }
     ],
-    imageCredit: 'GI Registry Documentation / Crafts Council of Kerala',
+    imageCredit: 'Photo: Rajesh Nair / Wikimedia Commons / CC BY 2.0',
     verificationStatus: 'Verified',
     verifiedBy: 'Geographical Indications Registry & State Handicrafts Board',
     lastReviewed: '18 December 2025',
@@ -164,7 +164,7 @@ Because the reflection occurs directly on the polished metal surface rather than
 The curriculum progresses methodically through Meythari (body conditioning and animal postures like Lion, Boar, Elephant), Kolthari (wooden weapons and sticks), Angathari (metal blades, shields, and the lethal flexible sword Urumi), and culminates in Verumkai (barehand self-defense) and Marma Chikitsa (treatment of vital pressure points).`,
     culturalSignificance: 'Mentioned in ancient Sangam literature and the Vadakkan Pattukal ballads, Kalaripayattu is the physiological and aesthetic ancestor of Kerala’s dramatic arts, including Kathakali and Theyyam.',
     visitorProtocol: 'Morning training sessions (6:00 AM - 8:30 AM) can be observed with prior permission. Remove footwear before stepping down into the earthen Kalari floor. Photography requires instructor consent.',
-    imageUrl: '/images/stitch/cvn-kalari.jpg',
+    imageUrl: '/images/cultural/cvn-kalari.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1200&auto=format&fit=crop',
@@ -172,7 +172,7 @@ The curriculum progresses methodically through Meythari (body conditioning and a
         credit: 'CVN Archive'
       }
     ],
-    imageCredit: 'Kerala Martial Arts Directorate Archive',
+    imageCredit: 'Photo: KaustubhShrm / Wikimedia Commons / CC BY-SA 4.0',
     verificationStatus: 'Scholar Reviewed',
     verifiedBy: 'Dr. Madhavan Kutty, Indian Sports & Martial History Bureau',
     lastReviewed: '22 January 2026',
@@ -208,7 +208,7 @@ The curriculum progresses methodically through Meythari (body conditioning and a
 Costumed in opulent velvet capes, golden crowns, and Romanesque armor, actors deliver dramatic verse in Chentamil and classical Malayalam while executing synchronized acrobatic footwork. Plays like 'Brijeena Charitham' and 'Karalman Charitham' (Charlemagne) depict epic battles, courtly honor, and Christian spiritual triumph.`,
     culturalSignificance: 'Chavittu Nadakam is India’s foremost Christian classical dramatic heritage, celebrated for its unique wooden stage resonance and vibrant synthesis of Mediterranean and Malabar aesthetics.',
     visitorProtocol: 'Rehearsals are open during post-monsoon festive seasons. Annual Gothuruth Chavittu Nadakam Fest takes place every December.',
-    imageUrl: '/images/stitch/chavittu-nadakam.jpg',
+    imageUrl: '/images/cultural/chavittu-nadakam.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?q=80&w=1200&auto=format&fit=crop',
@@ -216,7 +216,7 @@ Costumed in opulent velvet capes, golden crowns, and Romanesque armor, actors de
         credit: 'Gothuruth Cultural Archive'
       }
     ],
-    imageCredit: 'Ernakulam Heritage Collective / Muziris Heritage Project',
+    imageCredit: 'Photo: Fotokannan / Wikimedia Commons / CC BY-SA 4.0',
     verificationStatus: 'Verified',
     verifiedBy: 'Muziris Heritage Conservation Board',
     lastReviewed: '10 January 2026',
@@ -252,7 +252,7 @@ Costumed in opulent velvet capes, golden crowns, and Romanesque armor, actors de
 The puppets are meticulously cut from treated deer and buffalo hide, etched with perforated decorative filigree that casts luminous silhouettes against the backlit cotton screen. The flickering flames of 21 oil lamps suspended in a row impart a hypnotic, lifelike animation to the epic battles between Rama and Ravana. Master puppeteer Padmashri Ramachandra Pulavar and his family lead the art’s preservation and contemporary adaptation.`,
     culturalSignificance: 'One of the few ritual shadow puppetry lineages in South Asia that continues to be performed as a live devotional offering within sacred temple precincts.',
     visitorProtocol: 'The Koonathara puppet museum and workshop can be visited during daytime. Temple ritual performances are nocturnal (10:00 PM to dawn) between January and May.',
-    imageUrl: '/images/stitch/tholpavakoothu.jpg',
+    imageUrl: '/images/cultural/tholpavakoothu.jpg',
     imageGallery: [
       {
         url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?q=80&w=1200&auto=format&fit=crop',
@@ -260,7 +260,7 @@ The puppets are meticulously cut from treated deer and buffalo hide, etched with
         credit: 'Palakkad Heritage Archives'
       }
     ],
-    imageCredit: 'Pulavar Puppetry Trust Documentation',
+    imageCredit: 'Photo: Tonynirappathu / Rama Ravana Yudham / CC BY 4.0',
     verificationStatus: 'Verified',
     verifiedBy: 'Sangeet Natak Akademi Regional Centre',
     lastReviewed: '29 December 2025',
@@ -296,15 +296,15 @@ The puppets are meticulously cut from treated deer and buffalo hide, etched with
 Uniquely in Kerala's temple landscape, the chief rites are consecrated by a senior matriarch known as the 'Valiya Amma'. Devotees from across the subcontinent seek blessings for fertility through the offering of 'Uruli Kamazhthal' (placing a consecrated bronze vessel upside down before Nagaraja). The temple is also associated with Sarpam Thullal, an ancient ritual performed by the Pulluvan community with one-stringed fiddles (Veena) and earthen pots (Kudam).`,
     culturalSignificance: 'Mannarasala represents indigenous sacred ecology, where spiritual reverence acts as a living bulwark against deforestation and backwater wetland degradation.',
     visitorProtocol: 'Quiet contemplation is requested within the forest paths. Footwear is strictly banned on grove premises. Dress code: traditional dhoti/mundu and sari/churidar.',
-    imageUrl: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/cultural/mannarasala.jpg',
     imageGallery: [
       {
-        url: 'https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=1200&auto=format&fit=crop',
+        url: '/images/cultural/mannarasala.jpg',
         caption: 'Stone serpent idols carpeted in green moss amidst the ancient canopy.',
         credit: 'Haripad Cultural Society'
       }
     ],
-    imageCredit: 'Sacred Groves Documentation Initiative Kerala',
+    imageCredit: 'Photo: Vibitha vijay / Wikimedia Commons / CC BY-SA 3.0',
     verificationStatus: 'Verified',
     verifiedBy: 'State Sacred Grove Conservation Cell',
     lastReviewed: '08 January 2026',
@@ -340,15 +340,15 @@ Uniquely in Kerala's temple landscape, the chief rites are consecrated by a seni
 The cave walls are etched with deeply grooved human figures with spiked hair, wheeled carts, bow-wielding warriors, geometric symbols, and Indus Valley script-like signs. Discovered in 1890 by Fred Fawcett, the district police superintendent, the carvings represent human dwelling and ritual marking from the late Neolithic to early historic times.`,
     culturalSignificance: 'Crucial anthropological evidence connecting proto-Dravidian writing and early agrarian civilizations of the Deccan and Western Ghats.',
     visitorProtocol: 'The trek up Ambukuthi Mala involves steep stairs and rocky terrain. Advance online pass or morning counter ticket is required. Touching the carvings is prohibited.',
-    imageUrl: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop',
+    imageUrl: '/images/cultural/edakkal.jpg',
     imageGallery: [
       {
-        url: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1200&auto=format&fit=crop',
+        url: '/images/cultural/edakkal.jpg',
         caption: 'Neolithic anthropomorphic rock engraving inside the split rock chamber.',
         credit: 'Archaeological Survey of India'
       }
     ],
-    imageCredit: 'Archaeology Department of Kerala / ASI Records',
+    imageCredit: 'Photo: Ingo Mehling / Neolithic Petroglyphs, Edakkal / CC BY-SA 4.0',
     verificationStatus: 'Verified',
     verifiedBy: 'State Archaeology Department & ASI Calicut Circle',
     lastReviewed: '15 January 2026',

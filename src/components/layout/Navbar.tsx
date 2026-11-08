@@ -70,9 +70,9 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/admin"
-            className="hidden sm:inline-block font-body text-xs font-medium text-[#5d5e61] hover:text-[#1c1c16] hover:bg-[#f3ede1] transition-colors px-3 py-1.5 rounded-md"
+            className="hidden sm:inline-flex items-center font-body text-xs font-medium bg-[#f6f4ea] hover:bg-[#ede7da] text-[#1c1c16] px-3 py-1.5 border border-[#ded7c9] rounded-md transition-colors shadow-2xs"
           >
-            {t('Curator portal', 'ക്യുറേറ്റർ പോർട്ടൽ')}
+            {t('Admin Portal', 'അഡ്മിൻ പോർട്ടൽ')}
           </Link>
 
           {/* Bilingual Toggle Button */}
@@ -121,7 +121,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="text-xs font-body font-medium text-[#5d5e61] hover:text-[#aa3000]"
             >
-              {t('Curator portal', 'ക്യുറേറ്റർ പോർട്ടൽ')}
+              {t('Admin Portal', 'അഡ്മിൻ പോർട്ടൽ')}
             </Link>
           </div>
         </div>

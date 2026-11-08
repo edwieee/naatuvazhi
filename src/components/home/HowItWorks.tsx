@@ -37,7 +37,7 @@ export default function HowItWorks() {
       descMl: 'സമർപ്പിച്ച വിവരങ്ങളും സ്രോതസ്സുകളും പരിശോധിച്ച ശേഷമാണ് പ്രസിദ്ധീകരിക്കുന്നത്.',
       tag: 'Information review',
       icon: ShieldCheck,
-      href: '/#charter',
+      href: '/#how-it-works',
     },
     {
       num: '04',
@@ -52,19 +52,19 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section id="how-it-works" className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#f6f3eb]">
+    <section id="how-it-works" className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#FCFBEF]">
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0">
-        <div className="max-w-2xl mb-10">
+        <div className="max-w-4xl lg:max-w-none mb-10">
           <span className="font-body text-xs font-semibold text-[#aa3000] block mb-2">
             {t('Methodology & verification', 'വിവരശേഖരണ രീതി')}
           </span>
-          <h2 className="font-headline text-2xl sm:text-3xl lg:text-[34px] font-semibold text-[#1c1c16] mb-3 tracking-tight">
+          <h2 className="font-headline text-2xl sm:text-[28px] lg:text-[32px] font-semibold text-[#1c1c16] mb-2.5 tracking-tight lg:whitespace-nowrap">
             {t(
               'How cultural information is collected and checked',
               'വിവരങ്ങൾ എങ്ങനെ ശേഖരിക്കുകയും പരിശോധിക്കുകയും ചെയ്യുന്നു'
             )}
           </h2>
-          <p className="font-body text-sm sm:text-base text-[#5d5e61] leading-relaxed">
+          <p className="font-body text-sm sm:text-base text-[#5d5e61] leading-relaxed max-w-3xl">
             {t(
               'We document local traditions, performances, places and traditional crafts with information from reliable sources and the people who know them.',
               'വിശ്വസനീയമായ സ്രോതസ്സുകളിൽ നിന്നും തദ്ദേശീയരിൽ നിന്നും ലഭിക്കുന്ന വിവരങ്ങളുടെ അടിസ്ഥാനത്തിലാണ് പൈതൃക രേഖകൾ തയ്യാറാക്കുന്നത്.'

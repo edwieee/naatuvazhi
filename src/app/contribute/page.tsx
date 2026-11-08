@@ -1,9 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { actionSubmitContribution } from '@/app/actions/curator-actions';
+import { EVENT_CATEGORIES, getCategories } from '@/lib/supabase/data-service';
+import type { CulturalCategory } from '@/lib/supabase/data-service';
+import type { ListingCategory } from '@/lib/types';
 import {
   Upload,
   CheckCircle2,
@@ -15,9 +18,6 @@ import {
   RotateCcw,
   Compass,
   MapPin,
-  Clock,
-  Sparkles,
-  Link as LinkIcon,
 } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -32,7 +32,9 @@ export default function ContributePage() {
   const [artForm, setArtForm] = useState('');
   const [district, setDistrict] = useState('Thrissur');
   const [locality, setLocality] = useState('');
-  const [address, setAddress] = useState('');
+  const [listingCategories, setListingCategories] = useState<CulturalCategory[]>([]);
+  const [listingCategorySlug, setListingCategorySlug] = useState('sacred-space');
+  const [eventCategory, setEventCategory] = useState<string>(EVENT_CATEGORIES[0]);
 
   // Event specific fields
   const [eventDate, setEventDate] = useState('');
@@ -51,20 +53,27 @@ export default function ContributePage() {
   // Media and references
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [imageCredit, setImageCredit] = useState('');
-  const [sourceUrls, setSourceUrls] = useState('');
   const [websiteLink, setWebsiteLink] = useState('');
 
   // Contributor details (No account or login required)
   const [contributorName, setContributorName] = useState('');
   const [contributorEmail, setContributorEmail] = useState('');
-  const [hasConsent, setHasConsent] = useState(false);
 
   // Validation and status
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [submissionId, setSubmissionId] = useState('');
+  const [submissionError, setSubmissionError] = useState('');
+
+  useEffect(() => {
+    let active = true;
+    getCategories().then((categories) => {
+      if (active) setListingCategories(categories);
+    });
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const types: { id: SubmissionType; label: string; icon: any; desc: string }[] = [
     { id: 'Place', label: 'Cultural Place / Shrine', icon: Landmark, desc: 'Sacred groves, kavu, ancient temples' },
@@ -105,10 +114,6 @@ export default function ContributePage() {
     if (!contributorEmail.trim() || !contributorEmail.includes('@')) {
       newErrors.contributorEmail = 'A valid contact email is required for peer verification notice';
     }
-    if (!hasConsent) {
-      newErrors.consent = 'You must accept the community verification terms';
-    }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -118,6 +123,7 @@ export default function ContributePage() {
     if (!validate()) return;
 
     setIsSubmitting(true);
+    setSubmissionError('');
     try {
       const parsedLat = latitude.trim() ? parseFloat(latitude.trim()) : undefined;
       const parsedLng = longitude.trim() ? parseFloat(longitude.trim()) : undefined;
@@ -129,7 +135,11 @@ export default function ContributePage() {
         artForm: artForm.trim(),
         district: district as any,
         locality: locality.trim(),
-        address: address.trim(),
+        listingCategory: submissionType === 'Event'
+          ? undefined
+          : listingCategories.find((category) => category.slug === listingCategorySlug)?.name as ListingCategory | undefined,
+        listingCategorySlug: submissionType === 'Event' ? undefined : listingCategorySlug,
+        eventCategory: submissionType === 'Event' ? eventCategory : undefined,
         eventDate: submissionType === 'Event' ? eventDate : undefined,
         eventTime: submissionType === 'Event' ? eventTime.trim() : undefined,
         venue: submissionType === 'Event' ? venue.trim() : undefined,
@@ -140,14 +150,7 @@ export default function ContributePage() {
             : undefined,
         description: description.trim(),
         culturalSignificance: culturalBackground.trim(),
-        sources: sourceUrls
-          ? sourceUrls
-              .split('\n')
-              .map((s) => s.trim())
-              .filter(Boolean)
-          : [],
         imageUrl: imageUrl.trim() || undefined,
-        imageCredit: imageCredit.trim(),
         websiteLink: websiteLink.trim(),
         contributorName: contributorName.trim(),
         contributorEmail: contributorEmail.trim(),
@@ -155,13 +158,12 @@ export default function ContributePage() {
       });
 
       if (res.success && res.submission) {
-        setSubmissionId(res.submission.id);
         setIsSuccess(true);
       } else {
         throw new Error(res.error || 'Submission could not be completed');
       }
     } catch (err: any) {
-      alert(`Submission error: ${err.message || 'Please try again.'}`);
+      setSubmissionError(err instanceof Error ? err.message : 'Submission could not be completed. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -172,7 +174,6 @@ export default function ContributePage() {
     setTitleMalayalam('');
     setArtForm('');
     setLocality('');
-    setAddress('');
     setEventDate('');
     setEventTime('');
     setVenue('');
@@ -183,13 +184,11 @@ export default function ContributePage() {
     setCulturalBackground('');
     setImageUrl('');
     setImagePreview(null);
-    setImageCredit('');
-    setSourceUrls('');
     setWebsiteLink('');
     setContributorName('');
     setContributorEmail('');
-    setHasConsent(false);
     setErrors({});
+    setSubmissionError('');
     setIsSuccess(false);
   };
 
@@ -218,16 +217,12 @@ export default function ContributePage() {
             <CheckCircle2 className="w-6 h-6" />
           </div>
 
-          <div className="text-xs font-mono text-[#8C8273]">
-            Accession ID: {submissionId}
-          </div>
-
           <h2 className="text-xl font-semibold text-[#181512]">
             Submission recorded in moderation queue
           </h2>
 
           <p className="text-xs sm:text-sm text-[#5C554B] max-w-md leading-relaxed">
-            Your submission for <strong>"{title}"</strong> has been logged in Supabase as a Pending accession. Our curatorial circle will verify citations and publish it to the live Kerala Culture Map.
+            Your submission for <strong>"{title}"</strong> is now awaiting review. Our curatorial circle will verify the details before publishing it to the live Kerala Culture Map.
           </p>
 
           <div className="flex items-center gap-3 pt-4">
@@ -251,9 +246,9 @@ export default function ContributePage() {
         /* The Contribution Form */
         <form onSubmit={handleSubmit} className="flex flex-col gap-6">
           {/* Section 1: Submission Type Selection */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs">
             <label className="text-xs font-semibold text-[#181512] mb-3 block">
-              1. Select category of entry
+              1. What are you submitting?
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
               {types.map((type) => {
@@ -275,10 +270,34 @@ export default function ContributePage() {
                 );
               })}
             </div>
+            <div className="mt-4 max-w-md">
+              <label className="text-xs font-medium text-[#181512] mb-1.5 block">
+                {submissionType === 'Event' ? 'Event category' : 'Cultural category'}
+              </label>
+              {submissionType === 'Event' ? (
+                <select
+                  value={eventCategory}
+                  onChange={(e) => setEventCategory(e.target.value)}
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none"
+                >
+                  {EVENT_CATEGORIES.map((category) => <option key={category} value={category}>{category}</option>)}
+                </select>
+              ) : (
+                <select
+                  value={listingCategorySlug}
+                  onChange={(e) => setListingCategorySlug(e.target.value)}
+                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none"
+                >
+                  {listingCategories.map((category) => (
+                    <option key={category.slug} value={category.slug}>{category.name}</option>
+                  ))}
+                </select>
+              )}
+            </div>
           </div>
 
           {/* Section 2: Basic Identification */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
               2. BASIC IDENTIFICATION
             </h3>
@@ -364,22 +383,10 @@ export default function ContributePage() {
                 )}
               </div>
 
-              <div>
-                <label className="text-xs font-medium text-[#181512] mb-1.5 block">
-                  Specific Address or Landmark
-                </label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="e.g. Near Valapattanam River, Anthoor"
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:border-[#181512] focus:outline-none transition-colors"
-                />
-              </div>
             </div>
 
             {/* Coordinates for OpenStreetMap pinpointing */}
-            <div className="pt-2">
+            <div className="pt-1">
               <label className="text-xs font-medium text-[#181512] mb-1 block flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-[#B21C01]" />
                 <span>Geographic Coordinates (Optional)</span>
@@ -408,7 +415,7 @@ export default function ContributePage() {
 
           {/* Section: Event Specific Logistics (Rendered if Event is selected) */}
           {submissionType === 'Event' && (
-            <div className="bg-[#FFFDF9] rounded-xl p-6 border border-[#E0D8C7] shadow-xs flex flex-col gap-4">
+            <div className="bg-[#FFFDF9] rounded-xl p-5 border border-[#E0D8C7] shadow-xs flex flex-col gap-3">
               <div className="flex items-center gap-2 pb-2 border-b border-[#E0D8C7]">
                 <Calendar className="w-4 h-4 text-[#B21C01]" />
                 <h3 className="text-xs font-mono font-semibold text-[#181512]">
@@ -482,7 +489,7 @@ export default function ContributePage() {
           )}
 
           {/* Section 3: Cultural Story */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
               3. CULTURAL NARRATIVE & CONTEXT
             </h3>
@@ -520,7 +527,7 @@ export default function ContributePage() {
           </div>
 
           {/* Section 4: Media & Citations */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
               4. MEDIA & ARCHIVAL CITATIONS
             </h3>
@@ -589,32 +596,6 @@ export default function ContributePage() {
 
               <div>
                 <label className="text-xs font-medium text-[#181512] mb-1.5 block">
-                  Image Credit & License
-                </label>
-                <input
-                  type="text"
-                  value={imageCredit}
-                  onChange={(e) => setImageCredit(e.target.value)}
-                  placeholder="e.g. Photo by Self / CC-BY-SA 4.0"
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-[#181512] mb-1.5 block">
-                  Original Source Links or Archival Citations
-                </label>
-                <input
-                  type="text"
-                  value={sourceUrls}
-                  onChange={(e) => setSourceUrls(e.target.value)}
-                  placeholder="e.g. Folklore Academy review, Gazette link..."
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md px-3 py-2.5 focus:bg-white focus:outline-none transition-colors"
-                />
-              </div>
-
-              <div>
-                <label className="text-xs font-medium text-[#181512] mb-1.5 block">
                   Official Website / Social Link (Optional)
                 </label>
                 <input
@@ -629,7 +610,7 @@ export default function ContributePage() {
           </div>
 
           {/* Section 5: Contributor Details (Anonymous public submission) */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs flex flex-col gap-4">
+          <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
             <h3 className="text-xs font-mono text-[#8C8273] pb-2 border-b border-[#EDE7DC]">
               5. CONTRIBUTOR CONTACT (NO LOGIN REQUIRED)
             </h3>
@@ -676,26 +657,12 @@ export default function ContributePage() {
               </div>
             </div>
 
-            <div className="pt-2">
-              <label className="flex items-start gap-2.5 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={hasConsent}
-                  onChange={(e) => setHasConsent(e.target.checked)}
-                  className="mt-0.5 w-4 h-4 rounded text-[#B21C01] border-[#E8E2D6] focus:ring-[#B21C01]"
-                />
-                <span className="text-xs text-[#5C554B] leading-relaxed">
-                  I confirm that this contribution is submitted in good faith for public cultural documentation and does not violate temple ritual privacy.
-                </span>
-              </label>
-              {errors.consent && (
-                <p className="text-[11px] text-red-600 mt-1 ml-6">{errors.consent}</p>
-              )}
-            </div>
-
             <div className="pt-4 border-t border-[#EDE7DC] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              {submissionError && (
+                <p role="alert" className="text-xs text-red-700">{submissionError}</p>
+              )}
               <span className="text-xs text-[#8C8273]">
-                Direct accession into Supabase · Peer-reviewed before publication
+                Peer-reviewed before publication
               </span>
 
               <button

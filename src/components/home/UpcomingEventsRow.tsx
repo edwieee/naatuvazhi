@@ -7,10 +7,10 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function UpcomingEventsRow() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
-    <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#f6f3eb]" id="calendar">
+    <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#FCFBEF]" id="calendar">
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0">
         {/* Section Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -83,12 +83,9 @@ export default function UpcomingEventsRow() {
                     </div>
                   </div>
 
-                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
-                    {event.title}
+                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-2 group-hover:text-[#aa3000] transition-colors leading-snug">
+                    {language === 'ml' && event.titleMalayalam ? event.titleMalayalam : event.title}
                   </h3>
-                  <p className="font-malayalam text-xs text-[#6e675d] mb-2">
-                    {event.titleMalayalam}
-                  </p>
 
                   <div className="flex items-center gap-1.5 text-xs text-[#5d5e61] font-body mb-2.5">
                     <span className="font-medium text-[#1c1c16]">{t('Organiser:', 'സംഘാടകർ:')}</span>

@@ -22,7 +22,7 @@ import {
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 function ExplorePageContent() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -352,10 +352,7 @@ function ExplorePageContent() {
 
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
-                          <div className="flex items-center justify-between text-[10px] text-[#8C8273]">
-                            <span className="font-mono">
-                              № KL-{listing.district.substring(0, 3).toUpperCase()}-{listing.id.replace('c-', '')}
-                            </span>
+                          <div className="flex items-center justify-end text-[10px] text-[#8C8273]">
                             <span className="text-[#2D6A4F] font-medium flex items-center gap-1">
                               <ShieldCheck className="w-3 h-3" />
                               <span>{listing.verificationStatus}</span>
@@ -363,11 +360,8 @@ function ExplorePageContent() {
                           </div>
 
                           <h3 className="font-semibold text-xs sm:text-sm text-[#181512] hover:text-[#B21C01] transition-colors leading-snug mt-0.5">
-                            {listing.name}
+                            {language === 'ml' && listing.nameMalayalam ? listing.nameMalayalam : listing.name}
                           </h3>
-                          <div className="text-[11px] text-[#8C8273] font-malayalam">
-                            {listing.nameMalayalam}
-                          </div>
                         </div>
 
                         <div className="flex items-center justify-between pt-1 text-[11px]">

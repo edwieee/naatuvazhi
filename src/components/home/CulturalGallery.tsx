@@ -98,14 +98,14 @@ export default function CulturalGallery() {
   return (
     <section id="gallery" className="border-b border-[#e5e0d4] bg-[#fcfcec] py-14 md:py-20">
       <div className="mx-auto max-w-[1120px] px-4 md:px-10 xl:px-0">
-        <div className="mb-10 max-w-2xl">
+        <div className="mb-10 max-w-4xl lg:max-w-none">
           <span className="font-body mb-2 block text-xs font-semibold text-[#aa3000]">
             Kerala heritage in focus
           </span>
-          <h2 className="font-headline mb-3 text-2xl font-semibold tracking-tight text-[#1c1c16] sm:text-3xl lg:text-[34px]">
+          <h2 className="font-headline mb-2 text-2xl font-semibold tracking-tight text-[#1c1c16] sm:text-3xl lg:text-[32px] md:whitespace-nowrap">
             Living traditions, seen up close
           </h2>
-          <p className="font-body text-sm leading-relaxed text-[#5d5e61] sm:text-base">
+          <p className="font-body text-sm leading-relaxed text-[#5d5e61] sm:text-base md:whitespace-nowrap">
             Explore the performances, crafts and architecture that continue to shape Kerala’s cultural landscape.
           </p>
         </div>

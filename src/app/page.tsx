@@ -28,7 +28,7 @@ export default function HomePage() {
       {/* 6. Methodology & Verification: 4-step workflow (Discover, Learn, Verify, Contribute) */}
       <HowItWorks />
 
-      {/* 7 & 8. Community Verification Charter (5 standards) & Final Contribution CTA */}
+      {/* 7. Community Contribution CTA */}
       <TrustSection />
     </main>
   );

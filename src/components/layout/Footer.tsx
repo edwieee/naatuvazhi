@@ -9,7 +9,7 @@ export default function Footer() {
   const { t } = useLanguage();
 
   return (
-    <footer className="relative w-full bg-[#f6f3eb] overflow-hidden">
+    <footer className="relative w-full bg-[#FCFBEF] overflow-hidden">
       {/* 3-Column Content Container: Full Width, Borderless, Balanced Edge-to-Edge Spacing */}
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 pt-10 md:pt-14 pb-2">
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 md:gap-12 lg:gap-16">
@@ -136,7 +136,7 @@ export default function Footer() {
                     href="/admin"
                     className="hover:text-[#692820] transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-[#692820] rounded-xs"
                   >
-                    Curator portal
+                    Admin Portal
                   </Link>
                 </li>
               </ul>

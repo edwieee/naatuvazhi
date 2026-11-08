@@ -119,4 +119,7 @@ export interface SubmissionReviewItem {
   imageUrl?: string;
   imageCredit?: string;
   websiteLink?: string;
+  listingCategory?: ListingCategory;
+  listingCategorySlug?: string;
+  eventCategory?: string;
 }

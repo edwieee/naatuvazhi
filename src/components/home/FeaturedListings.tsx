@@ -7,7 +7,7 @@ import { Check, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function FeaturedListings() {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
 
   const categories = ['All', 'Ritual Art', 'Sacred Space', 'Traditional Craft', 'Cultural Institution', 'Martial Tradition'];
@@ -17,7 +17,7 @@ export default function FeaturedListings() {
     : MOCK_LISTINGS.filter((l) => l.category === selectedCategory).slice(0, 6);
 
   return (
-    <section className="py-14 md:py-20 border-b border-[#e5e0d4]" id="directory">
+    <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#FCFBEF]" id="directory">
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0">
         {/* Section Header with Archive Link */}
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
@@ -93,24 +93,18 @@ export default function FeaturedListings() {
 
               <div className="p-5 flex-1 flex flex-col justify-between">
                 <div>
-                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-1 group-hover:text-[#aa3000] transition-colors leading-snug">
-                    {listing.name}
+                  <h3 className="font-headline text-lg font-semibold text-[#1c1c16] mb-2 group-hover:text-[#aa3000] transition-colors leading-snug">
+                    {language === 'ml' && listing.nameMalayalam ? listing.nameMalayalam : listing.name}
                   </h3>
-                  <p className="font-malayalam text-xs text-[#6e675d] mb-3">
-                    {listing.nameMalayalam}
-                  </p>
                   <p className="font-body text-xs text-[#5d5e61] leading-relaxed line-clamp-2">
                     {listing.shortDescription}
                   </p>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-[#ece6da] flex items-center justify-between">
-                  <span className="font-mono text-xs text-[#6e675d] bg-[#f4efe4] px-2 py-0.5 rounded-xs border border-[#ded7c9] tabular-nums">
-                    № KL-{listing.district.substring(0, 3).toUpperCase()}-{listing.id.replace('c-', '')}
-                  </span>
+                <div className="mt-6 pt-4 border-t border-[#ece6da] flex items-center justify-end">
                   <span className="font-body text-xs text-[#aa3000] group-hover:text-[#c23700] flex items-center gap-1 font-semibold">
                     <span>{t('Read story', 'വായിക്കുക')}</span>
-                    <ArrowRight className="w-3.5 h-3.5 text-[#aa3000]" />
+                    <ArrowRight className="w-3.5 h-3.5 text-[#aa3000] transition-transform group-hover:translate-x-1" />
                   </span>
                 </div>
               </div>

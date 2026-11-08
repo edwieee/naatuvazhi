@@ -6,6 +6,7 @@ import { MOCK_EVENTS } from '@/data/mock-events';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { Calendar, Clock, MapPin, Search, CheckCircle2, ArrowRight, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { EVENT_CATEGORIES } from '@/lib/supabase/data-service';
 
 export default function EventsPage() {
   const { t } = useLanguage();
@@ -14,7 +15,7 @@ export default function EventsPage() {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [selectedTimeframe, setSelectedTimeframe] = useState<'all' | 'upcoming' | 'annual'>('all');
 
-  const categories = ['All', 'Temple Festival & Percussion', 'Ritual Theatre', 'Classical Arts Festival', 'Water Heritage & Feasting'];
+  const categories = ['All', ...EVENT_CATEGORIES];
 
   const filteredEvents = useMemo(() => {
     return MOCK_EVENTS.filter((ev) => {

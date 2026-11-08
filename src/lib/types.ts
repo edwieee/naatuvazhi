@@ -109,4 +109,14 @@ export interface SubmissionReviewItem {
   status: 'Pending' | 'Approved' | 'Changes Requested' | 'Rejected';
   reviewerNotes?: string;
   urgency: 'Low' | 'Medium' | 'High';
+  nameMalayalam?: string;
+  address?: string;
+  eventDate?: string;
+  eventTime?: string;
+  venue?: string;
+  organizer?: string;
+  coordinates?: { lat: number; lng: number };
+  imageUrl?: string;
+  imageCredit?: string;
+  websiteLink?: string;
 }

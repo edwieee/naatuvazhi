@@ -22,19 +22,20 @@ export default function KeralaMap(props: KeralaMapProps) {
     let isMounted = true;
     import('@/components/map/OpenStreetMapClient')
       .then((mod) => {
+        console.log('[KeralaMap] PROMISE RESOLVED! mod=', !!mod, 'default=', !!mod?.default);
         if (isMounted) {
-          console.log('[KeralaMap] OpenStreetMapClient loaded successfully');
           setClientMap(() => mod.default);
         }
       })
       .catch((err) => {
+        console.error('[KeralaMap] PROMISE REJECTED!', err);
         if (isMounted) {
-          console.error('[KeralaMap] Error importing OpenStreetMapClient:', err);
           setLoadError(err?.message || String(err));
         }
       });
 
     return () => {
+      console.log('[KeralaMap useEffect cleanup]');
       isMounted = false;
     };
   }, []);

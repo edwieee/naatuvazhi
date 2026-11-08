@@ -87,10 +87,11 @@ export interface EventListing {
   culturalContext: string;
   sourceLink: string;
   lastConfirmedDate: string;
-  status: 'Confirmed' | 'Tentative' | 'Annual Season';
+  status: 'Confirmed' | 'Tentative' | 'Annual Season' | 'Completed';
   imageUrl: string;
   entryType: 'Free Entry' | 'Pass Required' | 'Ritual Offering';
   scheduleHighlights: { time: string; item: string }[];
+  coordinates?: { lat: number; lng: number };
 }
 
 export interface SubmissionReviewItem {

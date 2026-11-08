@@ -431,9 +431,9 @@ export default function AdminDashboardPage() {
         <div className="md:px-4">
           <div className="text-xs font-medium text-[#5d5e61]">Active Festivals</div>
           <div className="text-xl sm:text-2xl font-semibold text-[#1c1c16] tracking-tight mt-0.5">
-            {events.length}
+            {events.filter((ev) => ev.date >= '2026-11-08' && ev.status !== 'Completed').length}
           </div>
-          <div className="text-[11px] text-[#8c8577] mt-0.5">In cultural calendar</div>
+          <div className="text-[11px] text-[#8c8577] mt-0.5">Upcoming in calendar</div>
         </div>
 
         <div className="md:px-4 last:pr-0">
@@ -803,8 +803,8 @@ export default function AdminDashboardPage() {
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1.5 text-xs text-[#2d6a4f] font-medium">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#2d6a4f]" />
+                        <span className={`inline-flex items-center gap-1.5 text-xs font-medium ${ev.status === 'Completed' ? 'text-[#7d7971]' : 'text-[#2d6a4f]'}`}>
+                          <span className={`w-1.5 h-1.5 rounded-full ${ev.status === 'Completed' ? 'bg-[#7d7971]' : 'bg-[#2d6a4f]'}`} />
                           <span>{ev.status}</span>
                         </span>
                       </td>

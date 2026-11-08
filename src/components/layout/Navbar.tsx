@@ -45,7 +45,7 @@ export default function Navbar() {
         </Link>
 
         {/* Desktop Navigation Links */}
-        <nav className="hidden md:flex items-center gap-7 text-sm">
+        <nav className={`hidden md:flex items-center text-sm ${language === 'ml' ? 'gap-4 text-[13px]' : 'gap-7'}`}>
           {navLinks.map((link) => {
             const active = isActive(link.href);
             return (
@@ -68,7 +68,7 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <Link
             href="/admin"
-            className="hidden sm:inline-flex items-center font-body text-sm text-[#5d5e61] hover:text-[#1c1c16] py-1 transition-colors"
+            className="hidden sm:inline-flex h-9 min-w-[118px] items-center justify-center font-body text-xs font-semibold text-[#5d5e61] hover:text-[#1c1c16] px-2.5 border border-[#ded7c9] rounded-md transition-colors"
           >
             {t('Admin Portal', 'അഡ്മിൻ പോർട്ടൽ')}
           </Link>
@@ -77,11 +77,11 @@ export default function Navbar() {
           <button
             onClick={toggleLanguage}
             type="button"
-            className="font-body text-sm text-[#5d5e61] hover:text-[#1c1c16] py-1 flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="h-9 min-w-[118px] font-body text-xs font-semibold text-[#5d5e61] hover:text-[#1c1c16] px-2.5 border border-[#ded7c9] rounded-md flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
             title="Toggle language / ഭാഷ മാറ്റുക"
           >
             <Languages className="w-3.5 h-3.5 text-[#aa3000]" aria-hidden="true" />
-            <span className="font-malayalam text-sm">{language === 'en' ? 'മലയാളം' : 'English'}</span>
+            <span className="font-malayalam text-xs font-semibold">{language === 'en' ? 'മലയാളം' : 'English'}</span>
           </button>
 
           {/* Mobile Menu Button */}

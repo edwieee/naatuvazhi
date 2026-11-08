@@ -80,10 +80,10 @@ let liveHomepageConfig: Record<string, any> = {
     'tholpavakoothu-shadow-puppetry-koonathara',
   ],
   featured_event_slugs: [
-    'thrissur-pooram-ilanjithara-melam',
-    'parassini-madappura-annual-utsavam',
-    'nishagandhi-monsoon-rhythms',
-    'aranmula-valla-sadya-regatta',
+    'kalpathi-ratholsavam-2026',
+    'guruvayur-ekadasi-2026',
+    'presidents-trophy-boat-race-2026',
+    'vaikathashtami-utsavam-2026',
   ],
   verification_charter: {
     pledge:
@@ -216,6 +216,10 @@ function mapDbEvent(row: any): EventListing {
     district: districtName as DistrictName,
     locality: row.locality,
     address: row.address,
+    coordinates:
+      row.latitude && row.longitude
+        ? { lat: Number(row.latitude), lng: Number(row.longitude) }
+        : undefined,
     organizer: row.organizer,
     description: row.description,
     culturalContext: row.cultural_context,
@@ -470,7 +474,27 @@ export async function createListing(data: Partial<CulturalListing>, customSb?: a
   if (sb) {
     try {
       const { data: dist } = await sb.from('districts').select('id, center_lat, center_lng').eq('name', newListing.district).single();
+      
+      let categoryId: string | null = null;
       const { data: cat } = await sb.from('categories').select('id').eq('name', newListing.category).single();
+      if (cat?.id) {
+        categoryId = cat.id;
+      } else {
+        const targetSlug =
+          newListing.category === 'Master Practitioner' || (newListing.category as string) === 'Artist'
+            ? 'master-practitioner'
+            : newListing.category === 'Cultural Institution' || (newListing.category as string) === 'Institution'
+            ? 'cultural-institution'
+            : newListing.category === 'Traditional Craft'
+            ? 'traditional-craft'
+            : newListing.category === 'Martial Tradition'
+            ? 'martial-tradition'
+            : newListing.category === 'Oral Heritage'
+            ? 'oral-heritage'
+            : 'sacred-space';
+        const { data: catBySlug } = await sb.from('categories').select('id').eq('slug', targetSlug).single();
+        categoryId = catBySlug?.id || 'f5b6f8f0-8705-43cd-8d6c-4f34de9e87ad';
+      }
 
       const districtId = dist?.id || 'c86a50d4-7964-4546-9b92-3d3edbd92553'; // Default Thrissur
       const lat = newListing.coordinates?.lat || dist?.center_lat || 10.8505;
@@ -482,7 +506,7 @@ export async function createListing(data: Partial<CulturalListing>, customSb?: a
           slug: newListing.slug,
           name: newListing.name,
           name_malayalam: newListing.nameMalayalam,
-          category_id: cat?.id || null,
+          category_id: categoryId,
           art_form: newListing.artForm,
           district_id: districtId,
           locality: newListing.locality,
@@ -506,6 +530,7 @@ export async function createListing(data: Partial<CulturalListing>, customSb?: a
 
       if (insertError) {
         console.error('Error inserting listing into Supabase:', insertError);
+        throw new Error(`Failed to insert listing into Supabase: ${insertError.message}`);
       } else if (inserted?.id) {
         newListing.id = inserted.id;
 
@@ -531,13 +556,14 @@ export async function createListing(data: Partial<CulturalListing>, customSb?: a
             url: newListing.imageUrl,
             caption: newListing.name,
             credit: newListing.imageCredit || 'Community Documenter / Open Archive',
-            permission_status: 'Granted',
+            permission_status: 'Community Provided',
             display_order: 1,
           });
         }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.warn('Could not insert to Supabase:', e);
+      throw e;
     }
   }
 
@@ -610,12 +636,15 @@ export async function deleteListing(id: string, customSb?: any): Promise<boolean
 // EVENTS & LIVING FESTIVALS
 // ====================================================================
 
+export const KERALA_PLATFORM_DATE = '2026-11-08';
+
 export interface EventFilters {
   district?: string;
   category?: string;
   search?: string;
   status?: string;
   upcomingOnly?: boolean;
+  pastOnly?: boolean;
 }
 
 export async function getEvents(filters?: EventFilters, customSb?: any): Promise<EventListing[]> {
@@ -633,11 +662,15 @@ export async function getEvents(filters?: EventFilters, customSb?: any): Promise
         let results: EventListing[] = data.map(mapDbEvent);
 
         if (filters?.upcomingOnly) {
-          const today = new Date().toISOString().split('T')[0];
-          results = results.filter((ev) => ev.date >= today || ev.status === 'Annual Season');
+          results = results.filter((ev) => ev.date >= KERALA_PLATFORM_DATE && ev.status !== 'Completed');
+        } else if (filters?.pastOnly) {
+          results = results.filter((ev) => ev.date < KERALA_PLATFORM_DATE || ev.status === 'Completed');
         }
         if (filters?.district && filters.district !== 'All') {
           results = results.filter((ev) => ev.district.toLowerCase() === filters.district!.toLowerCase());
+        }
+        if (filters?.category && filters.category !== 'All') {
+          results = results.filter((ev) => ev.category === filters.category);
         }
         if (filters?.status && filters.status !== 'All') {
           results = results.filter((ev) => ev.status === filters.status);
@@ -661,11 +694,15 @@ export async function getEvents(filters?: EventFilters, customSb?: any): Promise
   // Fallback
   let results = [...liveEvents];
   if (filters?.upcomingOnly) {
-    const today = new Date().toISOString().split('T')[0];
-    results = results.filter((ev) => ev.date >= today || ev.status === 'Annual Season');
+    results = results.filter((ev) => ev.date >= KERALA_PLATFORM_DATE && ev.status !== 'Completed');
+  } else if (filters?.pastOnly) {
+    results = results.filter((ev) => ev.date < KERALA_PLATFORM_DATE || ev.status === 'Completed');
   }
   if (filters?.district && filters.district !== 'All') {
     results = results.filter((ev) => ev.district.toLowerCase() === filters.district!.toLowerCase());
+  }
+  if (filters?.category && filters.category !== 'All') {
+    results = results.filter((ev) => ev.category === filters.category);
   }
   if (filters?.status && filters.status !== 'All') {
     results = results.filter((ev) => ev.status === filters.status);
@@ -732,6 +769,7 @@ export async function createEvent(data: Partial<EventListing>, customSb?: any): 
     district: data.district || 'Thrissur',
     locality: data.locality || 'Central Grounds',
     address: data.address,
+    coordinates: data.coordinates,
     organizer: data.organizer || 'Festival Trustee Committee',
     description: data.description || '',
     culturalContext: data.culturalContext || '',
@@ -748,8 +786,10 @@ export async function createEvent(data: Partial<EventListing>, customSb?: any): 
   const sb = getSupabase(customSb);
   if (sb) {
     try {
-      const { data: dist } = await sb.from('districts').select('id').eq('name', newEvent.district).single();
+      const { data: dist } = await sb.from('districts').select('id, center_lat, center_lng').eq('name', newEvent.district).single();
       const districtId = dist?.id || 'c86a50d4-7964-4546-9b92-3d3edbd92553';
+      const lat = newEvent.coordinates?.lat || dist?.center_lat || null;
+      const lng = newEvent.coordinates?.lng || dist?.center_lng || null;
 
       const { data: inserted, error } = await sb
         .from('events')
@@ -766,6 +806,8 @@ export async function createEvent(data: Partial<EventListing>, customSb?: any): 
           district_id: districtId,
           locality: newEvent.locality,
           address: newEvent.address,
+          latitude: lat,
+          longitude: lng,
           organizer: newEvent.organizer,
           description: newEvent.description,
           cultural_context: newEvent.culturalContext,
@@ -780,11 +822,26 @@ export async function createEvent(data: Partial<EventListing>, customSb?: any): 
         .select()
         .single();
 
-      if (!error && inserted?.id) {
+      if (error) {
+        console.error('Error inserting event to Supabase:', error);
+        throw new Error(`Failed to insert event into Supabase: ${error.message}`);
+      } else if (inserted?.id) {
         newEvent.id = inserted.id;
+
+        if (newEvent.imageUrl) {
+          await sb.from('media').insert({
+            event_id: inserted.id,
+            url: newEvent.imageUrl,
+            caption: newEvent.title,
+            credit: newEvent.organizer || 'Community Documenter / Open Archive',
+            permission_status: 'Community Provided',
+            display_order: 1,
+          });
+        }
       }
-    } catch (e) {
+    } catch (e: any) {
       console.warn('Could not insert event to Supabase:', e);
+      throw e;
     }
   }
 
@@ -1126,7 +1183,66 @@ export async function approveSubmissionAndPublish(
   let createdListing: CulturalListing | undefined;
   let createdEvent: EventListing | undefined;
 
-  if (['Place', 'Artist', 'Institution', 'Correction'].includes(sub.type)) {
+  if (sub.type === 'Correction') {
+    const cleanName = sub.name.replace(/^(Correction for|Correction:?)\s*/i, '').trim();
+    const cleanSlug = cleanName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+    const existingListing = await getListingBySlug(cleanSlug, sb);
+
+    if (existingListing) {
+      createdListing =
+        (await updateListing(
+          existingListing.id,
+          {
+            shortDescription: sub.description || existingListing.shortDescription,
+            fullStory: sub.culturalSignificance
+              ? `${sub.description}\n\nCultural Significance & Context:\n${sub.culturalSignificance}`
+              : sub.description || existingListing.fullStory,
+            culturalSignificance: sub.culturalSignificance || existingListing.culturalSignificance,
+            nameMalayalam: sub.nameMalayalam || existingListing.nameMalayalam,
+            locality: sub.locality || existingListing.locality,
+          },
+          sb
+        )) || existingListing;
+    } else {
+      // If no matching existing listing was found, create as verified entry
+      createdListing = await createListing(
+        {
+          slug: cleanSlug || `correction-${Date.now()}`,
+          name: cleanName || sub.name,
+          nameMalayalam: sub.nameMalayalam || '',
+          category: sub.listingCategory || 'Traditional Craft',
+          artForm: sub.artForm,
+          district: sub.district,
+          locality: sub.locality,
+          address: sub.address || `${sub.locality}, ${sub.district}, Kerala`,
+          coordinates: sub.coordinates,
+          shortDescription: sub.description,
+          fullStory: sub.culturalSignificance
+            ? `${sub.description}\n\nCultural Significance & Context:\n${sub.culturalSignificance}`
+            : sub.description,
+          culturalSignificance: sub.culturalSignificance,
+          visitorProtocol: 'Respectful visitation in accordance with hereditary customs.',
+          imageUrl: sub.imageUrl || 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop',
+          imageCredit: sub.imageCredit || 'Community Heritage Contributor',
+          verificationStatus: 'Verified',
+          verifiedBy: 'Regional Curatorial Bureau',
+          sourceCitations: sub.sources.map((s) => ({
+            title: s,
+            authorOrArchive: 'Submitted Source Documentation',
+            url: s.startsWith('http') ? s : undefined,
+          })),
+          officialWebsite: sub.websiteLink || undefined,
+          contributor: {
+            name: sub.contributorName,
+            role: 'Community Heritage Contributor',
+            dateSubmitted: sub.submittedAt.split('T')[0],
+          },
+          featured: false,
+        },
+        sb
+      );
+    }
+  } else if (['Place', 'Artist', 'Institution'].includes(sub.type)) {
     const slug = sub.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 
     // Map submission category
@@ -1190,6 +1306,7 @@ export async function approveSubmissionAndPublish(
         district: sub.district,
         locality: sub.locality,
         address: sub.address || `${sub.locality}, ${sub.district}, Kerala`,
+        coordinates: sub.coordinates,
         organizer: sub.organizer || sub.contributorName || 'Festival Trustee Committee',
         description: sub.description,
         culturalContext: sub.culturalSignificance || sub.description,

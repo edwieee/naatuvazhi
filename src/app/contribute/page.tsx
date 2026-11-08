@@ -20,6 +20,7 @@ import {
   MapPin,
 } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
+import { createClient } from '@/lib/supabase/client';
 
 type SubmissionType = 'Place' | 'Artist' | 'Institution' | 'Event' | 'Correction';
 
@@ -53,6 +54,7 @@ export default function ContributePage() {
   // Media and references
   const [imageUrl, setImageUrl] = useState('');
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [websiteLink, setWebsiteLink] = useState('');
 
   // Contributor details (No account or login required)
@@ -83,16 +85,40 @@ export default function ContributePage() {
     { id: 'Correction', label: 'Factual Correction', icon: FileEdit, desc: 'Suggested update to indexed listing' },
   ];
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64 = reader.result as string;
-        setImagePreview(base64);
-        setImageUrl(base64);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+
+    // Fast client-side image preview
+    const previewUrl = URL.createObjectURL(file);
+    setImagePreview(previewUrl);
+
+    try {
+      setIsUploadingImage(true);
+      const supabase = createClient();
+      if (supabase) {
+        const fileExt = file.name.split('.').pop() || 'jpg';
+        const cleanName = file.name.replace(/[^a-zA-Z0-9]/g, '_');
+        const filePath = `discoveries/${Date.now()}_${cleanName}.${fileExt}`;
+
+        const { error: uploadError } = await supabase.storage
+          .from('contributions')
+          .upload(filePath, file, { contentType: file.type, upsert: true });
+
+        if (!uploadError) {
+          const { data: publicData } = supabase.storage
+            .from('contributions')
+            .getPublicUrl(filePath);
+          if (publicData?.publicUrl) {
+            setImageUrl(publicData.publicUrl);
+            return;
+          }
+        }
+      }
+    } catch (err) {
+      console.warn('Storage upload encountered an issue, fallback to preview:', err);
+    } finally {
+      setIsUploadingImage(false);
     }
   };
 
@@ -544,16 +570,22 @@ export default function ContributePage() {
                       alt="Preview"
                       className="max-h-40 rounded-md object-cover border border-[#E8E2D6]"
                     />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setImagePreview(null);
-                        setImageUrl('');
-                      }}
-                      className="text-xs text-red-600 hover:underline"
-                    >
-                      Remove photo
-                    </button>
+                    {isUploadingImage ? (
+                      <span className="text-[11px] text-[#B21C01] font-mono animate-pulse">
+                        Uploading to secure storage...
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setImagePreview(null);
+                          setImageUrl('');
+                        }}
+                        className="text-xs text-red-600 hover:underline"
+                      >
+                        Remove photo
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <label className="cursor-pointer flex flex-col items-center">

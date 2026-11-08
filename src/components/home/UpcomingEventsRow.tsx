@@ -1,13 +1,35 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { MOCK_EVENTS } from '@/data/mock-events';
+import { getEvents, KERALA_PLATFORM_DATE } from '@/lib/supabase/data-service';
+import { EventListing } from '@/lib/types';
 import { MapPin, ArrowRight } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 export default function UpcomingEventsRow() {
   const { language, t } = useLanguage();
+  const [events, setEvents] = useState<EventListing[]>(() =>
+    MOCK_EVENTS.filter((e) => e.date >= KERALA_PLATFORM_DATE && e.status !== 'Completed').slice(0, 4)
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+    getEvents({ upcomingOnly: true })
+      .then((data) => {
+        if (isMounted && data && data.length > 0) {
+          setEvents(data.slice(0, 4));
+        }
+      })
+      .catch((err) => {
+        console.warn('Fallback to upcoming mock events in row:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section className="py-14 md:py-20 border-b border-[#e5e0d4] bg-[#FCFBEF]" id="calendar">
@@ -40,10 +62,18 @@ export default function UpcomingEventsRow() {
 
         {/* 4 Event Cards (2x2 Grid) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {MOCK_EVENTS.map((event) => {
-            const monthStr = event.date.split('-')[1];
-            const monthLabel = monthStr === '04' ? 'APR' : monthStr === '03' ? 'MAR' : monthStr === '02' ? 'FEB' : 'AUG';
-            const dayStr = event.date.split('-')[2];
+          {events.map((event) => {
+            const dateParts = event.date.split('-');
+            const year = parseInt(dateParts[0], 10);
+            const month = parseInt(dateParts[1], 10) - 1;
+            const day = parseInt(dateParts[2], 10);
+            const dateObj = new Date(Date.UTC(year, month, day));
+
+            const monthLabel = dateObj.toLocaleDateString('en-US', {
+              month: 'short',
+              timeZone: 'UTC',
+            }).toUpperCase();
+            const dayStr = String(day).padStart(2, '0');
 
             return (
               <Link
@@ -100,7 +130,9 @@ export default function UpcomingEventsRow() {
                 <div className="pt-4 border-t border-[#ece6da] flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-1.5 text-[#5d5e61] font-body text-xs">
                     <MapPin className="w-3.5 h-3.5 text-[#aa3000] flex-shrink-0" />
-                    <span className="truncate max-w-[280px]">{event.venue}, {event.district}</span>
+                    <span className="truncate max-w-[280px]">
+                      {event.venue}, {event.district}
+                    </span>
                   </div>
                   <span className="font-body text-xs text-[#aa3000] group-hover:text-[#c23700] flex items-center gap-1 font-semibold">
                     <span>{t('View event details', 'വിവരങ്ങൾ കാണുക')}</span>

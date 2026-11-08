@@ -5,8 +5,8 @@ import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MOCK_LISTINGS } from '@/data/mock-listings';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
-import { CulturalListing } from '@/lib/types';
-import { getCategories, getListings, type CulturalCategory } from '@/lib/supabase/data-service';
+import { CulturalListing, EventListing } from '@/lib/types';
+import { getCategories, getListings, getEvents, type CulturalCategory } from '@/lib/supabase/data-service';
 import KeralaMap from '@/components/map/KeralaMap';
 import {
   Search,
@@ -29,6 +29,7 @@ function ExplorePageContent() {
   // Live database listings state (initialized with mock fallback for immediate render)
   const [listings, setListings] = useState<CulturalListing[]>(MOCK_LISTINGS);
   const [isLoadingListings, setIsLoadingListings] = useState(false);
+  const [events, setEvents] = useState<EventListing[]>([]);
 
   // Search and filter states
   const [searchQuery, setSearchQuery] = useState('');
@@ -56,7 +57,6 @@ function ExplorePageContent() {
         if (isMounted && data && data.length > 0) {
           setListings(data);
         }
-
       })
       .catch((err) => {
         console.warn('Using local listings fallback:', err);
@@ -66,6 +66,10 @@ function ExplorePageContent() {
           setIsLoadingListings(false);
         }
       });
+
+    getEvents({ upcomingOnly: true }).then((evs) => {
+      if (isMounted && evs) setEvents(evs);
+    }).catch(() => {});
 
     return () => {
       isMounted = false;
@@ -396,6 +400,7 @@ function ExplorePageContent() {
         >
           <KeralaMap
             listings={filteredListings}
+            events={events}
             selectedListing={selectedListing}
             onSelectListing={setSelectedListing}
             hoveredListingId={hoveredListingId}

@@ -2,12 +2,13 @@
 
 import React, { useEffect, useMemo, useRef } from 'react';
 import L from 'leaflet';
-import { CulturalListing } from '@/lib/types';
+import { CulturalListing, EventListing } from '@/lib/types';
 import { RotateCcw, Plus, Minus } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
 interface OpenStreetMapClientProps {
   listings: CulturalListing[];
+  events?: EventListing[];
   selectedListing: CulturalListing | null;
   onSelectListing: (listing: CulturalListing | null) => void;
   hoveredListingId?: string | null;
@@ -55,21 +56,21 @@ function createPopupContent(listing: CulturalListing, exploreLabel: string) {
     : '';
 
   return `
-    <div class="p-3 bg-white rounded-xl shadow-lg border border-[#E8E2D6] max-w-[260px] text-left">
-      <div class="flex items-center justify-between text-[10px] text-[#8C8273] mb-1">
-        <span class="font-mono uppercase tracking-wider font-semibold">${escapeHtml(listing.category)}</span>
-        <span class="text-[#2D6A4F] font-medium flex items-center gap-0.5">
+    <div class="w-[240px] max-w-[calc(100vw-48px)] p-3.5 bg-white rounded-lg border border-[#E8E2D6] shadow-[0_8px_24px_rgba(24,21,18,0.12)] text-left">
+      <div class="flex items-center justify-between gap-3 text-[9px] text-[#8C8273] mb-2">
+        <span class="font-mono uppercase tracking-[0.12em] font-semibold truncate">${escapeHtml(listing.category)}</span>
+        <span class="text-[#2D6A4F] font-medium flex items-center gap-0.5 shrink-0">
           <span aria-hidden="true">✓</span>
           <span>${escapeHtml(listing.verificationStatus)}</span>
         </span>
       </div>
-      <h4 class="font-semibold text-xs text-[#181512] leading-snug line-clamp-1">${escapeHtml(listing.name)}</h4>
-      ${nameMalayalam}
-      <div class="flex items-center gap-1 text-[11px] text-[#5C554B] mb-3">
+      <h4 class="font-semibold text-sm text-[#181512] leading-snug line-clamp-2">${escapeHtml(listing.name)}</h4>
+      ${nameMalayalam ? nameMalayalam.replace('text-[10px]', 'text-[11px]').replace('mb-1', 'mt-1 mb-2') : ''}
+      <div class="flex items-start gap-1.5 text-[11px] leading-relaxed text-[#5C554B] mb-3">
         <span class="text-[#B21C01] flex-shrink-0" aria-hidden="true">•</span>
-        <span class="truncate">${escapeHtml(`${listing.locality}, ${listing.district}`)}</span>
+        <span>${escapeHtml(`${listing.locality}, ${listing.district}`)}</span>
       </div>
-      <a href="/culture/${encodeURIComponent(listing.slug)}" class="inline-flex items-center gap-1 w-full justify-center px-2.5 py-1.5 rounded-md bg-[#181512] hover:bg-[#B21C01] text-white text-[11px] font-medium transition-colors">
+      <a href="/culture/${encodeURIComponent(listing.slug)}" class="inline-flex items-center gap-1 w-full justify-center px-2.5 py-2 rounded-md bg-[#B21C01] hover:bg-[#8C1500] text-white text-[11px] font-semibold transition-colors">
         <span>${escapeHtml(exploreLabel)}</span>
         <span aria-hidden="true">↗</span>
       </a>
@@ -79,6 +80,7 @@ function createPopupContent(listing: CulturalListing, exploreLabel: string) {
 
 export default function OpenStreetMapClient({
   listings,
+  events = [],
   selectedListing,
   onSelectListing,
   hoveredListingId,
@@ -102,6 +104,19 @@ export default function OpenStreetMapClient({
           !Number.isNaN(listing.coordinates.lng)
       ),
     [listings]
+  );
+
+  const validEvents = useMemo(
+    () =>
+      events.filter(
+        (ev) =>
+          ev.coordinates &&
+          typeof ev.coordinates.lat === 'number' &&
+          typeof ev.coordinates.lng === 'number' &&
+          !Number.isNaN(ev.coordinates.lat) &&
+          !Number.isNaN(ev.coordinates.lng)
+      ),
+    [events]
   );
 
   useEffect(() => {
@@ -176,7 +191,50 @@ export default function OpenStreetMapClient({
       marker.addTo(markerLayer);
       markerRefs.current[listing.id] = marker;
     });
-  }, [validListings, selectedListing?.id, hoveredListingId, exploreLabel]);
+
+    validEvents.forEach((ev) => {
+      if (!ev.coordinates) return;
+      const marker = L.marker([ev.coordinates.lat, ev.coordinates.lng], {
+        icon: L.divIcon({
+          className: 'custom-nattuvazhi-event-marker',
+          html: `
+            <div style="width: 26px; height: 26px;" class="relative flex items-center justify-center">
+              <div style="background-color: #D9531E; width: 26px; height: 26px;" class="rounded-full border-2 border-white shadow-md flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform">
+                <div class="w-2 h-2 rounded-full bg-white"></div>
+              </div>
+            </div>
+          `,
+          iconSize: [26, 26],
+          iconAnchor: [13, 13],
+          popupAnchor: [0, -17],
+        }),
+      });
+
+      marker.bindPopup(`
+        <div class="w-[240px] max-w-[calc(100vw-48px)] p-3.5 bg-white rounded-lg border border-[#E8E2D6] shadow-[0_8px_24px_rgba(24,21,18,0.12)] text-left">
+          <div class="flex items-center justify-between gap-2 text-[9px] text-[#8C8273] mb-1.5">
+            <span class="font-mono uppercase tracking-[0.12em] font-semibold text-[#D9531E] truncate">${escapeHtml(ev.category)}</span>
+            <span class="text-[#2D6A4F] font-medium shrink-0">✓ ${escapeHtml(ev.status)}</span>
+          </div>
+          <h4 class="font-semibold text-sm text-[#181512] leading-snug line-clamp-2">${escapeHtml(ev.title)}</h4>
+          <p class="text-[11px] text-[#8C8273] mt-1 mb-2 font-mono">${escapeHtml(ev.formattedDate || ev.date)}</p>
+          <div class="flex items-start gap-1.5 text-[11px] leading-relaxed text-[#5C554B] mb-3">
+            <span class="text-[#D9531E] flex-shrink-0">•</span>
+            <span>${escapeHtml(`${ev.venue}, ${ev.district}`)}</span>
+          </div>
+          <a href="/events/${encodeURIComponent(ev.slug)}" class="inline-flex items-center gap-1 w-full justify-center px-2.5 py-2 rounded-md bg-[#D9531E] hover:bg-[#B33C0F] text-white text-[11px] font-semibold transition-colors">
+            <span>View festival schedule</span>
+            <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      `, {
+        className: 'nattuvazhi-custom-popup',
+        closeButton: false,
+      });
+
+      marker.addTo(markerLayer);
+    });
+  }, [validListings, validEvents, selectedListing?.id, hoveredListingId, exploreLabel]);
 
   useEffect(() => {
     const map = mapRef.current;
@@ -238,3 +296,4 @@ export default function OpenStreetMapClient({
     </div>
   );
 }
+

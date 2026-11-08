@@ -30,6 +30,8 @@ export default async function EventDetailPage({ params }: Props) {
     notFound();
   }
 
+  const isCompleted = event.status === 'Completed';
+
   return (
     <main className="flex-1 max-w-5xl w-full mx-auto px-4 md:px-8 py-8">
       {/* Breadcrumb Navigation */}
@@ -47,6 +49,19 @@ export default async function EventDetailPage({ params }: Props) {
 
       {/* Header Block */}
       <div className="flex flex-col gap-2 mb-8">
+        <div className="flex items-center gap-2">
+          <span className="font-mono text-[11px] uppercase tracking-wider text-[#8C8273]">{event.category}</span>
+          <span
+            className={`font-medium text-[11px] px-2 py-0.5 rounded-full ${
+              isCompleted
+                ? 'bg-[#F3EFE8] text-[#5C554B] border border-[#E8E2D6]'
+                : 'bg-[#eef7ee] text-[#246b24] border border-[#cbe6cb]'
+            }`}
+          >
+            {event.status}
+          </span>
+        </div>
+
         <h1 className="text-3xl sm:text-4xl font-semibold text-[#181512] tracking-tight leading-tight">
           {event.title}
         </h1>
@@ -102,26 +117,28 @@ export default async function EventDetailPage({ params }: Props) {
           </div>
 
           {/* Schedule Highlights Sequence */}
-          <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
-            <h3 className="text-sm font-semibold text-[#181512] mb-4 pb-2 border-b border-[#EDE7DC] flex items-center gap-2">
-              <Clock className="w-4 h-4 text-[#8C8273]" />
-              <span>Ritual & Performance Schedule</span>
-            </h3>
+          {event.scheduleHighlights && event.scheduleHighlights.length > 0 && (
+            <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
+              <h3 className="text-sm font-semibold text-[#181512] mb-4 pb-2 border-b border-[#EDE7DC] flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#8C8273]" />
+                <span>Ritual & Performance Schedule</span>
+              </h3>
 
-            <div className="border-l border-[#E8E2D6] ml-2 space-y-4 pl-4 py-1">
-              {event.scheduleHighlights.map((highlight, index) => (
-                <div key={index} className="relative">
-                  <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#B21C01] border-2 border-white"></div>
-                  <div className="text-xs font-mono text-[#8C8273] tabular-nums">
-                    {highlight.time}
+              <div className="border-l border-[#E8E2D6] ml-2 space-y-4 pl-4 py-1">
+                {event.scheduleHighlights.map((highlight, index) => (
+                  <div key={index} className="relative">
+                    <div className="absolute -left-[21px] top-1 w-2.5 h-2.5 rounded-full bg-[#B21C01] border-2 border-white"></div>
+                    <div className="text-xs font-mono text-[#8C8273] tabular-nums">
+                      {highlight.time}
+                    </div>
+                    <div className="text-xs font-semibold text-[#181512] mt-0.5">
+                      {highlight.item}
+                    </div>
                   </div>
-                  <div className="text-xs font-semibold text-[#181512] mt-0.5">
-                    {highlight.item}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
         {/* Right Sidebar */}
@@ -147,7 +164,7 @@ export default async function EventDetailPage({ params }: Props) {
                 <span>Visitor notice</span>
               </div>
               <p className="text-[11px] leading-relaxed">
-                Crowd regulations and customary attire apply at temple sanctums. Verify local guidelines before attending.
+                Crowd regulations and customary attire apply at temple sanctums and regatta courses. Verify local guidelines before attending.
               </p>
             </div>
 

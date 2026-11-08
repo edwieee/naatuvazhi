@@ -1,11 +1,12 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { CulturalListing } from '@/lib/types';
+import { CulturalListing, EventListing } from '@/lib/types';
 import { Compass } from 'lucide-react';
 
 interface KeralaMapProps {
   listings: CulturalListing[];
+  events?: EventListing[];
   selectedListing: CulturalListing | null;
   onSelectListing: (listing: CulturalListing | null) => void;
   hoveredListingId?: string | null;

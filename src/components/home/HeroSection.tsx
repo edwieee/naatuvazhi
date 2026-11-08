@@ -62,28 +62,26 @@ export default function HeroSection() {
       </div>
 
       {/* Editorial Content Container */}
-      <div className="max-w-7xl mx-auto px-4 md:px-12 w-full py-10 lg:py-0 flex-1 flex flex-col justify-center relative z-10">
+      <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 w-full py-10 lg:py-0 flex-1 flex flex-col justify-center relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center h-full">
           {/* Left Column: Editorial Archive Pitch */}
-          <div className="lg:col-span-7 flex flex-col justify-center py-6 lg:py-10 max-w-lg lg:max-w-[500px] xl:max-w-[540px]">
+          <div className="lg:col-span-7 flex flex-col justify-center py-0 max-w-[480px] lg:max-w-[480px]">
             {/* Subtle Eyebrow Label */}
-            <div className="inline-flex items-center gap-2.5 mb-5 lg:mb-6">
+            <div className="inline-flex items-center gap-2.5 mb-[12px]">
               <span className="w-2 h-2 rounded-full bg-[#aa3000]"></span>
-              <span className="font-body text-xs sm:text-[13px] font-medium text-[#7d3b24] tracking-normal">
+              <span className="font-body text-[12px] font-medium text-[#7d3b24] tracking-normal">
                 {t('Kerala cultural cartography · Public open archive', 'കേരള സാംസ്കാരിക ഭൂപടം · പബ്ലിക് ഓപ്പൺ ആർക്കൈവ്')}
               </span>
             </div>
 
             {/* Display Headline without trailing period */}
-            <h1 className="font-headline text-4xl sm:text-5xl lg:text-[50px] xl:text-[58px] lg:leading-[1.14] xl:leading-[1.1] text-[#1c1c16] mb-6 lg:mb-7 tracking-tight font-medium">
-              {t(
-                'Discover the culture that lives around you',
-                'നിങ്ങൾക്ക് ചുറ്റും ജീവിക്കുന്ന സംസ്കാരം കണ്ടെത്തൂ'
-              )}
+            <h1 className="font-headline text-[44px] leading-[0.96] tracking-[-0.02em] text-[#1c1c16] max-w-[15ch] mb-[16px] font-medium">
+              <span className="block">{t('Discover the culture', 'സംസ്കാരം കണ്ടെത്തൂ')}</span>
+              <span className="block">{t('that lives around you', 'നിങ്ങളെ ചുറ്റും ജീവിക്കുന്നു')}</span>
             </h1>
 
             {/* Supporting Description */}
-            <p className="font-body text-base sm:text-lg lg:text-[18px] xl:text-[19px] text-[#5d5e61] mb-8 lg:mb-10 leading-relaxed max-w-md lg:max-w-[480px]">
+            <p className="font-body text-[15.5px] leading-[1.7] text-[#5d5e61] max-w-[480px]">
               {t(
                 'A community-informed, scholar-verified living map of Kerala’s sacred groves, ritual performing arts, master practitioners, and craft guilds.',
                 'നാട്ടുവഴി — കേരളത്തിന്റെ സാംസ്കാരിക ഭൂപടം. ക്ഷേത്രകലകൾ, കാവുകൾ, പാരമ്പര്യ കരകൗശലങ്ങൾ, നാട്ടുവിജ്ഞാനം എന്നിവയെ തൊട്ടറിയാൻ ഒരു കൂട്ടായ ഉദ്യമം.'
@@ -91,19 +89,19 @@ export default function HeroSection() {
             </p>
 
             {/* Quiet, Well-balanced Dual CTAs */}
-            <div className="flex flex-wrap items-center gap-4">
+            <div className="mt-[28px] flex flex-wrap items-center gap-4">
               <Link
                 href="/explore"
-                className="inline-flex items-center justify-center gap-2.5 px-6 sm:px-7 py-3.5 sm:py-4 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-sm sm:text-base rounded-md transition-colors shadow-xs"
+                className="inline-flex h-[40px] items-center justify-center gap-2.5 px-6 bg-[#aa3000] hover:bg-[#c23700] text-white font-body font-medium text-[14px] rounded-md transition-colors shadow-xs"
               >
                 <span>{t('Explore the directory', 'ഭൂപടം തുറക്കുക')}</span>
-                <ArrowRight className="w-4 h-4 sm:w-4.5 sm:h-4.5" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/contribute"
-                className="inline-flex items-center justify-center gap-2.5 px-5 sm:px-6 py-3.5 sm:py-4 bg-[#f6f4ea] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-sm sm:text-base rounded-md transition-colors"
+                className="inline-flex h-[40px] items-center justify-center gap-2.5 px-5 bg-[#f6f4ea] hover:bg-[#ede7da] border border-[#ded7c9] text-[#1c1c16] font-body font-medium text-[14px] rounded-md transition-colors"
               >
-                <PlusCircle className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#aa3000]" />
+                <PlusCircle className="w-4 h-4 text-[#aa3000]" />
                 <span>{t('Submit a discovery', 'പുതിയ കേന്ദ്രം സമർപ്പിക്കൂ')}</span>
               </Link>
             </div>

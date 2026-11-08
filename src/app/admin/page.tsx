@@ -28,25 +28,18 @@ import {
   ListingCategory,
 } from '@/lib/types';
 import {
-  ShieldCheck,
   Search,
   ChevronRight,
   Plus,
   Edit2,
   Trash2,
-  Calendar,
-  Sparkles,
   CheckCircle2,
-  AlertTriangle,
-  Clock,
-  Layers,
-  Settings,
-  History,
-  ExternalLink,
   X,
-  Loader2,
   MapPin,
-  LogOut,
+  ExternalLink,
+  ShieldCheck,
+  Check,
+  ArrowRight,
 } from 'lucide-react';
 
 const KERALA_DISTRICTS_LIST: DistrictName[] = [
@@ -320,172 +313,162 @@ export default function AdminDashboardPage() {
     setEditingEvent(null);
   }
 
-  async function handleQuickVerifyEvent(event: EventListing) {
-    const res = await actionUpdateEvent(event.id, {
-      lastConfirmedDate: `Verified on ${new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })} via Devaswom Council`,
+  async function handleQuickVerifyEvent(ev: EventListing) {
+    const res = await actionUpdateEvent(ev.id, {
+      lastConfirmedDate: new Date().toISOString(),
       status: 'Confirmed',
     });
     if (res.success && res.event) {
       setEvents((prev) =>
-        prev.map((e) => (e.id === event.id ? res.event! : e))
+        prev.map((item) => (item.id === res.event!.id ? res.event! : item))
       );
-      showToast(`Event "${event.title}" verified with updated timestamp.`);
+      showToast(`Event "${ev.title}" verified for today.`);
     }
   }
 
   async function handleDeleteEvent(id: string, title: string) {
-    if (!confirm(`Are you sure you want to remove event "${title}"?`)) return;
+    if (!confirm(`Are you sure you want to delete/archive event "${title}"?`)) return;
     const res = await actionDeleteEvent(id);
     if (res.success) {
-      setEvents((prev) => prev.filter((e) => e.id !== id));
-      showToast(`Event "${title}" removed.`);
+      setEvents((prev) => prev.filter((ev) => ev.id !== id));
+      showToast(`Event "${title}" archived.`);
     }
   }
 
   // ====================================================================
-  // HOMEPAGE CONFIG HANDLERS
+  // HOMEPAGE CONFIG HANDLER
   // ====================================================================
 
-  async function handleSaveHomepageConfig(e: React.FormEvent) {
+  async function handleSaveHomepageConfig(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     await actionUpdateHomepageConfig('hero_headline', heroHeadline);
     await actionUpdateHomepageConfig('hero_subheadline', heroSubheadline);
     showToast('Homepage text configuration saved successfully!');
   }
 
+  const pendingCount = submissions.filter((s) => s.status === 'Pending').length;
+
   return (
-    <main className="flex-1 max-w-7xl w-full mx-auto px-4 md:px-8 py-8">
+    <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed bottom-6 right-6 z-50 bg-[#181512] text-white px-4 py-3 rounded-xl shadow-lg border border-[#3A352F] text-xs flex items-center gap-2.5 animate-in fade-in duration-200">
-          <CheckCircle2 className="w-4 h-4 text-[#4ADE80]" />
+        <div className="fixed bottom-6 right-6 z-50 bg-[#1c1c16] text-white px-4 py-2.5 rounded-lg shadow-lg border border-[#38332c] text-xs flex items-center gap-2 animate-in fade-in duration-200">
+          <CheckCircle2 className="w-3.5 h-3.5 text-[#4ADE80]" />
           <span>{toastMessage}</span>
-          <button onClick={() => setToastMessage(null)} className="ml-2 text-[#8C8273] hover:text-white">
+          <button onClick={() => setToastMessage(null)} className="ml-2 text-[#8c8577] hover:text-white">
             <X className="w-3.5 h-3.5" />
           </button>
         </div>
       )}
 
-      {/* Top Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-[#E8E2D6]">
+      {/* Clean Dashboard Header */}
+      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 mb-6 border-b border-[#e5e0d4]">
         <div>
-          <div className="text-xs font-mono text-[#8C8273] mb-1">
-            CURATORIAL VERIFICATION BUREAU · SUPABASE LIVE CMS
+          <div className="inline-flex items-center gap-2 mb-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]" />
+            <span className="text-xs font-medium text-[#7d3b24]">
+              Curator Portal
+            </span>
           </div>
-          <h1 className="text-2xl font-semibold text-[#181512] tracking-tight">
-            Curator Content Management Portal
+          <h1 className="text-2xl sm:text-[28px] font-semibold text-[#1c1c16] tracking-tight">
+            Content Management
           </h1>
-          <p className="text-xs text-[#5C554B] mt-0.5">
-            Single source of truth for Kerala cultural listings, calendar festivals, and community accessions.
+          <p className="text-xs sm:text-[13px] text-[#5d5e61] mt-1 max-w-xl leading-relaxed">
+            Verified cultural listings, living festival calendar, and community accessions.
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2.5">
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-[#F8F5EE] border border-[#E8E2D6] rounded-md text-xs">
-            <span className="w-2 h-2 rounded-full bg-[#2D6A4F] animate-pulse" />
-            <span className="text-[#8C8273]">Curator:</span>
-            <span className="font-mono font-medium text-[#181512]">{curatorEmail}</span>
-          </div>
-
+        {/* Clean, Unified Action & Account Bar */}
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs text-[#5d5e61]">
           <Link
             href="/explore"
-            className="rounded-md bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#181512] text-xs font-medium px-3 py-1.5 transition-colors"
+            className="hover:text-[#1c1c16] transition-colors"
           >
-            Public directory
+            Directory
           </Link>
+          <span className="text-[#c4bfb4]">·</span>
           <Link
             href="/events"
-            className="rounded-md bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#181512] text-xs font-medium px-3 py-1.5 transition-colors"
+            className="hover:text-[#1c1c16] transition-colors"
           >
             Calendar
           </Link>
-
+          <span className="text-[#c4bfb4]">·</span>
+          <div className="flex items-center gap-1.5 text-[#1c1c16]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#2d6a4f]" />
+            <span className="font-medium truncate max-w-[180px] sm:max-w-none">{curatorEmail}</span>
+          </div>
+          <span className="text-[#c4bfb4]">·</span>
           <button
             onClick={handleSignOut}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-[#E8E2D6] hover:border-red-300 hover:bg-red-50 text-[#8C8273] hover:text-red-700 text-xs font-medium transition-colors"
-            title="Sign out of Curator Portal"
+            className="text-[#aa3000] hover:text-[#7d2300] font-medium transition-colors"
           >
-            <LogOut className="w-3.5 h-3.5" />
-            <span>Sign Out</span>
+            Sign Out
           </button>
         </div>
       </div>
 
-      {/* Metrics Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-        <div className="bg-white rounded-xl p-4 border border-[#E8E2D6] shadow-xs">
-          <span className="text-[11px] font-mono text-[#8C8273] block">
-            PENDING SUBMISSIONS
-          </span>
-          <div className="text-2xl font-bold font-mono text-[#B21C01] tabular-nums mt-1">
-            {submissions.filter((s) => s.status === 'Pending').length}
+      {/* Understated, Compact Statistics Row */}
+      <div className="bg-white/80 rounded-xl border border-[#e5e0d4] p-4 sm:p-5 mb-8 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-0 md:divide-x md:divide-[#e5e0d4]">
+        <div className="md:px-4 first:pl-0">
+          <div className="text-xs font-medium text-[#5d5e61]">Pending Submissions</div>
+          <div className="text-xl sm:text-2xl font-semibold text-[#aa3000] tracking-tight mt-0.5">
+            {pendingCount}
           </div>
-          <span className="text-[11px] text-[#5C554B]">Awaiting verification</span>
+          <div className="text-[11px] text-[#8c8577] mt-0.5">Awaiting review</div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 border border-[#E8E2D6] shadow-xs">
-          <span className="text-[11px] font-mono text-[#8C8273] block">
-            PUBLISHED LISTINGS
-          </span>
-          <div className="text-2xl font-bold font-mono text-[#2D6A4F] tabular-nums mt-1">
+        <div className="md:px-4">
+          <div className="text-xs font-medium text-[#5d5e61]">Published Listings</div>
+          <div className="text-xl sm:text-2xl font-semibold text-[#1c1c16] tracking-tight mt-0.5">
             {listings.length}
           </div>
-          <span className="text-[11px] text-[#5C554B]">
-            {listings.filter((l) => l.featured).length} featured on homepage
-          </span>
+          <div className="text-[11px] text-[#8c8577] mt-0.5">
+            {listings.filter((l) => l.featured).length} featured on map
+          </div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 border border-[#E8E2D6] shadow-xs">
-          <span className="text-[11px] font-mono text-[#8C8273] block">
-            ACTIVE FESTIVALS
-          </span>
-          <div className="text-2xl font-bold font-mono text-[#181512] tabular-nums mt-1">
+        <div className="md:px-4">
+          <div className="text-xs font-medium text-[#5d5e61]">Active Festivals</div>
+          <div className="text-xl sm:text-2xl font-semibold text-[#1c1c16] tracking-tight mt-0.5">
             {events.length}
           </div>
-          <span className="text-[11px] text-[#5C554B]">In public cultural calendar</span>
+          <div className="text-[11px] text-[#8c8577] mt-0.5">In cultural calendar</div>
         </div>
 
-        <div className="bg-white rounded-xl p-4 border border-[#E8E2D6] shadow-xs">
-          <span className="text-[11px] font-mono text-[#8C8273] block">
-            CURATOR ACTIONS LOGGED
-          </span>
-          <div className="text-2xl font-bold font-mono text-[#8C8273] tabular-nums mt-1">
+        <div className="md:px-4 last:pr-0">
+          <div className="text-xs font-medium text-[#5d5e61]">Curator Actions</div>
+          <div className="text-xl sm:text-2xl font-semibold text-[#1c1c16] tracking-tight mt-0.5">
             {reviewLogs.length}
           </div>
-          <span className="text-[11px] text-[#5C554B]">Full audit traceability</span>
+          <div className="text-[11px] text-[#8c8577] mt-0.5">Logged in audit trail</div>
         </div>
       </div>
 
-      {/* Main Tab Navigation */}
-      <div className="flex items-center gap-2 border-b border-[#E8E2D6] mb-6 overflow-x-auto scrollbar-none pb-px">
+      {/* Clean, Text-Based Navigation Tabs */}
+      <div className="flex items-center gap-6 border-b border-[#e5e0d4] mb-6 overflow-x-auto scrollbar-none text-xs">
         {[
-          { id: 'submissions', label: 'Submissions Queue', count: submissions.length, icon: Layers },
-          { id: 'listings', label: 'Cultural Listings', count: listings.length, icon: Sparkles },
-          { id: 'events', label: 'Events & Calendar', count: events.length, icon: Calendar },
-          { id: 'homepage', label: 'Homepage & Copy', icon: Settings },
-          { id: 'audit', label: 'Moderation History', count: reviewLogs.length, icon: History },
+          { id: 'submissions', label: 'Submissions', count: submissions.length },
+          { id: 'listings', label: 'Cultural Listings', count: listings.length },
+          { id: 'events', label: 'Events & Calendar', count: events.length },
+          { id: 'homepage', label: 'Homepage Copy' },
+          { id: 'audit', label: 'Audit History', count: reviewLogs.length },
         ].map((tab) => {
-          const Icon = tab.icon;
           const isActive = currentTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setCurrentTab(tab.id as any)}
-              className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold whitespace-nowrap border-b-2 transition-colors ${
+              className={`pb-3 whitespace-nowrap transition-colors relative font-medium ${
                 isActive
-                  ? 'border-[#B21C01] text-[#181512] bg-[#F8F5EE] rounded-t-lg'
-                  : 'border-transparent text-[#8C8273] hover:text-[#181512] hover:bg-[#FBF9F5]'
+                  ? 'text-[#1c1c16] border-b-2 border-[#1c1c16]'
+                  : 'text-[#5d5e61] hover:text-[#1c1c16] border-b-2 border-transparent'
               }`}
             >
-              <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-[#B21C01]' : 'text-[#8C8273]'}`} />
               <span>{tab.label}</span>
               {typeof tab.count === 'number' && (
-                <span
-                  className={`text-[10px] font-mono px-1.5 py-0.5 rounded-full ${
-                    isActive ? 'bg-[#181512] text-white' : 'bg-[#EAE4D9] text-[#5C554B]'
-                  }`}
-                >
-                  {tab.count}
+                <span className="ml-1.5 text-[11px] text-[#8c8577] font-normal">
+                  ({tab.count})
                 </span>
               )}
             </button>
@@ -497,130 +480,151 @@ export default function AdminDashboardPage() {
       {/* TAB 1: SUBMISSIONS QUEUE */}
       {/* ================================================================ */}
       {currentTab === 'submissions' && (
-        <div className="bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden flex flex-col">
-          <div className="p-4 border-b border-[#E8E2D6] flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#FCFBF8]">
-            <div className="flex items-center gap-1 overflow-x-auto scrollbar-none">
-              {(['All', 'Pending', 'Approved', 'Changes Requested', 'Rejected'] as const).map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setSubFilter(tab)}
-                  className={`px-3 py-1 rounded-md text-xs font-medium whitespace-nowrap transition-colors ${
-                    subFilter === tab
-                      ? 'bg-[#181512] text-white'
-                      : 'bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#5C554B]'
-                  }`}
-                >
-                  {tab}
-                </button>
-              ))}
+        <div className="space-y-4">
+          {/* Segmented Filter Control & Compact Search Bar */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            {/* Segmented Controls */}
+            <div className="inline-flex p-0.5 rounded-lg bg-[#ede8dc] border border-[#ded7c9] self-start sm:self-auto overflow-x-auto max-w-full">
+              {(['All', 'Pending', 'Approved', 'Changes Requested', 'Rejected'] as const).map((tab) => {
+                const isActive = subFilter === tab;
+                return (
+                  <button
+                    key={tab}
+                    onClick={() => setSubFilter(tab)}
+                    className={`px-3 py-1 rounded-md text-xs whitespace-nowrap transition-all ${
+                      isActive
+                        ? 'bg-white text-[#1c1c16] font-medium shadow-2xs'
+                        : 'text-[#5d5e61] hover:text-[#1c1c16]'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                );
+              })}
             </div>
 
+            {/* Compact Search Input */}
             <div className="relative sm:w-64">
-              <Search className="w-3.5 h-3.5 text-[#8C8273] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[#8c8577] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={subSearch}
                 onChange={(e) => setSubSearch(e.target.value)}
                 placeholder="Search accessions..."
-                className="w-full pl-8 pr-3 py-1.5 bg-[#FBF9F5] focus:bg-white rounded-md text-xs font-medium border border-[#E8E2D6] focus:border-[#181512] focus:outline-none transition-colors placeholder:text-[#8C8273]"
+                className="w-full h-8 pl-8 pr-3 bg-white/80 focus:bg-white rounded-lg text-xs border border-[#ded7c9] focus:border-[#1c1c16] focus:outline-none transition-colors placeholder:text-[#8c8577]"
               />
             </div>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-[#F8F5EE] border-b border-[#E8E2D6] text-[#8C8273] font-mono text-[10px]">
-                <tr>
-                  <th className="py-2.5 px-4">ACCESSION ID</th>
-                  <th className="py-2.5 px-4">NAME & TRADITION</th>
-                  <th className="py-2.5 px-4">LOCATION</th>
-                  <th className="py-2.5 px-4">CONTRIBUTOR</th>
-                  <th className="py-2.5 px-4">STATUS</th>
-                  <th className="py-2.5 px-4 text-right">ACTION</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-[#EDE7DC]">
-                {filteredSubmissions.length === 0 ? (
+          {/* Refined Submissions Table */}
+          <div className="bg-white/90 rounded-xl border border-[#e5e0d4] overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs">
+                <thead className="bg-[#fbf9f2] border-b border-[#e5e0d4] text-[11px] font-medium text-[#7d7971]">
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-[#8C8273]">
-                      No submissions found in this status queue
-                    </td>
+                    <th className="py-2.5 px-4 font-medium">Accession</th>
+                    <th className="py-2.5 px-4 font-medium">Cultural Record</th>
+                    <th className="py-2.5 px-4 font-medium">Location</th>
+                    <th className="py-2.5 px-4 font-medium">Contributor</th>
+                    <th className="py-2.5 px-4 font-medium">Status</th>
+                    <th className="py-2.5 px-4 text-right font-medium">Action</th>
                   </tr>
-                ) : (
-                  filteredSubmissions.map((sub) => (
-                    <tr key={sub.id} className="hover:bg-[#FBF9F5] transition-colors">
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-mono text-[#181512] font-semibold block">{sub.id}</span>
-                        <span className="text-[10px] font-mono text-[#8C8273] block mt-0.5">
-                          {sub.type}
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-4 max-w-xs">
-                        <div className="font-medium text-[#181512] hover:text-[#B21C01] transition-colors line-clamp-1">
-                          {sub.name}
-                        </div>
-                        <div className="text-[11px] text-[#8C8273] line-clamp-1">{sub.artForm}</div>
-                      </td>
-
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-medium text-[#181512] block">{sub.district}</span>
-                        <span className="text-[11px] text-[#8C8273]">{sub.locality}</span>
-                      </td>
-
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-medium text-[#181512] block">{sub.contributorName}</span>
-                        <span className="text-[11px] text-[#8C8273] font-mono">{sub.contributorEmail}</span>
-                      </td>
-
-                      <td className="py-3 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded-sm text-[10px] font-mono uppercase tracking-wider ${
-                            sub.status === 'Approved'
-                              ? 'bg-[#F4F9F5] text-[#2D6A4F] border border-[#B7DFCA]'
-                              : sub.status === 'Pending'
-                              ? 'bg-[#FEF2F2] text-[#B21C01] border border-[#FECACA]'
-                              : sub.status === 'Rejected'
-                              ? 'bg-[#F3F4F6] text-[#6B7280] border border-[#D1D5DB]'
-                              : 'bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]'
-                          }`}
-                        >
-                          {sub.status}
-                        </span>
-                      </td>
-
-                      <td className="py-3 px-4 text-right whitespace-nowrap">
-                        <Link
-                          href={`/admin/review/${sub.id}`}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md bg-[#181512] hover:bg-[#B21C01] text-white text-xs font-medium transition-colors"
-                        >
-                          <span>Review</span>
-                          <ChevronRight className="w-3 h-3" />
-                        </Link>
+                </thead>
+                <tbody className="divide-y divide-[#eee9df]">
+                  {filteredSubmissions.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="py-12 text-center text-[#8c8577] text-xs">
+                        No submissions found in this status queue
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
+                  ) : (
+                    filteredSubmissions.map((sub) => (
+                      <tr key={sub.id} className="hover:bg-[#f6f4ea]/50 transition-colors">
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <span className="font-mono text-xs text-[#1c1c16] font-medium block">
+                            {sub.id}
+                          </span>
+                          <span className="text-[11px] text-[#7d7971] block">
+                            {sub.type}
+                          </span>
+                        </td>
+
+                        <td className="py-3 px-4 max-w-xs">
+                          <div className="text-[13px] font-medium text-[#1c1c16] line-clamp-1">
+                            {sub.name}
+                          </div>
+                          <div className="text-xs text-[#5d5e61] line-clamp-1">
+                            {sub.artForm}
+                          </div>
+                        </td>
+
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <span className="text-[13px] text-[#1c1c16] block">{sub.district}</span>
+                          <span className="text-xs text-[#7d7971]">{sub.locality}</span>
+                        </td>
+
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          <span className="text-[13px] text-[#1c1c16] block">{sub.contributorName}</span>
+                          <span className="text-xs text-[#7d7971]">{sub.contributorEmail}</span>
+                        </td>
+
+                        <td className="py-3 px-4 whitespace-nowrap">
+                          {sub.status === 'Approved' ? (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-[#2d6a4f] font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#2d6a4f]" />
+                              <span>Approved</span>
+                            </span>
+                          ) : sub.status === 'Pending' ? (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-[#aa3000] font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#aa3000]" />
+                              <span>Pending</span>
+                            </span>
+                          ) : sub.status === 'Rejected' ? (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-[#71717a] font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#71717a]" />
+                              <span>Rejected</span>
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-[#b45309] font-medium">
+                              <span className="w-1.5 h-1.5 rounded-full bg-[#b45309]" />
+                              <span>Changes requested</span>
+                            </span>
+                          )}
+                        </td>
+
+                        <td className="py-3 px-4 text-right whitespace-nowrap">
+                          <Link
+                            href={`/admin/review/${sub.id}`}
+                            className="inline-flex items-center gap-1 px-3 py-1 rounded-md bg-[#1c1c16] hover:bg-[#aa3000] text-white text-xs font-medium transition-colors"
+                          >
+                            <span>Review</span>
+                            <ChevronRight className="w-3 h-3" />
+                          </Link>
+                        </td>
+                      </tr>
+                    ))
+                  )}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
 
       {/* ================================================================ */}
-      {/* TAB 2: CULTURAL LISTINGS MANAGEMENT (FULL CRUD) */}
+      {/* TAB 2: CULTURAL LISTINGS MANAGEMENT */}
       {/* ================================================================ */}
       {currentTab === 'listings' && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="relative sm:w-80">
-              <Search className="w-3.5 h-3.5 text-[#8C8273] absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="relative sm:w-72">
+              <Search className="w-3.5 h-3.5 text-[#8c8577] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={listingSearch}
                 onChange={(e) => setListingSearch(e.target.value)}
                 placeholder="Search cultural listings..."
-                className="w-full pl-8 pr-3 py-2 bg-white rounded-md text-xs font-medium border border-[#E8E2D6] focus:border-[#181512] focus:outline-none transition-colors"
+                className="w-full h-8 pl-8 pr-3 bg-white/80 focus:bg-white rounded-lg text-xs border border-[#ded7c9] focus:border-[#1c1c16] focus:outline-none transition-colors"
               />
             </div>
 
@@ -629,61 +633,61 @@ export default function AdminDashboardPage() {
                 setEditingListing(null);
                 setIsListingModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#B21C01] hover:bg-[#961700] text-white rounded-md text-xs font-semibold shadow-xs transition-colors self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#aa3000] hover:bg-[#882600] text-white rounded-md text-xs font-medium transition-colors self-start sm:self-auto"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add new cultural listing</span>
+              <span>Add Cultural Listing</span>
             </button>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden">
+          <div className="bg-white/90 rounded-xl border border-[#e5e0d4] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#F8F5EE] border-b border-[#E8E2D6] text-[#8C8273] font-mono text-[10px]">
+                <thead className="bg-[#fbf9f2] border-b border-[#e5e0d4] text-[11px] font-medium text-[#7d7971]">
                   <tr>
-                    <th className="py-2.5 px-4">LISTING NAME</th>
-                    <th className="py-2.5 px-4">CATEGORY & ART FORM</th>
-                    <th className="py-2.5 px-4">DISTRICT</th>
-                    <th className="py-2.5 px-4">VERIFICATION</th>
-                    <th className="py-2.5 px-4 text-center">FEATURED</th>
-                    <th className="py-2.5 px-4 text-right">ACTIONS</th>
+                    <th className="py-2.5 px-4 font-medium">Listing</th>
+                    <th className="py-2.5 px-4 font-medium">Category & Art Form</th>
+                    <th className="py-2.5 px-4 font-medium">Location</th>
+                    <th className="py-2.5 px-4 font-medium">Verification</th>
+                    <th className="py-2.5 px-4 text-center font-medium">Featured</th>
+                    <th className="py-2.5 px-4 text-right font-medium">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EDE7DC]">
+                <tbody className="divide-y divide-[#eee9df]">
                   {filteredListings.map((item) => (
-                    <tr key={item.id} className="hover:bg-[#FBF9F5] transition-colors">
+                    <tr key={item.id} className="hover:bg-[#f6f4ea]/50 transition-colors">
                       <td className="py-3 px-4">
                         <Link
                           href={`/culture/${item.slug}`}
-                          className="font-semibold text-[#181512] hover:text-[#B21C01] transition-colors block line-clamp-1"
+                          className="text-[13px] font-medium text-[#1c1c16] hover:text-[#aa3000] transition-colors block line-clamp-1"
                         >
                           {item.name}
                         </Link>
                         {item.nameMalayalam && (
-                          <span className="text-[11px] text-[#8C8273] font-malayalam block">
+                          <span className="text-xs text-[#7d7971] block">
                             {item.nameMalayalam}
                           </span>
                         )}
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium bg-[#F3EFE8] text-[#181512] mb-0.5">
+                        <span className="text-[11px] font-medium text-[#7d3b24] block">
                           {item.category}
                         </span>
-                        <div className="text-[11px] text-[#5C554B] line-clamp-1">{item.artForm}</div>
+                        <div className="text-xs text-[#5d5e61] line-clamp-1">{item.artForm}</div>
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-medium text-[#181512] block">{item.district}</span>
-                        <span className="text-[11px] text-[#8C8273]">{item.locality}</span>
+                        <span className="text-[13px] text-[#1c1c16] block">{item.district}</span>
+                        <span className="text-xs text-[#7d7971]">{item.locality}</span>
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 text-[11px] font-medium text-[#2D6A4F]">
-                          <ShieldCheck className="w-3.5 h-3.5" />
+                        <span className="inline-flex items-center gap-1.5 text-xs text-[#2d6a4f] font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2d6a4f]" />
                           <span>{item.verificationStatus}</span>
                         </span>
-                        <div className="text-[10px] text-[#8C8273] truncate max-w-xs">
+                        <div className="text-[11px] text-[#7d7971] truncate max-w-xs">
                           {item.verifiedBy}
                         </div>
                       </td>
@@ -691,13 +695,13 @@ export default function AdminDashboardPage() {
                       <td className="py-3 px-4 text-center whitespace-nowrap">
                         <button
                           onClick={() => handleToggleFeaturedListing(item)}
-                          className={`text-xs px-2 py-1 rounded transition-colors ${
+                          className={`text-xs px-2 py-0.5 rounded transition-colors ${
                             item.featured
-                              ? 'bg-[#FEF2F2] text-[#B21C01] font-semibold border border-[#FECACA]'
-                              : 'bg-[#F3EFE8] text-[#8C8273] hover:text-[#181512]'
+                              ? 'text-[#aa3000] font-medium bg-[#fbeae5]'
+                              : 'text-[#8c8577] hover:text-[#1c1c16]'
                           }`}
                         >
-                          {item.featured ? '★ Featured' : '☆ Feature'}
+                          {item.featured ? 'Featured' : 'Feature'}
                         </button>
                       </td>
 
@@ -708,14 +712,14 @@ export default function AdminDashboardPage() {
                               setEditingListing(item);
                               setIsListingModalOpen(true);
                             }}
-                            className="p-1.5 rounded hover:bg-[#F3EFE8] text-[#5C554B] hover:text-[#181512] transition-colors"
+                            className="p-1 rounded text-[#5d5e61] hover:text-[#1c1c16] transition-colors"
                             title="Edit Listing"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDeleteListing(item.id, item.name)}
-                            className="p-1.5 rounded hover:bg-[#FEF2F2] text-[#8C8273] hover:text-[#B21C01] transition-colors"
+                            className="p-1 rounded text-[#8c8577] hover:text-[#aa3000] transition-colors"
                             title="Archive Listing"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -732,19 +736,19 @@ export default function AdminDashboardPage() {
       )}
 
       {/* ================================================================ */}
-      {/* TAB 3: EVENTS MANAGEMENT (FULL CRUD & QUICK VERIFY) */}
+      {/* TAB 3: EVENTS MANAGEMENT */}
       {/* ================================================================ */}
       {currentTab === 'events' && (
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="relative sm:w-80">
-              <Search className="w-3.5 h-3.5 text-[#8C8273] absolute left-3 top-1/2 -translate-y-1/2" />
+            <div className="relative sm:w-72">
+              <Search className="w-3.5 h-3.5 text-[#8c8577] absolute left-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
               <input
                 type="text"
                 value={eventSearch}
                 onChange={(e) => setEventSearch(e.target.value)}
                 placeholder="Search festival calendar..."
-                className="w-full pl-8 pr-3 py-2 bg-white rounded-md text-xs font-medium border border-[#E8E2D6] focus:border-[#181512] focus:outline-none transition-colors"
+                className="w-full h-8 pl-8 pr-3 bg-white/80 focus:bg-white rounded-lg text-xs border border-[#ded7c9] focus:border-[#1c1c16] focus:outline-none transition-colors"
               />
             </div>
 
@@ -753,67 +757,60 @@ export default function AdminDashboardPage() {
                 setEditingEvent(null);
                 setIsEventModalOpen(true);
               }}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#B21C01] hover:bg-[#961700] text-white rounded-md text-xs font-semibold shadow-xs transition-colors self-start sm:self-auto"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#aa3000] hover:bg-[#882600] text-white rounded-md text-xs font-medium transition-colors self-start sm:self-auto"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>Add new festival / gathering</span>
+              <span>Add Festival Gathering</span>
             </button>
           </div>
 
-          <div className="bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden">
+          <div className="bg-white/90 rounded-xl border border-[#e5e0d4] overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#F8F5EE] border-b border-[#E8E2D6] text-[#8C8273] font-mono text-[10px]">
+                <thead className="bg-[#fbf9f2] border-b border-[#e5e0d4] text-[11px] font-medium text-[#7d7971]">
                   <tr>
-                    <th className="py-2.5 px-4">EVENT & TRADITION</th>
-                    <th className="py-2.5 px-4">DATE & TIMING</th>
-                    <th className="py-2.5 px-4">VENUE & DISTRICT</th>
-                    <th className="py-2.5 px-4">STATUS</th>
-                    <th className="py-2.5 px-4">SOURCE & CONFIRMATION</th>
-                    <th className="py-2.5 px-4 text-right">ACTIONS</th>
+                    <th className="py-2.5 px-4 font-medium">Event</th>
+                    <th className="py-2.5 px-4 font-medium">Date & Timing</th>
+                    <th className="py-2.5 px-4 font-medium">Venue & District</th>
+                    <th className="py-2.5 px-4 font-medium">Status</th>
+                    <th className="py-2.5 px-4 font-medium">Verification</th>
+                    <th className="py-2.5 px-4 text-right font-medium">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-[#EDE7DC]">
+                <tbody className="divide-y divide-[#eee9df]">
                   {filteredEvents.map((ev) => (
-                    <tr key={ev.id} className="hover:bg-[#FBF9F5] transition-colors">
+                    <tr key={ev.id} className="hover:bg-[#f6f4ea]/50 transition-colors">
                       <td className="py-3 px-4 max-w-xs">
                         <Link
                           href={`/events/${ev.slug}`}
-                          className="font-semibold text-[#181512] hover:text-[#B21C01] transition-colors block line-clamp-1"
+                          className="text-[13px] font-medium text-[#1c1c16] hover:text-[#aa3000] transition-colors block line-clamp-1"
                         >
                           {ev.title}
                         </Link>
-                        <div className="text-[11px] text-[#8C8273]">{ev.artForm}</div>
+                        <div className="text-xs text-[#5d5e61]">{ev.artForm}</div>
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-mono font-semibold text-[#181512] block">
+                        <span className="text-[13px] font-medium text-[#1c1c16] block">
                           {ev.date}
                         </span>
-                        <span className="text-[11px] text-[#5C554B]">{ev.time}</span>
+                        <span className="text-xs text-[#7d7971]">{ev.time}</span>
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span className="font-medium text-[#181512] block">{ev.district}</span>
-                        <span className="text-[11px] text-[#8C8273] line-clamp-1">{ev.venue}</span>
+                        <span className="text-[13px] text-[#1c1c16] block">{ev.district}</span>
+                        <span className="text-xs text-[#7d7971] line-clamp-1">{ev.venue}</span>
                       </td>
 
                       <td className="py-3 px-4 whitespace-nowrap">
-                        <span
-                          className={`inline-block px-2 py-0.5 rounded text-[10px] font-mono uppercase tracking-wider ${
-                            ev.status === 'Confirmed'
-                              ? 'bg-[#F4F9F5] text-[#2D6A4F] border border-[#B7DFCA]'
-                              : ev.status === 'Annual Season'
-                              ? 'bg-[#FFFBEB] text-[#D97706] border border-[#FDE68A]'
-                              : 'bg-[#FEF2F2] text-[#B21C01] border border-[#FECACA]'
-                          }`}
-                        >
-                          {ev.status}
+                        <span className="inline-flex items-center gap-1.5 text-xs text-[#2d6a4f] font-medium">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#2d6a4f]" />
+                          <span>{ev.status}</span>
                         </span>
                       </td>
 
                       <td className="py-3 px-4 max-w-xs">
-                        <div className="text-[11px] text-[#2D6A4F] font-medium line-clamp-1">
+                        <div className="text-xs text-[#5d5e61] line-clamp-1">
                           {ev.lastConfirmedDate}
                         </div>
                         {ev.sourceLink && (
@@ -821,36 +818,36 @@ export default function AdminDashboardPage() {
                             href={ev.sourceLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[10px] text-[#8C8273] hover:text-[#181512] underline"
+                            className="inline-flex items-center gap-1 text-[11px] text-[#7d7971] hover:text-[#1c1c16]"
                           >
-                            <span>Official Source</span>
+                            <span>Source link</span>
                             <ExternalLink className="w-2.5 h-2.5" />
                           </a>
                         )}
                       </td>
 
                       <td className="py-3 px-4 text-right whitespace-nowrap">
-                        <div className="inline-flex items-center gap-1.5">
+                        <div className="inline-flex items-center gap-2">
                           <button
                             onClick={() => handleQuickVerifyEvent(ev)}
-                            className="px-2 py-1 bg-[#F4F9F5] hover:bg-[#E3F2E9] text-[#2D6A4F] border border-[#B7DFCA] rounded text-[11px] font-medium transition-colors"
-                            title="Re-verify against source today"
+                            className="px-2 py-0.5 rounded text-xs font-medium text-[#2d6a4f] hover:bg-[#f4f9f5] transition-colors"
+                            title="Re-verify today"
                           >
-                            Verify Date
+                            Verify
                           </button>
                           <button
                             onClick={() => {
                               setEditingEvent(ev);
                               setIsEventModalOpen(true);
                             }}
-                            className="p-1.5 rounded hover:bg-[#F3EFE8] text-[#5C554B] hover:text-[#181512] transition-colors"
+                            className="p-1 rounded text-[#5d5e61] hover:text-[#1c1c16] transition-colors"
                             title="Edit Event"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
                           </button>
                           <button
                             onClick={() => handleDeleteEvent(ev.id, ev.title)}
-                            className="p-1.5 rounded hover:bg-[#FEF2F2] text-[#8C8273] hover:text-[#B21C01] transition-colors"
+                            className="p-1 rounded text-[#8c8577] hover:text-[#aa3000] transition-colors"
                             title="Remove Event"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -870,41 +867,41 @@ export default function AdminDashboardPage() {
       {/* TAB 4: HOMEPAGE CONTENT & CHARTER MANAGEMENT */}
       {/* ================================================================ */}
       {currentTab === 'homepage' && (
-        <div className="max-w-3xl bg-white rounded-xl border border-[#E8E2D6] p-6 shadow-xs">
-          <h2 className="text-lg font-semibold text-[#181512] mb-1">Homepage Content & Charter</h2>
-          <p className="text-xs text-[#5C554B] mb-6">
-            Modify live public platform headlines and pedagogical charter without code redeployment.
+        <div className="max-w-2xl bg-white/90 rounded-xl border border-[#e5e0d4] p-5 sm:p-6">
+          <h2 className="text-base font-semibold text-[#1c1c16] mb-0.5">Homepage Headlines & Copy</h2>
+          <p className="text-xs text-[#5d5e61] mb-5">
+            Modify public platform headlines and narrative without code deployment.
           </p>
 
-          <form onSubmit={handleSaveHomepageConfig} className="space-y-5">
+          <form onSubmit={handleSaveHomepageConfig} className="space-y-4">
             <div>
-              <label className="text-xs font-semibold text-[#181512] block mb-1.5">
+              <label className="text-xs font-medium text-[#1c1c16] block mb-1">
                 Hero Main Headline
               </label>
               <input
                 type="text"
                 value={heroHeadline}
                 onChange={(e) => setHeroHeadline(e.target.value)}
-                className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2.5 focus:bg-white focus:outline-none"
+                className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2.5 focus:border-[#1c1c16] focus:outline-none transition-colors"
               />
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-[#181512] block mb-1.5">
-                Hero Sub-Headline / Platform Narrative
+              <label className="text-xs font-medium text-[#1c1c16] block mb-1">
+                Platform Narrative / Sub-headline
               </label>
               <textarea
                 rows={3}
                 value={heroSubheadline}
                 onChange={(e) => setHeroSubheadline(e.target.value)}
-                className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2.5 focus:bg-white focus:outline-none"
+                className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2.5 focus:border-[#1c1c16] focus:outline-none transition-colors"
               />
             </div>
 
-            <div className="pt-4 border-t border-[#E8E2D6]">
+            <div className="pt-2">
               <button
                 type="submit"
-                className="px-4 py-2 bg-[#B21C01] hover:bg-[#961700] text-white rounded-md text-xs font-semibold shadow-xs transition-colors"
+                className="px-4 py-2 bg-[#aa3000] hover:bg-[#882600] text-white rounded-md text-xs font-medium transition-colors"
               >
                 Save Homepage Configuration
               </button>
@@ -917,31 +914,37 @@ export default function AdminDashboardPage() {
       {/* TAB 5: AUDIT LOGS */}
       {/* ================================================================ */}
       {currentTab === 'audit' && (
-        <div className="bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden">
-          <div className="p-4 border-b border-[#E8E2D6] bg-[#FCFBF8]">
-            <h2 className="text-sm font-semibold text-[#181512]">Curatorial Moderation & Audit Trail</h2>
-            <p className="text-xs text-[#8C8273]">
-              Every creation, date amendment, source check, and accession approval is logged.
+        <div className="bg-white/90 rounded-xl border border-[#e5e0d4] overflow-hidden">
+          <div className="p-4 border-b border-[#e5e0d4] bg-[#fbf9f2]">
+            <h2 className="text-sm font-semibold text-[#1c1c16]">Moderation & Audit History</h2>
+            <p className="text-xs text-[#7d7971] mt-0.5">
+              Chronological log of curatorial decisions, accession approvals, and record updates.
             </p>
           </div>
 
-          <div className="divide-y divide-[#EDE7DC]">
-            {reviewLogs.map((log) => (
-              <div key={log.id} className="p-4 hover:bg-[#FBF9F5] transition-colors flex items-start justify-between gap-4">
-                <div>
-                  <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-[10px] text-[#B21C01] bg-[#FEF2F2] px-2 py-0.5 rounded uppercase font-semibold">
-                      {log.action}
-                    </span>
-                    <span className="text-xs font-semibold text-[#181512]">{log.reviewerName}</span>
-                  </div>
-                  <p className="text-xs text-[#5C554B]">{log.notes}</p>
-                </div>
-                <div className="text-[11px] font-mono text-[#8C8273] whitespace-nowrap">
-                  {log.createdAt.split('T')[0]}
-                </div>
+          <div className="divide-y divide-[#eee9df]">
+            {reviewLogs.length === 0 ? (
+              <div className="py-12 text-center text-[#8c8577] text-xs">
+                No moderation logs recorded yet.
               </div>
-            ))}
+            ) : (
+              reviewLogs.map((log) => (
+                <div key={log.id} className="p-4 hover:bg-[#f6f4ea]/40 transition-colors flex items-start justify-between gap-4">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-[11px] font-medium text-[#7d3b24] bg-[#f8f1eb] px-2 py-0.5 rounded">
+                        {log.action}
+                      </span>
+                      <span className="text-xs font-medium text-[#1c1c16]">{log.reviewerName}</span>
+                    </div>
+                    <p className="text-xs text-[#5d5e61]">{log.notes}</p>
+                  </div>
+                  <div className="text-[11px] text-[#8c8577] whitespace-nowrap">
+                    {log.createdAt ? log.createdAt.split('T')[0] : 'Recent'}
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
@@ -951,49 +954,49 @@ export default function AdminDashboardPage() {
       {/* ================================================================ */}
       {isListingModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E8E2D6] shadow-2xl p-6">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D6] mb-4">
-              <h3 className="text-lg font-semibold text-[#181512]">
-                {editingListing ? 'Edit Cultural Listing' : 'Create New Cultural Listing'}
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#e5e0d4] shadow-xl p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e0d4] mb-4">
+              <h3 className="text-base font-semibold text-[#1c1c16]">
+                {editingListing ? 'Edit Cultural Listing' : 'Create Cultural Listing'}
               </h3>
               <button
                 onClick={() => setIsListingModalOpen(false)}
-                className="text-[#8C8273] hover:text-[#181512]"
+                className="text-[#8c8577] hover:text-[#1c1c16]"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <form onSubmit={handleSaveListing} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">English Name *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">English Name *</label>
                   <input
                     type="text"
                     name="name"
                     required
                     defaultValue={editingListing?.name}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Malayalam Name</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Malayalam Name</label>
                   <input
                     type="text"
                     name="nameMalayalam"
                     defaultValue={editingListing?.nameMalayalam}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Category *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Category *</label>
                   <select
                     name="category"
                     defaultValue={editingListing?.category || 'Ritual Art'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     {CATEGORIES_LIST.map((c) => (
                       <option key={c} value={c}>{c}</option>
@@ -1001,21 +1004,21 @@ export default function AdminDashboardPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Art Form *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Art Form *</label>
                   <input
                     type="text"
                     name="artForm"
                     required
                     defaultValue={editingListing?.artForm}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">District *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">District *</label>
                   <select
                     name="district"
                     defaultValue={editingListing?.district || 'Kannur'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     {KERALA_DISTRICTS_LIST.map((d) => (
                       <option key={d} value={d}>{d}</option>
@@ -1026,99 +1029,99 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Locality *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Locality *</label>
                   <input
                     type="text"
                     name="locality"
                     required
                     defaultValue={editingListing?.locality}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Address</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Address</label>
                   <input
                     type="text"
                     name="address"
                     defaultValue={editingListing?.address}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Latitude</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Latitude</label>
                   <input
                     type="number"
                     step="any"
                     name="latitude"
                     defaultValue={editingListing?.coordinates.lat || 11.9867}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white font-mono"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none font-mono"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Longitude</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Longitude</label>
                   <input
                     type="number"
                     step="any"
                     name="longitude"
                     defaultValue={editingListing?.coordinates.lng || 75.3942}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white font-mono"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none font-mono"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Short Description *</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Short Description *</label>
                 <textarea
                   name="shortDescription"
                   rows={2}
                   required
                   defaultValue={editingListing?.shortDescription}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Full Story & Background *</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Full Story & Background *</label>
                 <textarea
                   name="fullStory"
                   rows={4}
                   required
                   defaultValue={editingListing?.fullStory}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Image URL</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Image URL</label>
                   <input
                     type="text"
                     name="imageUrl"
                     defaultValue={editingListing?.imageUrl || 'https://images.unsplash.com/photo-1609137144829-873d6118b763?q=80&w=1200&auto=format&fit=crop'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Image Credit</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Image Credit</label>
                   <input
                     type="text"
                     name="imageCredit"
                     defaultValue={editingListing?.imageCredit || 'Kerala Cultural Archive / Open Documentation'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Verification Status</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Verification Status</label>
                   <select
                     name="verificationStatus"
                     defaultValue={editingListing?.verificationStatus || 'Verified'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     <option value="Verified">Verified</option>
                     <option value="Scholar Reviewed">Scholar Reviewed</option>
@@ -1126,42 +1129,42 @@ export default function AdminDashboardPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Verified By</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Verified By</label>
                   <input
                     type="text"
                     name="verifiedBy"
                     defaultValue={editingListing?.verifiedBy || 'Kerala Folklore Academy Board'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center gap-2 pt-2">
+              <div className="flex items-center gap-2 pt-1">
                 <input
                   type="checkbox"
                   name="featured"
                   id="featured-checkbox"
                   defaultChecked={editingListing?.featured}
-                  className="rounded border-[#E8E2D6] text-[#B21C01] focus:ring-[#B21C01]"
+                  className="rounded border-[#ded7c9] text-[#aa3000] focus:ring-[#aa3000]"
                 />
-                <label htmlFor="featured-checkbox" className="text-xs font-medium text-[#181512]">
-                  Mark as featured on Homepage & Curated section
+                <label htmlFor="featured-checkbox" className="text-xs text-[#5d5e61]">
+                  Mark as featured on Homepage and curated directory
                 </label>
               </div>
 
-              <div className="pt-4 border-t border-[#E8E2D6] flex justify-end gap-2">
+              <div className="pt-3 border-t border-[#e5e0d4] flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsListingModalOpen(false)}
-                  className="px-4 py-2 border border-[#E8E2D6] rounded-md text-xs font-medium text-[#5C554B] hover:bg-[#F3EFE8]"
+                  className="px-3.5 py-1.5 rounded-md text-xs font-medium text-[#5d5e61] hover:text-[#1c1c16]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#B21C01] hover:bg-[#961700] text-white rounded-md text-xs font-semibold shadow-xs"
+                  className="px-4 py-1.5 bg-[#aa3000] hover:bg-[#882600] text-white rounded-md text-xs font-medium transition-colors"
                 >
-                  Save & Publish Listing
+                  Save Listing
                 </button>
               </div>
             </form>
@@ -1174,68 +1177,68 @@ export default function AdminDashboardPage() {
       {/* ================================================================ */}
       {isEventModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#E8E2D6] shadow-2xl p-6">
-            <div className="flex items-center justify-between pb-3 border-b border-[#E8E2D6] mb-4">
-              <h3 className="text-lg font-semibold text-[#181512]">
-                {editingEvent ? 'Edit Festival / Gathering' : 'Add New Festival'}
+          <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto border border-[#e5e0d4] shadow-xl p-6">
+            <div className="flex items-center justify-between pb-3 border-b border-[#e5e0d4] mb-4">
+              <h3 className="text-base font-semibold text-[#1c1c16]">
+                {editingEvent ? 'Edit Festival Gathering' : 'Add Festival Gathering'}
               </h3>
               <button
                 onClick={() => setIsEventModalOpen(false)}
-                className="text-[#8C8273] hover:text-[#181512]"
+                className="text-[#8c8577] hover:text-[#1c1c16]"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             <form onSubmit={handleSaveEvent} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Event Title *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Event Title *</label>
                   <input
                     type="text"
                     name="title"
                     required
                     defaultValue={editingEvent?.title}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Malayalam Title</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Malayalam Title</label>
                   <input
                     type="text"
                     name="titleMalayalam"
                     defaultValue={editingEvent?.titleMalayalam}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Date *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Date *</label>
                   <input
                     type="date"
                     name="date"
                     required
                     defaultValue={editingEvent?.date || new Date().toISOString().split('T')[0]}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white font-mono"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Timing</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Timing</label>
                   <input
                     type="text"
                     name="time"
                     defaultValue={editingEvent?.time || '06:00 AM – Next Dawn'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">District *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">District *</label>
                   <select
                     name="district"
                     defaultValue={editingEvent?.district || 'Thrissur'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     {KERALA_DISTRICTS_LIST.map((d) => (
                       <option key={d} value={d}>{d}</option>
@@ -1246,33 +1249,33 @@ export default function AdminDashboardPage() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Venue *</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Venue *</label>
                   <input
                     type="text"
                     name="venue"
                     required
                     defaultValue={editingEvent?.venue}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Locality</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Locality</label>
                   <input
                     type="text"
                     name="locality"
                     defaultValue={editingEvent?.locality}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Status</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Status</label>
                   <select
                     name="status"
                     defaultValue={editingEvent?.status || 'Confirmed'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     <option value="Confirmed">Confirmed</option>
                     <option value="Tentative">Tentative</option>
@@ -1282,20 +1285,20 @@ export default function AdminDashboardPage() {
                   </select>
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Category</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Category</label>
                   <input
                     type="text"
                     name="category"
                     defaultValue={editingEvent?.category || 'Temple Festival & Percussion'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   />
                 </div>
                 <div>
-                  <label className="text-xs font-semibold text-[#181512] block mb-1">Entry Type</label>
+                  <label className="text-xs font-medium text-[#1c1c16] block mb-1">Entry Type</label>
                   <select
                     name="entryType"
                     defaultValue={editingEvent?.entryType || 'Free Entry'}
-                    className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                    className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                   >
                     <option value="Free Entry">Free Entry</option>
                     <option value="Pass Required">Pass Required</option>
@@ -1305,60 +1308,60 @@ export default function AdminDashboardPage() {
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Organizer</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Organizer</label>
                 <input
                   type="text"
                   name="organizer"
                   defaultValue={editingEvent?.organizer || 'Devaswom Board / Festival Council'}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Original Announcement URL *</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Original Announcement URL *</label>
                 <input
                   type="url"
                   name="sourceLink"
                   required
                   defaultValue={editingEvent?.sourceLink || 'https://keralatourism.org'}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white font-mono"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Description *</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Description *</label>
                 <textarea
                   name="description"
                   rows={3}
                   required
                   defaultValue={editingEvent?.description}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
               <div>
-                <label className="text-xs font-semibold text-[#181512] block mb-1">Cover Image URL</label>
+                <label className="text-xs font-medium text-[#1c1c16] block mb-1">Cover Image URL</label>
                 <input
                   type="text"
                   name="imageUrl"
                   defaultValue={editingEvent?.imageUrl || 'https://images.unsplash.com/photo-1567157577867-05ccb1388e66?q=80&w=1200&auto=format&fit=crop'}
-                  className="w-full text-xs bg-[#FBF9F5] border border-[#E8E2D6] rounded-md p-2 focus:bg-white"
+                  className="w-full text-xs bg-white border border-[#ded7c9] rounded-lg p-2 focus:border-[#1c1c16] focus:outline-none"
                 />
               </div>
 
-              <div className="pt-4 border-t border-[#E8E2D6] flex justify-end gap-2">
+              <div className="pt-3 border-t border-[#e5e0d4] flex justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setIsEventModalOpen(false)}
-                  className="px-4 py-2 border border-[#E8E2D6] rounded-md text-xs font-medium text-[#5C554B] hover:bg-[#F3EFE8]"
+                  className="px-3.5 py-1.5 rounded-md text-xs font-medium text-[#5d5e61] hover:text-[#1c1c16]"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-[#B21C01] hover:bg-[#961700] text-white rounded-md text-xs font-semibold shadow-xs"
+                  className="px-4 py-1.5 bg-[#aa3000] hover:bg-[#882600] text-white rounded-md text-xs font-medium transition-colors"
                 >
-                  Save & Publish Event
+                  Save Event
                 </button>
               </div>
             </form>

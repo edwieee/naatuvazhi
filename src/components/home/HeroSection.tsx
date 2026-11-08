@@ -36,7 +36,7 @@ export default function HeroSection() {
       {/* Desktop: Top edge anchored directly below navigation header (top-0), sized at 80% height (5% smaller), preserving aspect ratio */}
       {/* Mobile/Tablet: Rendered below the text in single-column flow */}
       <div className="hidden lg:flex absolute inset-y-0 right-0 w-[58vw] max-w-[1200px] items-start justify-end pr-8 xl:pr-16 pointer-events-none select-none overflow-hidden [mask-image:linear-gradient(to_right,transparent_10%,black_30%)]">
-        <div className="relative h-[80%] aspect-video flex items-start justify-end bg-[#fcfcec]">
+        <div className="relative h-[80%] aspect-video flex items-start justify-end bg-[#fcfcec] overflow-visible">
           {/* Native HTML5 video with autoplay, muted, loop, playsInline, poster */}
           <video
             ref={videoRef}
@@ -57,6 +57,14 @@ export default function HeroSection() {
             width={1920}
             height={1080}
             className="hidden motion-reduce:block w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+          />
+          <img
+            src="/videos/theyyam-hero-dissolve.png"
+            alt=""
+            width={1920}
+            height={300}
+            aria-hidden="true"
+            className="absolute inset-x-0 top-[calc(100%-80px)] z-10 w-full h-auto pointer-events-none select-none"
           />
         </div>
       </div>
@@ -109,7 +117,7 @@ export default function HeroSection() {
 
           {/* Mobile/Tablet Fallback Visual (In-flow below text) */}
           <div className="lg:hidden w-full flex items-center justify-center pb-6">
-            <div className="relative w-full aspect-video flex items-center justify-center bg-[#fcfcec] overflow-hidden">
+            <div className="relative w-full aspect-video flex items-center justify-center bg-[#fcfcec] overflow-visible">
               <video
                 src="/videos/theyyam-hero.mp4"
                 poster="/videos/theyyam-hero-poster.jpg"
@@ -127,6 +135,14 @@ export default function HeroSection() {
                 width={1920}
                 height={1080}
                 className="hidden motion-reduce:block w-full h-full object-contain [clip-path:inset(0_4px_4px_0)] bg-[#fcfcec]"
+              />
+              <img
+                src="/videos/theyyam-hero-dissolve.png"
+                alt=""
+                width={1920}
+                height={300}
+                aria-hidden="true"
+                className="absolute inset-x-0 top-[calc(100%-80px)] z-10 w-full h-auto pointer-events-none select-none"
               />
             </div>
           </div>

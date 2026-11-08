@@ -65,7 +65,7 @@ export default function HeroSection() {
       <div className="max-w-[1120px] mx-auto px-4 md:px-10 xl:px-0 w-full py-10 lg:py-0 flex-1 flex flex-col justify-center relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center h-full">
           {/* Left Column: Editorial Archive Pitch */}
-          <div className="lg:col-span-7 flex flex-col justify-center py-0 max-w-[480px] lg:max-w-[520px]">
+          <div className="lg:col-span-7 flex flex-col justify-center py-0 max-w-[480px] lg:max-w-[520px] transform translate-x-[5%] -translate-y-[5%]">
             {/* Subtle Eyebrow Label */}
             <div className="inline-flex items-center gap-2.5 mb-[16px]">
               <span className="w-2 h-2 rounded-full bg-[#aa3000]"></span>

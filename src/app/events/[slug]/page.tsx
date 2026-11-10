@@ -1,9 +1,8 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MOCK_EVENTS } from '@/data/mock-events';
 import { getEventBySlug } from '@/lib/supabase/data-service';
-import { createClient as createServerClient } from '@/lib/supabase/server';
 import {
   Calendar,
   Clock,
@@ -25,16 +24,11 @@ export function generateStaticParams() {
   }));
 }
 
-export const dynamicParams = true;
-
-export default async function EventDetailPage({ params }: Props) {
-  const { slug } = await params;
-
+async function EventDetailContent({ slug }: { slug: string }) {
   // Try Supabase first, then fall back to MOCK_EVENTS
   let event = null;
   try {
-    const supabase = await createServerClient();
-    event = await getEventBySlug(slug, supabase);
+    event = await getEventBySlug(slug);
   } catch (e) {
     // ignore, fall through to mock
   }
@@ -216,5 +210,20 @@ export default async function EventDetailPage({ params }: Props) {
         </div>
       </div>
     </main>
+  );
+}
+
+export default async function EventDetailPage({ params }: Props) {
+  const { slug } = await params;
+  return (
+    <Suspense
+      fallback={
+        <div className="flex-1 max-w-5xl w-full mx-auto p-12 text-center text-xs text-[#8C8273]">
+          Loading festival chronicle...
+        </div>
+      }
+    >
+      <EventDetailContent slug={slug} />
+    </Suspense>
   );
 }

@@ -10,6 +10,10 @@ interface KeralaMapProps {
   selectedListing: CulturalListing | null;
   onSelectListing: (listing: CulturalListing | null) => void;
   hoveredListingId?: string | null;
+  selectedEvent?: EventListing | null;
+  selectedEventId?: string | null;
+  onSelectEvent?: (event: EventListing | null) => void;
+  hoveredEventId?: string | null;
 }
 
 const ClientMap = dynamic(() => import('@/components/map/OpenStreetMapClient'), {

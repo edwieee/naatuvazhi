@@ -2,6 +2,8 @@ import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { MOCK_EVENTS } from '@/data/mock-events';
+import { getEventBySlug } from '@/lib/supabase/data-service';
+import { createClient as createServerClient } from '@/lib/supabase/server';
 import {
   Calendar,
   Clock,
@@ -9,7 +11,8 @@ import {
   ExternalLink,
   Users,
   ArrowLeft,
-  Info
+  Info,
+  Map as MapIcon,
 } from 'lucide-react';
 
 interface Props {
@@ -22,9 +25,23 @@ export function generateStaticParams() {
   }));
 }
 
+export const dynamicParams = true;
+
 export default async function EventDetailPage({ params }: Props) {
   const { slug } = await params;
-  const event = MOCK_EVENTS.find((e) => e.slug === slug);
+
+  // Try Supabase first, then fall back to MOCK_EVENTS
+  let event = null;
+  try {
+    const supabase = await createServerClient();
+    event = await getEventBySlug(slug, supabase);
+  } catch (e) {
+    // ignore, fall through to mock
+  }
+
+  if (!event) {
+    event = MOCK_EVENTS.find((e) => e.slug === slug) || null;
+  }
 
   if (!event) {
     notFound();
@@ -41,7 +58,7 @@ export default async function EventDetailPage({ params }: Props) {
         </Link>
         <span>/</span>
         <Link href="/events" className="hover:text-[#181512] transition-colors">
-          Events & Festivals
+          Events &amp; Festivals
         </Link>
         <span>/</span>
         <span className="text-[#181512] font-medium truncate max-w-xs">{event.title}</span>
@@ -109,7 +126,7 @@ export default async function EventDetailPage({ params }: Props) {
             </p>
 
             <h4 className="text-xs font-mono text-[#8C8273] mb-1.5">
-              CULTURAL & HISTORICAL CONTEXT
+              CULTURAL &amp; HISTORICAL CONTEXT
             </h4>
             <p className="text-xs text-[#5C554B] leading-relaxed">
               {event.culturalContext}
@@ -121,7 +138,7 @@ export default async function EventDetailPage({ params }: Props) {
             <div className="bg-white rounded-xl p-6 border border-[#E8E2D6] shadow-xs">
               <h3 className="text-sm font-semibold text-[#181512] mb-4 pb-2 border-b border-[#EDE7DC] flex items-center gap-2">
                 <Clock className="w-4 h-4 text-[#8C8273]" />
-                <span>Ritual & Performance Schedule</span>
+                <span>Ritual &amp; Performance Schedule</span>
               </h3>
 
               <div className="border-l border-[#E8E2D6] ml-2 space-y-4 pl-4 py-1">
@@ -145,7 +162,7 @@ export default async function EventDetailPage({ params }: Props) {
         <div className="lg:col-span-4 flex flex-col gap-4">
           <div className="bg-white rounded-xl p-5 border border-[#E8E2D6] shadow-xs flex flex-col gap-3">
             <h3 className="text-xs font-mono text-[#8C8273]">
-              ORGANIZER & NOTICE
+              ORGANIZER &amp; NOTICE
             </h3>
 
             <div className="flex items-start gap-2.5">
@@ -177,6 +194,16 @@ export default async function EventDetailPage({ params }: Props) {
               <span>Official announcement</span>
               <ExternalLink className="w-3 h-3" />
             </a>
+
+            {event.coordinates && (
+              <Link
+                href={`/explore?type=events&eventId=${event.id}`}
+                className="rounded-md border border-[#D9531E] text-[#D9531E] hover:bg-[#D9531E] hover:text-white font-medium text-xs py-2 px-3 text-center transition-colors flex items-center justify-center gap-1.5"
+              >
+                <MapIcon className="w-3 h-3" />
+                <span>View on Kerala Map</span>
+              </Link>
+            )}
 
             <Link
               href="/events"

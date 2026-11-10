@@ -12,6 +12,10 @@ interface OpenStreetMapClientProps {
   selectedListing: CulturalListing | null;
   onSelectListing: (listing: CulturalListing | null) => void;
   hoveredListingId?: string | null;
+  selectedEvent?: EventListing | null;
+  selectedEventId?: string | null;
+  onSelectEvent?: (event: EventListing | null) => void;
+  hoveredEventId?: string | null;
 }
 
 const KERALA_CENTER: [number, number] = [10.5276, 76.2144];
@@ -37,6 +41,30 @@ function createCustomPin(isSelected: boolean, isHovered: boolean) {
 
   return L.divIcon({
     className: 'custom-nattuvazhi-marker',
+    html: `
+      <div style="width: ${size}px; height: ${size}px;" class="relative flex items-center justify-center transition-all duration-200">
+        <div style="background-color: ${bgColor}; width: ${size}px; height: ${size}px;" class="rounded-full ${ring} flex items-center justify-center text-white cursor-pointer">
+          <div class="w-2 h-2 rounded-full bg-white"></div>
+        </div>
+      </div>
+    `,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+    popupAnchor: [0, -size / 2 - 4],
+  });
+}
+
+function createEventPin(isSelected: boolean, isHovered: boolean) {
+  const size = isSelected ? 34 : isHovered ? 30 : 26;
+  const bgColor = isSelected ? '#B33C0F' : '#D9531E';
+  const ring = isSelected
+    ? 'border-2 border-white ring-4 ring-[#D9531E]/30 shadow-lg scale-110'
+    : isHovered
+      ? 'border-2 border-white ring-2 ring-[#D9531E]/20 shadow-md'
+      : 'border-2 border-white shadow-md';
+
+  return L.divIcon({
+    className: 'custom-nattuvazhi-event-marker',
     html: `
       <div style="width: ${size}px; height: ${size}px;" class="relative flex items-center justify-center transition-all duration-200">
         <div style="background-color: ${bgColor}; width: ${size}px; height: ${size}px;" class="rounded-full ${ring} flex items-center justify-center text-white cursor-pointer">
@@ -78,19 +106,46 @@ function createPopupContent(listing: CulturalListing, exploreLabel: string) {
   `;
 }
 
+function createEventPopupContent(ev: EventListing) {
+  return `
+    <div class="w-[240px] max-w-[calc(100vw-48px)] p-3.5 bg-white rounded-lg border border-[#E8E2D6] shadow-[0_8px_24px_rgba(24,21,18,0.12)] text-left">
+      <div class="flex items-center justify-between gap-2 text-[9px] text-[#8C8273] mb-1.5">
+        <span class="font-mono uppercase tracking-[0.12em] font-semibold text-[#D9531E] truncate">${escapeHtml(ev.category)}</span>
+        <span class="text-[#2D6A4F] font-medium shrink-0">✓ ${escapeHtml(ev.status)}</span>
+      </div>
+      <h4 class="font-semibold text-sm text-[#181512] leading-snug line-clamp-2">${escapeHtml(ev.title)}</h4>
+      <p class="text-[11px] text-[#8C8273] mt-1 mb-2 font-mono">${escapeHtml(ev.formattedDate || ev.date)}</p>
+      <div class="flex items-start gap-1.5 text-[11px] leading-relaxed text-[#5C554B] mb-3">
+        <span class="text-[#D9531E] flex-shrink-0">•</span>
+        <span>${escapeHtml(`${ev.venue}, ${ev.district}`)}</span>
+      </div>
+      <a href="/events/${encodeURIComponent(ev.slug)}" class="inline-flex items-center gap-1 w-full justify-center px-2.5 py-2 rounded-md bg-[#D9531E] hover:bg-[#B33C0F] text-white text-[11px] font-semibold transition-colors">
+        <span>View festival schedule</span>
+        <span aria-hidden="true">↗</span>
+      </a>
+    </div>
+  `;
+}
+
 export default function OpenStreetMapClient({
   listings,
   events = [],
   selectedListing,
   onSelectListing,
   hoveredListingId,
+  selectedEvent,
+  selectedEventId,
+  onSelectEvent,
+  hoveredEventId,
 }: OpenStreetMapClientProps) {
   const { t } = useLanguage();
   const mapElementRef = useRef<HTMLDivElement | null>(null);
   const mapRef = useRef<L.Map | null>(null);
   const markerLayerRef = useRef<L.LayerGroup | null>(null);
   const markerRefs = useRef<Record<string, L.Marker>>({});
+  const eventMarkerRefs = useRef<Record<string, L.Marker>>({});
   const onSelectListingRef = useRef(onSelectListing);
+  const onSelectEventRef = useRef(onSelectEvent);
   const exploreLabel = t('Explore Story & Protocol', 'വിശദ വിവരങ്ങൾ കാണുക');
 
   const validListings = useMemo(
@@ -122,6 +177,10 @@ export default function OpenStreetMapClient({
   useEffect(() => {
     onSelectListingRef.current = onSelectListing;
   }, [onSelectListing]);
+
+  useEffect(() => {
+    onSelectEventRef.current = onSelectEvent;
+  }, [onSelectEvent]);
 
   useEffect(() => {
     const element = mapElementRef.current;
@@ -158,6 +217,7 @@ export default function OpenStreetMapClient({
       resizeObserver.disconnect();
       window.removeEventListener('resize', resizeMap);
       markerRefs.current = {};
+      eventMarkerRefs.current = {};
       markerLayerRef.current = null;
       mapRef.current = null;
       map.remove();
@@ -171,15 +231,15 @@ export default function OpenStreetMapClient({
 
     markerLayer.clearLayers();
     markerRefs.current = {};
+    eventMarkerRefs.current = {};
 
     validListings.forEach((listing) => {
+      const isSelected = selectedListing?.id === listing.id;
+      const isHovered = hoveredListingId === listing.id;
       const marker = L.marker(
         [listing.coordinates.lat, listing.coordinates.lng],
         {
-          icon: createCustomPin(
-            selectedListing?.id === listing.id,
-            hoveredListingId === listing.id
-          ),
+          icon: createCustomPin(isSelected, isHovered),
         }
       );
 
@@ -194,48 +254,26 @@ export default function OpenStreetMapClient({
 
     validEvents.forEach((ev) => {
       if (!ev.coordinates) return;
+      const isSelected = selectedEvent?.id === ev.id || selectedEventId === ev.id;
+      const isHovered = hoveredEventId === ev.id;
+
       const marker = L.marker([ev.coordinates.lat, ev.coordinates.lng], {
-        icon: L.divIcon({
-          className: 'custom-nattuvazhi-event-marker',
-          html: `
-            <div style="width: 26px; height: 26px;" class="relative flex items-center justify-center">
-              <div style="background-color: #D9531E; width: 26px; height: 26px;" class="rounded-full border-2 border-white shadow-md flex items-center justify-center text-white cursor-pointer hover:scale-110 transition-transform">
-                <div class="w-2 h-2 rounded-full bg-white"></div>
-              </div>
-            </div>
-          `,
-          iconSize: [26, 26],
-          iconAnchor: [13, 13],
-          popupAnchor: [0, -17],
-        }),
+        icon: createEventPin(isSelected, isHovered),
       });
 
-      marker.bindPopup(`
-        <div class="w-[240px] max-w-[calc(100vw-48px)] p-3.5 bg-white rounded-lg border border-[#E8E2D6] shadow-[0_8px_24px_rgba(24,21,18,0.12)] text-left">
-          <div class="flex items-center justify-between gap-2 text-[9px] text-[#8C8273] mb-1.5">
-            <span class="font-mono uppercase tracking-[0.12em] font-semibold text-[#D9531E] truncate">${escapeHtml(ev.category)}</span>
-            <span class="text-[#2D6A4F] font-medium shrink-0">✓ ${escapeHtml(ev.status)}</span>
-          </div>
-          <h4 class="font-semibold text-sm text-[#181512] leading-snug line-clamp-2">${escapeHtml(ev.title)}</h4>
-          <p class="text-[11px] text-[#8C8273] mt-1 mb-2 font-mono">${escapeHtml(ev.formattedDate || ev.date)}</p>
-          <div class="flex items-start gap-1.5 text-[11px] leading-relaxed text-[#5C554B] mb-3">
-            <span class="text-[#D9531E] flex-shrink-0">•</span>
-            <span>${escapeHtml(`${ev.venue}, ${ev.district}`)}</span>
-          </div>
-          <a href="/events/${encodeURIComponent(ev.slug)}" class="inline-flex items-center gap-1 w-full justify-center px-2.5 py-2 rounded-md bg-[#D9531E] hover:bg-[#B33C0F] text-white text-[11px] font-semibold transition-colors">
-            <span>View festival schedule</span>
-            <span aria-hidden="true">↗</span>
-          </a>
-        </div>
-      `, {
+      marker.bindPopup(createEventPopupContent(ev), {
         className: 'nattuvazhi-custom-popup',
         closeButton: false,
       });
-
+      marker.on('click', () => {
+        if (onSelectEventRef.current) onSelectEventRef.current(ev);
+      });
       marker.addTo(markerLayer);
+      eventMarkerRefs.current[ev.id] = marker;
     });
-  }, [validListings, validEvents, selectedListing?.id, hoveredListingId, exploreLabel]);
+  }, [validListings, validEvents, selectedListing?.id, selectedEvent?.id, selectedEventId, hoveredListingId, hoveredEventId, exploreLabel]);
 
+  // Fly to selected listing
   useEffect(() => {
     const map = mapRef.current;
     if (!map || !selectedListing?.coordinates) return;
@@ -249,6 +287,22 @@ export default function OpenStreetMapClient({
     });
     markerRefs.current[selectedListing.id]?.openPopup();
   }, [selectedListing]);
+
+  // Fly to selected event (by selectedEvent or selectedEventId)
+  useEffect(() => {
+    const map = mapRef.current;
+    const targetEvent = selectedEvent ?? (selectedEventId ? validEvents.find(ev => ev.id === selectedEventId) : null);
+    if (!map || !targetEvent?.coordinates) return;
+
+    const { lat, lng } = targetEvent.coordinates;
+    if (typeof lat !== 'number' || typeof lng !== 'number') return;
+
+    map.flyTo([lat, lng], 13, {
+      duration: 1.2,
+      easeLinearity: 0.25,
+    });
+    eventMarkerRefs.current[targetEvent.id]?.openPopup();
+  }, [selectedEvent, selectedEventId, validEvents]);
 
   return (
     <div className="relative w-full h-full flex-1 flex flex-col min-h-[480px] rounded-xl overflow-hidden border border-[#E8E2D6] shadow-xs select-none">
@@ -296,4 +350,3 @@ export default function OpenStreetMapClient({
     </div>
   );
 }
-

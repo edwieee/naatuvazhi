@@ -130,12 +130,13 @@ export default function AdminDashboardPage() {
   async function loadAllData() {
     setIsLoading(true);
     try {
+      const sb = createBrowserClient();
       const [subs, lists, evts, config, logs] = await Promise.all([
-        getSubmissions(),
-        getListings(),
-        getEvents(),
-        getHomepageConfig(),
-        getReviewLogs(),
+        getSubmissions(undefined, sb),
+        getListings(undefined, sb),
+        getEvents(undefined, sb),
+        getHomepageConfig(sb),
+        getReviewLogs(sb),
       ]);
       setSubmissions(subs);
       setListings(lists);

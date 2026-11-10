@@ -1,6 +1,6 @@
 'use client';
 
-import React, { Suspense, useState, useMemo, useEffect } from 'react';
+import React, { Suspense, useState, useMemo, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { MOCK_LISTINGS } from '@/data/mock-listings';
@@ -17,7 +17,9 @@ import {
   ExternalLink,
   Map as MapIcon,
   List as ListIcon,
-  X
+  X,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 
@@ -81,6 +83,49 @@ function ExplorePageContent() {
       .then(setCategories)
       .catch((error) => console.warn('Using default category filter state:', error));
   }, []);
+
+  // Category horizontal slider state & handlers
+  const categorySliderRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkSliderScroll = () => {
+    if (categorySliderRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = categorySliderRef.current;
+      setCanScrollLeft(scrollLeft > 6);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 6);
+    }
+  };
+
+  useEffect(() => {
+    const el = categorySliderRef.current;
+    if (el) {
+      checkSliderScroll();
+      el.addEventListener('scroll', checkSliderScroll, { passive: true });
+      window.addEventListener('resize', checkSliderScroll);
+      return () => {
+        el.removeEventListener('scroll', checkSliderScroll);
+        window.removeEventListener('resize', checkSliderScroll);
+      };
+    }
+  }, [categories]);
+
+  useEffect(() => {
+    if (categorySliderRef.current) {
+      const activeBtn = categorySliderRef.current.querySelector<HTMLElement>('[data-active="true"]');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+      setTimeout(checkSliderScroll, 300);
+    }
+  }, [selectedCategory]);
+
+  const slideCategories = (direction: 'left' | 'right') => {
+    if (categorySliderRef.current) {
+      const offset = direction === 'left' ? -180 : 180;
+      categorySliderRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
 
   // Bi-directional selection: Scroll selected listing into view in the directory panel
   useEffect(() => {
@@ -217,30 +262,76 @@ function ExplorePageContent() {
               )}
             </div>
 
-            {/* Category Tags & Filter Trigger */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-0.5 flex-1">
-                {[
-                  { slug: 'All', name: 'All' },
-                  ...categories.map((category) => ({ slug: category.slug, name: category.name })),
-                ].map((cat) => (
+            {/* Category Tags Horizontal Slider & Filter Trigger */}
+            <div className="flex items-center gap-2">
+              <div className="relative flex items-center flex-1 min-w-0">
+                {/* Left Slide Arrow */}
+                {canScrollLeft && (
                   <button
-                    key={cat.slug}
-                    onClick={() => handleCategoryChange(cat.slug)}
-                    className={`px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap transition-colors ${
-                      selectedCategory === cat.slug
-                        ? 'bg-[#181512] text-white'
-                        : 'bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#5C554B]'
-                    }`}
+                    type="button"
+                    onClick={() => slideCategories('left')}
+                    aria-label="Slide categories left"
+                    className="absolute left-0 z-20 flex items-center justify-center w-6 h-6 rounded-full bg-white shadow-xs border border-[#E8E2D6] text-[#5C554B] hover:text-[#181512] hover:bg-[#FBF9F5] transition-all -translate-x-1"
                   >
-                    {cat.name}
+                    <ChevronLeft className="w-3.5 h-3.5" />
                   </button>
-                ))}
+                )}
+
+                {/* Left Gradient Fade */}
+                {canScrollLeft && (
+                  <div className="absolute left-0 top-0 bottom-0 w-8 bg-gradient-to-r from-white via-white/80 to-transparent z-10 pointer-events-none" />
+                )}
+
+                {/* Scrollable Track */}
+                <div
+                  ref={categorySliderRef}
+                  className="flex items-center gap-1.5 overflow-x-auto scrollbar-none py-1 scroll-smooth w-full px-0.5"
+                  style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                >
+                  {[
+                    { slug: 'All', name: 'All' },
+                    ...categories.map((category) => ({ slug: category.slug, name: category.name })),
+                  ].map((cat) => {
+                    const isActive = selectedCategory === cat.slug;
+                    return (
+                      <button
+                        key={cat.slug}
+                        data-active={isActive ? 'true' : 'false'}
+                        onClick={() => handleCategoryChange(cat.slug)}
+                        className={`px-2.5 py-1 rounded-md text-[11px] font-medium whitespace-nowrap transition-all flex-shrink-0 ${
+                          isActive
+                            ? 'bg-[#181512] text-white shadow-2xs'
+                            : 'bg-[#F3EFE8] hover:bg-[#EAE4D9] text-[#5C554B] hover:text-[#181512]'
+                        }`}
+                      >
+                        {cat.name}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Right Gradient Fade */}
+                {canScrollRight && (
+                  <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white via-white/80 to-transparent z-10 pointer-events-none" />
+                )}
+
+                {/* Right Slide Arrow */}
+                {canScrollRight && (
+                  <button
+                    type="button"
+                    onClick={() => slideCategories('right')}
+                    aria-label="Slide categories right"
+                    className="absolute right-0 z-20 flex items-center justify-center w-6 h-6 rounded-full bg-white shadow-xs border border-[#E8E2D6] text-[#5C554B] hover:text-[#181512] hover:bg-[#FBF9F5] transition-all translate-x-1"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
+              {/* Filters Toggle Button */}
               <button
                 onClick={() => setShowFiltersDrawer(!showFiltersDrawer)}
-                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border transition-colors ${
+                className={`flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium border transition-colors flex-shrink-0 ${
                   showFiltersDrawer || selectedDistrict !== 'All' || selectedVerification !== 'All'
                     ? 'bg-[#181512] text-white border-[#181512]'
                     : 'bg-[#F3EFE8] text-[#5C554B] border-[#E8E2D6] hover:bg-[#EAE4D9]'

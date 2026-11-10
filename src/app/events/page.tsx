@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { MOCK_EVENTS } from '@/data/mock-events';
 import { KERALA_DISTRICTS } from '@/data/mock-districts';
 import { Calendar, Clock, MapPin, Search, CheckCircle2, ArrowRight, ExternalLink } from 'lucide-react';
 import { useLanguage } from '@/components/ui/LanguageContext';
 import { EVENT_CATEGORIES, getEvents, KERALA_PLATFORM_DATE } from '@/lib/supabase/data-service';
+import { createClient as createBrowserClient } from '@/lib/supabase/client';
 import { EventListing } from '@/lib/types';
 
 export default function EventsPage() {
@@ -19,50 +20,96 @@ export default function EventsPage() {
 
   const categories = ['All', ...EVENT_CATEGORIES];
 
-  useEffect(() => {
-    let isMounted = true;
-    getEvents()
+  const fetchLatestEvents = useCallback(() => {
+    getEvents({ sortByPublication: true })
       .then((data) => {
-        if (isMounted && data && data.length > 0) {
+        if (data && data.length > 0) {
           setEvents(data);
         }
       })
       .catch((err) => {
         console.warn('Fallback to local mock events:', err);
       });
-
-    return () => {
-      isMounted = false;
-    };
   }, []);
 
+  useEffect(() => {
+    fetchLatestEvents();
+
+    // Auto-refresh when user switches back to this tab after approving in Curator Portal
+    const handleVisibilityOrFocus = () => {
+      if (document.visibilityState === 'visible') {
+        fetchLatestEvents();
+      }
+    };
+    window.addEventListener('visibilitychange', handleVisibilityOrFocus);
+    window.addEventListener('focus', handleVisibilityOrFocus);
+
+    // Supabase Realtime listener for immediate publication propagation
+    let channel: any = null;
+    try {
+      const sb = createBrowserClient();
+      if (sb) {
+        channel = sb
+          .channel('public:events_published')
+          .on(
+            'postgres_changes',
+            { event: '*', schema: 'public', table: 'events' },
+            () => {
+              fetchLatestEvents();
+            }
+          )
+          .subscribe();
+      }
+    } catch (e) {
+      // ignore
+    }
+
+    return () => {
+      window.removeEventListener('visibilitychange', handleVisibilityOrFocus);
+      window.removeEventListener('focus', handleVisibilityOrFocus);
+      if (channel) {
+        channel.unsubscribe();
+      }
+    };
+  }, [fetchLatestEvents]);
+
   const filteredEvents = useMemo(() => {
-    return events.filter((ev) => {
-      const q = searchQuery.toLowerCase().trim();
-      const matchesSearch =
-        !q ||
-        ev.title.toLowerCase().includes(q) ||
-        ev.titleMalayalam.toLowerCase().includes(q) ||
-        ev.venue.toLowerCase().includes(q) ||
-        ev.district.toLowerCase().includes(q) ||
-        ev.artForm.toLowerCase().includes(q);
+    return events
+      .filter((ev) => {
+        const q = searchQuery.toLowerCase().trim();
+        const matchesSearch =
+          !q ||
+          ev.title.toLowerCase().includes(q) ||
+          ev.titleMalayalam.toLowerCase().includes(q) ||
+          ev.venue.toLowerCase().includes(q) ||
+          ev.district.toLowerCase().includes(q) ||
+          ev.artForm.toLowerCase().includes(q);
 
-      const matchesDistrict =
-        selectedDistrict === 'All' || ev.district === selectedDistrict;
+        const matchesDistrict =
+          selectedDistrict === 'All' || ev.district === selectedDistrict;
 
-      const matchesCategory =
-        selectedCategory === 'All' || ev.category === selectedCategory;
+        const matchesCategory =
+          selectedCategory === 'All' || ev.category === selectedCategory;
 
-      const isUpcoming = ev.date >= KERALA_PLATFORM_DATE && ev.status !== 'Completed';
-      const isPast = ev.date < KERALA_PLATFORM_DATE || ev.status === 'Completed';
+        const isUpcoming = ev.date >= KERALA_PLATFORM_DATE && ev.status !== 'Completed';
+        const isPast = ev.date < KERALA_PLATFORM_DATE || ev.status === 'Completed';
 
-      const matchesTimeframe =
-        selectedTimeframe === 'all' ||
-        (selectedTimeframe === 'upcoming' && isUpcoming) ||
-        (selectedTimeframe === 'past' && isPast);
+        const matchesTimeframe =
+          selectedTimeframe === 'all' ||
+          (selectedTimeframe === 'upcoming' && isUpcoming) ||
+          (selectedTimeframe === 'past' && isPast);
 
-      return matchesSearch && matchesDistrict && matchesCategory && matchesTimeframe;
-    });
+        return matchesSearch && matchesDistrict && matchesCategory && matchesTimeframe;
+      })
+      .sort((a, b) => {
+        // Sort by newest publication timestamp first so newly approved events appear at the top
+        const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+        const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+        if (timeA !== timeB) {
+          return timeB - timeA;
+        }
+        return a.date.localeCompare(b.date);
+      });
   }, [events, searchQuery, selectedDistrict, selectedCategory, selectedTimeframe]);
 
   return (

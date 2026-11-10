@@ -92,6 +92,7 @@ export interface EventListing {
   entryType: 'Free Entry' | 'Pass Required' | 'Ritual Offering';
   scheduleHighlights: { time: string; item: string }[];
   coordinates?: { lat: number; lng: number };
+  createdAt?: string;
 }
 
 export interface SubmissionReviewItem {

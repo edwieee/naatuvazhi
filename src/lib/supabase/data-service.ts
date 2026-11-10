@@ -231,6 +231,7 @@ function mapDbEvent(row: any): EventListing {
     imageUrl: row.image_url,
     entryType: row.entry_type,
     scheduleHighlights: Array.isArray(row.schedule_highlights) ? row.schedule_highlights : [],
+    createdAt: row.created_at || row.updated_at || undefined,
   };
 }
 
@@ -645,6 +646,7 @@ export interface EventFilters {
   status?: string;
   upcomingOnly?: boolean;
   pastOnly?: boolean;
+  sortByPublication?: boolean;
 }
 
 export async function getEvents(filters?: EventFilters, customSb?: any): Promise<EventListing[]> {
@@ -654,12 +656,25 @@ export async function getEvents(filters?: EventFilters, customSb?: any): Promise
       let query = sb
         .from('events')
         .select('*, districts(name)')
-        .eq('publication_status', 'published')
-        .order('event_date', { ascending: true });
+        .eq('publication_status', 'published');
+
+      if (filters?.sortByPublication) {
+        query = query.order('created_at', { ascending: false });
+      } else {
+        query = query.order('event_date', { ascending: true });
+      }
 
       const { data, error } = await query;
       if (!error && data && data.length > 0) {
         let results: EventListing[] = data.map(mapDbEvent);
+
+        if (filters?.sortByPublication) {
+          results.sort((a, b) => {
+            const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return timeB - timeA;
+          });
+        }
 
         if (filters?.upcomingOnly) {
           results = results.filter((ev) => ev.date >= KERALA_PLATFORM_DATE && ev.status !== 'Completed');
@@ -716,7 +731,15 @@ export async function getEvents(filters?: EventFilters, customSb?: any): Promise
         ev.artForm.toLowerCase().includes(q)
     );
   }
-  results.sort((a, b) => a.date.localeCompare(b.date));
+  if (filters?.sortByPublication) {
+    results.sort((a, b) => {
+      const timeA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+      const timeB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+      return timeB - timeA;
+    });
+  } else {
+    results.sort((a, b) => a.date.localeCompare(b.date));
+  }
   return results;
 }
 

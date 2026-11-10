@@ -230,15 +230,15 @@ function ExplorePageContent() {
       </div>
 
       {/* Main Split Screen: 45% Directory / 55% Map */}
-      <div className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col lg:flex-row gap-4 h-[calc(100vh-8.5rem)] min-h-[640px]">
+      <div className="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 flex flex-col lg:flex-row gap-4 h-[calc(100vh-8.5rem)] min-h-[640px] overflow-hidden">
         {/* LEFT PANEL (45%): Directory */}
         <div
-          className={`w-full lg:w-[45%] h-full flex flex-col bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden ${
+          className={`w-full lg:w-[45%] h-full min-h-0 flex flex-col bg-white rounded-xl border border-[#E8E2D6] shadow-xs overflow-hidden ${
             mobileActiveView === 'map' ? 'hidden lg:flex' : 'flex'
           }`}
         >
-          {/* Controls Header */}
-          <div className="p-4 border-b border-[#E8E2D6] bg-white flex flex-col gap-3">
+          {/* Controls Header - Fixed at Top */}
+          <div className="p-4 border-b border-[#E8E2D6] bg-white flex flex-col gap-3 flex-shrink-0 z-10">
             {/* Search Box: Clean 8px radius */}
             <div className="relative">
               <Search className="w-4 h-4 text-[#8C8273] absolute left-3 top-1/2 -translate-y-1/2" />
@@ -398,8 +398,12 @@ function ExplorePageContent() {
             )}
           </div>
 
-          {/* Directory Listings */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-3 divide-y divide-[#EDE7DC]">
+          {/* Directory Listings - Independently Scrollable Results */}
+          <div
+            id="directory-results-container"
+            tabIndex={0}
+            className="flex-1 min-h-0 overflow-y-auto p-4 space-y-3 divide-y divide-[#EDE7DC] directory-results-scroll overscroll-contain scroll-smooth focus:outline-none"
+          >
             {filteredListings.length === 0 ? (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 text-[#8C8273]">
                 <Search className="w-6 h-6 text-[#D8D1C4] mb-2" />
